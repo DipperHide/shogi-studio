@@ -7,6 +7,7 @@ func matching_cache(ply: int) -> bool:
 func run(instance) -> void:
 	app=instance
 	output=ProjectSettings.globalize_path("res://../review/app/chessis16/ui")
+	if "--chessis22-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis22/chessis16_test")
 	if "--chessis21-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis21/chessis16_test")
 	if "--chessis17-regression" in OS.get_cmdline_user_args(): output=ProjectSettings.globalize_path("res://../review/app/chessis17/selection-ui")
 	if "--chessis18-regression" in OS.get_cmdline_user_args(): output=ProjectSettings.globalize_path("res://../review/app/chessis18/selection-ui")
@@ -61,8 +62,14 @@ func run(instance) -> void:
 	await capture("report-board-lines")
 	await until(func(): return app.motion_progress>=1)
 	app.ui.show_history(2)
-	await settle(0.05)
-	check(app.motion_progress>0 and app.motion_progress<1,"report replay retains actual piece animation")
+	var motion_frames = []
+	var motion_started = Time.get_ticks_msec()
+	while Time.get_ticks_msec() - motion_started < 1500:
+		await RenderingServer.frame_post_draw
+		motion_frames.append({"ms": Time.get_ticks_msec() - motion_started, "progress": app.motion_progress})
+		if app.motion_progress >= 1: break
+	FileAccess.open(output.path_join("replay-motion.json"), FileAccess.WRITE).store_string(JSON.stringify(motion_frames, "  "))
+	check(motion_frames.any(func(frame): return frame.progress > 0 and frame.progress < 1), "report replay renders intermediate piece positions")
 	check(matching_cache(2),"candidate root follows animated history change")
 	app.ui.show_history(1)
 	app.ui.show_history(4)

@@ -209,6 +209,15 @@ func probe_classification_verification() -> void:
 	await capture("verified-sharp-move")
 	verify(app.ui.report_story.find_child("StoryMoveSide",true,false).size==Vector2(12,12), "packaged story card keeps reference square player marker")
 	verify(app.ui.report_story.find_child("StoryMoveReason",true,false).get_parent().get_theme_constant("margin_left")==24, "packaged story reason uses original text inset")
+	var chart = app.ui.report_chart
+	verify(chart.rows == app.ui.report.rows and chart.markers.any(func(marker): return marker.ply == 3 and marker.category == "锐利"), "packaged chart marks the actually verified silver fork")
+	verify(chart.SENTE_BACKGROUND == Color("323a42") and chart.GOTE_BACKGROUND == Color("090c10"), "packaged chart uses the two reference advantage zones")
+	verify(chart.focus_mode == Control.FOCUS_ALL, "packaged chart supports keyboard focus")
+	await app.get_tree().create_timer(0.9).timeout
+	verify(chart.reveal == 1 and chart.visible_markers().size() == chart.markers.size(), "packaged chart completes its reveal without losing markers")
+	chart.choose(2)
+	verify(app.ui.report_selected_ply == 2, "packaged chart selection updates the move card")
+	chart.choose(3)
 	var ribbon = app.ui.report_phases
 	verify(ribbon is VBoxContainer and ribbon.find_child("PhaseLabelStrip", true, false).size.y == 22, "packaged phase ribbon uses measured native layout")
 	verify(ribbon.find_child("PhaseSegments", true, false).size.y == 34, "packaged phase bars retain reference height")

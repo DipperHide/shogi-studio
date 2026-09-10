@@ -1,0 +1,139 @@
+{
+  "version": "0.22.0",
+  "checks": {
+    "chart-core.json": 2175,
+    "chart-dex-oracle.json": 1080,
+    "ui/ui-tests.json": 1362,
+    "chessis21_test/ui-tests.json": 346,
+    "chessis12_test/results.json": 128,
+    "chessis16_test/results.json": 92,
+    "chessis19_test/results.json": 142,
+    "package/windows-package-probe.json": 96,
+    "package/verification.json": 59
+  },
+  "total": 5480,
+  "failures": [],
+  "real_engine_report_plies": 140,
+  "geometry": [
+    {
+      "markers": 39,
+      "plot": "[P: (8.0, 10.0), S: (300.0, 148.0)]",
+      "theme": "dark",
+      "window": "(360, 760)"
+    },
+    {
+      "markers": 39,
+      "plot": "[P: (8.0, 10.0), S: (333.0, 148.0)]",
+      "theme": "dark",
+      "window": "(393, 852)"
+    },
+    {
+      "markers": 39,
+      "plot": "[P: (8.0, 10.0), S: (792.0, 148.0)]",
+      "theme": "dark",
+      "window": "(852, 393)"
+    },
+    {
+      "markers": 39,
+      "plot": "[P: (8.0, 10.0), S: (1040.0, 148.0)]",
+      "theme": "dark",
+      "window": "(1100, 800)"
+    },
+    {
+      "markers": 39,
+      "plot": "[P: (8.0, 10.0), S: (300.0, 148.0)]",
+      "theme": "light",
+      "window": "(360, 760)"
+    },
+    {
+      "markers": 39,
+      "plot": "[P: (8.0, 10.0), S: (333.0, 148.0)]",
+      "theme": "light",
+      "window": "(393, 852)"
+    },
+    {
+      "markers": 39,
+      "plot": "[P: (8.0, 10.0), S: (792.0, 148.0)]",
+      "theme": "light",
+      "window": "(852, 393)"
+    },
+    {
+      "markers": 39,
+      "plot": "[P: (8.0, 10.0), S: (1040.0, 148.0)]",
+      "theme": "light",
+      "window": "(1100, 800)"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "builds/Shogi-0.22.0-windows-x64.zip",
+      "bytes": 150166108,
+      "sha256": "a716e09ee490c5f21887cd515d62bef19c565e64b574e57e1b74d1c5a4b36921"
+    },
+    {
+      "path": "builds/Shogi-0.22.0-android-arm64.apk",
+      "bytes": 136128922,
+      "sha256": "a3fc855e26bf7f229d2ddba25f6e180a0f60b6dafd5c73bbbb86a6b85bf0463e"
+    }
+  ],
+  "compiled_android_scripts": {
+    "shogi_report_phases": "087e4a52b5d885a98a6744e129cb56a4c7683e71757120d729eb90cf4c7f3ebb",
+    "shogi_report_chart": "2953fa5cf1bd39edc5c36a7ee1fdf4b7fa9d7c150b422c0f369521fad470fec0",
+    "shogi_report_chart_model": "2c1a41b97146fdb5f0c83069d7dbe47fc34d6dcf601458f66dc88e41078aeaeb",
+    "shogi_chessis_menu": "685465db762c5b0541515b18482cead955e203036e445dd9c215dd3721a3bee8",
+    "shogi_package_probe": "35ee8c9a121e130fffcd6eed10189187f6091592954b1e9d39e12d1e68aab8e7"
+  },
+  "matched_imported_icons": {
+    "ic_accurate_neutral.svg": "c07b304e199ef9e49fd75774c58b66a03f44f196eaacd235f6cf78870c310b2b",
+    "ic_arrow_drop_up.svg": "3a70e5916f82e4038ffc36fd97a117f680482e4343c822352663f91988dd28e8",
+    "ic_arrow_forward.svg": "5782a9d77491ae545a878c850053c7338cf38a37b0394604d82f65d7d1b0525d",
+    "ic_baseline_menu_24.svg": "6b1b2eb8a0f78955677f4100cbb825519664f734292c0055ffad58535588c664",
+    "ic_bestmove.svg": "f2f048b5f4559d49b59f7a4eb692bad186664278742647a1144bcc0e4c2d091a",
+    "ic_blunder_icon.svg": "3b46ede04d77e7a9fdd75d9164d70e23a368bdad61ad122330a33fd7d50093d7",
+    "ic_book_move.svg": "c5fa8eed4d69851356370493304b32d41507fa534473ca38a0bf7ee0c4c0ca72",
+    "ic_brilliant_move.svg": "dc3337dea820395e9bf3102a364a64f3e526751a7f2e0e1e55cf7e96eb0b4c5f",
+    "ic_circle_check.svg": "df6a64d4ff672a9835eefcb3a48d97759ee2b7820f69269aa6b3c02908e3830f",
+    "ic_close.svg": "e43df691b335a4eed7fc150f813d982449a320ae8e7aa0f39960f08ee47a438a",
+    "ic_deep_report.svg": "aca9968726bf36861e12b73c6200f9c5fa850645b114b51b414e72248ee83478",
+    "ic_excellent_move.svg": "b8e73687ded0480ddbe95f5e06ef6ef22d150e0c0663999106da3e9b23b52848",
+    "ic_eye.svg": "c21eae74799fe9bfc9e2403e049ade5a0e91cb96d5bc555e7599ef118c01606d",
+    "ic_flip_board.svg": "52fdc88eee81e06a311dd66f05c0b6cd572f6b42516212a7103d73a35dfc528e",
+    "ic_forced_move.svg": "f8cd751fb4dd71c42b4c20f5e14e473e34fa953ee2878e2970a18d50062bc3e3",
+    "ic_good_move.svg": "1c21f5a4186f230a528dec8c7f6a5f6bca3d6f9ab34dcf8aa2ad63ffb4568e43",
+    "ic_great_move.svg": "eaa85e8f33bae90e64f6a70dca735f306859d9760fce9415fcf1b46ca8f2fc2d",
+    "ic_hint_up.svg": "bab53d21770cf3221a53d65b3233d7a4653fd4f2631fdb50a1a9d1bb606c51b7",
+    "ic_inaccuracy.svg": "1495e0d8fde31d96bc7c6539d0ca7cd2c1dc5c04533d35b2d42603bc5f8e1e9e",
+    "ic_missed_win.svg": "0b059c8678a6a454682d1a020bfaad401cd2e4acc19ecb24ba56aefd36767cf1",
+    "ic_mistake.svg": "09bbd2f3c4a3a2bc6e8f3d20bafe77366b549ea8d0b4fe98a0871b5337dc07b0",
+    "ic_nav_more.svg": "14a5a237618fc71a0a2377f7ca1c54a73cde1374c716268cc1eb318be698366f",
+    "ic_nav_next.svg": "e8fd9cabe193150c7754703f6b1b29cdf26b48319882e68b3b1270495f39be81",
+    "ic_nav_pause.svg": "e8b83e90270c8b5171bab91b6a1c4a2e0dce9d70ee15cb7cd98f6bc032f92ab5",
+    "ic_nav_play.svg": "d66967f546d1ddfda64b72403ac1f9c21d0f39543d8654d3e7251f0118952d3f",
+    "ic_nav_previous.svg": "5b62837c6f682040d57df77e9c530ffd580e1f5738daeb7b597586329b3c462d",
+    "ic_pause.svg": "e8b83e90270c8b5171bab91b6a1c4a2e0dce9d70ee15cb7cd98f6bc032f92ab5",
+    "ic_play.svg": "d66967f546d1ddfda64b72403ac1f9c21d0f39543d8654d3e7251f0118952d3f",
+    "ic_quick_report.svg": "83ff5d172bdff857873ac62d1cae6d6097989de0e0696ff93c39839bd5b44dfc",
+    "ic_rating_trend_neutral.svg": "60bf9006c83c3d6ab6aac07692682e00ed99d6d3ab42ea6e3e8a38b422a010e7",
+    "ic_report.svg": "c2e0742ead70bbf0ec4fdede8afd1de47fac5c1035be907238605928aa0b2f77",
+    "ic_search.svg": "640a0dabc8cd0f0f280c2b7e64418e64442e9e9b44c66d3e68ed7a3b096cec82",
+    "ic_settings.svg": "7958edefb801ccc21abb082a786b3aa87af8749ab74b039a1eedb5f9744168b0",
+    "ic_stop.svg": "8f2f35b27f83fbe662cadb5223a811718847a814322e364a9bf38ea377c3bad5",
+    "ic_trophy_neutral.svg": "d672609ae7e54e880634a2a6b2913dec8b628c3d23a4fb718b202cfb14b437a5",
+    "ic_tune.svg": "225c2f4ebf2ef42270cfcc6fec4f59464e6a92d6566741d435db683eaa742248",
+    "ic_undo.svg": "abfdb049f32f50e7c919407fae76a5cc161aa80584f8cfb834d663c26f1b42dd"
+  },
+  "reference_source_sha256": {
+    "res/layout/dialog_game_report.xml": "cfc7d567c0470cf7b0452ac391e8dd107bbf251570b91f7f19f56ef3623ed207",
+    "java/sources/p328r2/C4566d.java": "ed01abbe6190a3296159f178165f523c350f35ba99b24df938517ee811ef7354",
+    "java/sources/p328r2/C4570h.java": "3f78f02c87593550e5500124cc8fe29251fdebe6aa8f1782ea506e3d35827f9b",
+    "java/sources/p254h4/RunnableC3483A.java": "a6aff7bf915f2438f6e80198be44d91ede5f567486d2580b6fdd489f94163f87",
+    "java/sources/com/chessimprovement/chessis/common/abstractclasses/CustomLineChart.java": "d7f516f99707331ffb5a1fa22b8c644c0ad728892a1f612b1da766592084c11f",
+    "dex-evidence/com-chessimprovement-chessis-common-abstractclasses-CustomLineChart-onDraw.txt": "d654fe35b6ff1c9bd753c2fb872126aa48203fb9518b3085ac5f8537231d3eb1"
+  },
+  "dex_layout_comparisons": 1080,
+  "dex_layout_cases": 18,
+  "runtime_sources_match_release_receipt": true,
+  "windows_zip_matches_tested_executable": true,
+  "first_board_frame_ms": 2166,
+  "android_device_tested": false
+}

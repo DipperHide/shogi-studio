@@ -1233,6 +1233,7 @@ func show_report() -> void:
 	graph_panel.add_child(report_selection)
 	report_chart = preload("res://scripts/shogi_report_chart.gd").new()
 	report_chart.samples = report.samples
+	report_chart.rows = report.rows
 	report_chart.phases = report.phases()
 	report_chart.total_plies = report.game.moves.size() if report.game != null else 0
 	report_chart.selected.connect(select_report_move)
@@ -1614,8 +1615,9 @@ func report_changed() -> void:
 		report_progress.text = report.progress_text()
 	if report_chart != null and is_instance_valid(report_chart):
 		report_chart.samples = report.samples
+		report_chart.rows = report.rows
 		report_chart.phases = report.phases()
-		report_chart.queue_redraw()
+		report_chart.refresh()
 	if report_phases != null and is_instance_valid(report_phases): report_phases.refresh()
 	if not report.running and report_progress != null and not report_progress.has_meta("finished"):
 		report_progress.set_meta("finished", true)

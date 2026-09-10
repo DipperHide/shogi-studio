@@ -128,10 +128,13 @@ func refresh() -> void:
 	add_child(labels_panel)
 	var labels = HBoxContainer.new()
 	labels.add_theme_constant_override("separation", 0)
-	labels_panel.add_child(labels)
+	var labels_inset = margins(labels_panel, 8, 0, 8, 0)
+	labels_inset.name = "PhaseLabelsInset"
+	labels_inset.add_child(labels)
 	var total: int = report.game.moves.size()
 	for segment in phases:
-		var caption = ui.label(segment.name, 12)
+		var caption = ui.label(segment.name, 11)
+		caption.add_theme_font_override("font", Design.heading_font(ui.app.text_font))
 		caption.autowrap_mode = TextServer.AUTOWRAP_OFF
 		caption.clip_text = true
 		caption.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
@@ -142,7 +145,15 @@ func refresh() -> void:
 		caption.size_flags_stretch_ratio = maxf(0.5, span.y - span.x)
 		caption.add_theme_color_override("font_color", INK)
 		labels.add_child(caption)
-	var inset = margins(self, 12, 2, 12, 6)
+		if segment != phases[0]:
+			var boundary = ColorRect.new()
+			boundary.name = "PhaseLabelDivider"
+			boundary.color = Color("f8f1e699")
+			boundary.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			caption.add_child(boundary)
+			boundary.set_anchors_and_offsets_preset(Control.PRESET_LEFT_WIDE)
+			boundary.offset_right = 1
+	var inset = margins(self, 8, 2, 8, 6)
 	var groups = VBoxContainer.new()
 	groups.name = "PhaseSideGroups"
 	groups.add_theme_constant_override("separation", 20)

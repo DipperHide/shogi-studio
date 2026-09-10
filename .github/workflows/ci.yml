@@ -30,7 +30,7 @@ jobs:
       - name: Rules, record parsing, reports and update recovery
         run: |
           set -euo pipefail
-          for test in rules_test chessis_core_test report12_test story19_test tournament_sync20_test historic_games_test; do
+          for test in rules_test chessis_core_test report12_test story19_test report_chart22_test tournament_sync20_test historic_games_test; do
             Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script "res://tests/$test.gd" -- --chessis20-regression
           done
           python scripts/check_rules_oracle.py --report review/app/chessis20/rules-oracle.json
@@ -39,4 +39,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: core-test-results
-          path: review/app/chessis20
+          path: |
+            review/app/chessis20
+            review/app/chessis22
