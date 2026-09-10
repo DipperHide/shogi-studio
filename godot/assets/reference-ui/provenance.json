@@ -127,6 +127,41 @@
       "decoded_sha256": "ede8bf85492103bf69b2350bf003f0eddd44942e1506d96959adec091075c7df"
     },
     {
+      "asset": "ic_refresh.svg",
+      "source": "res/drawable/ic_refresh.xml",
+      "decoded_sha256": "53146857f5c951e8a06d50b9c5784f42b73a938c1e9aa76f6eb563211a2f68a7"
+    },
+    {
+      "asset": "ic_delete.svg",
+      "source": "res/drawable/ic_delete.xml",
+      "decoded_sha256": "97a30a037cbed120b81ea5ade78cddddb36a4adb51d517aef3f7fa02e5e7c5a1"
+    },
+    {
+      "asset": "ic_redo.svg",
+      "source": "res/drawable/ic_redo.xml",
+      "decoded_sha256": "f0ea9eabe32f7de50213b72cd044df76ceacc7150d7e88180738041ca42f06fe"
+    },
+    {
+      "asset": "ic_save.svg",
+      "source": "res/drawable/ic_save.xml",
+      "decoded_sha256": "a8a9dc1df550514e812b9157a24b165a199cf2bf32456e1dd97403b3b01e09fe"
+    },
+    {
+      "asset": "ic_flipped_board.svg",
+      "source": "res/drawable/ic_flipped_board.xml",
+      "decoded_sha256": "04c8f00fd49fa04539b541a9322a8fb9780d10345e97c5c2beb09f62b85f6da1"
+    },
+    {
+      "asset": "ic_non_flipped_board.svg",
+      "source": "res/drawable/ic_non_flipped_board.xml",
+      "decoded_sha256": "75e891612c0cf63604aeacc0869658c44bc7efd2e5664923b7ca17953abf106c"
+    },
+    {
+      "asset": "ic_play_round.svg",
+      "source": "res/drawable/ic_play_round.xml",
+      "decoded_sha256": "9b10d44b1eda1e098e72d1dabd75a5faa3145ce06099034f0e921014be6719f2"
+    },
+    {
       "asset": "ic_book_move.svg",
       "source": "res/drawable/ic_book_move.xml",
       "decoded_sha256": "4788af013333c29b77d392ea45adae58e999f5e749e3e5d67f6dc55a383b6a44"

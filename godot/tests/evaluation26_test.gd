@@ -33,6 +33,7 @@ func _initialize() -> void:
 		check(restored.studio.eval_position == ("smart" if mode == "invalid" else mode), "persist and validate position preference")
 	DirAccess.remove_absolute("user://evaluation26-test.cfg")
 	var output = ProjectSettings.globalize_path("res://../review/app/chessis26")
+	if "--chessis27-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis27")
 	DirAccess.make_dir_recursive_absolute(output)
 	FileAccess.open(output.path_join("evaluation-core.json"), FileAccess.WRITE).store_string(JSON.stringify({"checks": checks, "failures": failures}, "  "))
 	print("EVALUATION 26: ", checks, " checks; failures: ", failures)

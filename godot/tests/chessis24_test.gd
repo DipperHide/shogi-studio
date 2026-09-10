@@ -121,6 +121,7 @@ func run(instance) -> void:
 		if arg.begins_with("--case24="): variant = arg.trim_prefix("--case24=")
 	output = ProjectSettings.globalize_path("res://../review/app/chessis24/" + variant)
 	if "--chessis26-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis26/animation")
+	if "--chessis27-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis27/animation")
 	if "--chessis25-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis25/animation")
 	DirAccess.make_dir_recursive_absolute(output)
 	app.records.root = output.path_join("records")

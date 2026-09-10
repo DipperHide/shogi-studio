@@ -107,8 +107,7 @@ func run(owner_node) -> void:
 	app.replay_index = 2
 	app.ui._board_keep()
 	app.ui.show_history(1)
-	await app.get_tree().create_timer(0.06).timeout
-	verify(app.motion_progress > 0 and app.motion_progress < 1, "packaged replay contains intermediate movement")
+	verify(await observe_motion("replay"), "packaged replay contains intermediate movement")
 	await app.get_tree().create_timer(0.3).timeout
 	verify(app.ui.continue_button.visible and app.game == original, "packaged replay exposes direct continuation without changing live game")
 	app.ui.close()
@@ -162,8 +161,8 @@ func probe_mistake_practice() -> void:
 	verify(app.review_game == practice.exercise and practice.exercise.moves.is_empty() and app.game == original, "packaged practice starts before mistake without replacing live game")
 	await capture("mistake-practice")
 	practice.submit(practice.entry().best)
-	await app.get_tree().create_timer(0.05).timeout
-	verify(practice.stage == "solved" and app.motion_progress > 0 and app.motion_progress < 1, "packaged practice animates accepted engine answer")
+	var answer_animated = await observe_motion("practice-answer")
+	verify(practice.stage == "solved" and answer_animated, "packaged practice animates accepted engine answer")
 	verify(practice.progress().state("mistakes", practice.entry().key, 0).mastered, "packaged independent correct answer persists as mastered")
 	await app.get_tree().create_timer(0.5).timeout
 	practice.show_line()
@@ -254,8 +253,7 @@ func probe_classification_verification() -> void:
 	var animation_deadline = Time.get_ticks_msec() + 3000
 	while app.motion_progress < 1 and Time.get_ticks_msec() < animation_deadline: await app.get_tree().process_frame
 	app.ui.show_history(2)
-	await app.get_tree().create_timer(0.05).timeout
-	verify(app.motion_progress > 0 and app.motion_progress < 1, "packaged cached report replay displays intermediate motion")
+	verify(await observe_motion("cached-report"), "packaged cached report replay displays intermediate motion")
 	verify(app.ui.live_details[1].pv == app.ui.report.samples[2].candidates[0].pv and app.ui.live_key == app._display_position().key(), "packaged replay updates candidate root alongside animation")
 	app.ui.show_report_move_details(2)
 	verify(app.ui.page_name == "report-move" and app.ui.page.find_child("ReportMoveExplanation", true, false) != null, "packaged move details retains full explanation and alternatives")
@@ -274,6 +272,22 @@ func probe_classification_verification() -> void:
 	verify(app.ui.report_selected_ply == 3 and app.game == original and app.game.moves.is_empty(), "packaged classification detail preserves report selection and live game")
 	await probe_accuracy_insight()
 	app.ui.close()
+
+func observe_motion(scenario: String) -> bool:
+	# Observe displayed frames, not a timer that may resume after the animation.
+	# Keep wall-clock gaps as evidence; no tween stepping or timing overrides.
+	var began = Time.get_ticks_usec()
+	var frames = []
+	var intermediate = false
+	while Time.get_ticks_usec() - began < 3000000:
+		await RenderingServer.frame_post_draw
+		var progress: float = app.motion_progress
+		frames.append({"elapsed_ms": (Time.get_ticks_usec() - began) / 1000.0, "progress": progress})
+		if progress > 0 and progress < 1: intermediate = true
+		if progress >= 1: break
+	if not report.has("motion_frames"): report.motion_frames = {}
+	report.motion_frames[scenario] = frames
+	return intermediate and app.motion_progress >= 1
 
 func probe_accuracy_insight() -> void:
 	app.ui.show_accuracy_insight(1)

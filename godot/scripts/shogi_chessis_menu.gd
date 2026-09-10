@@ -330,6 +330,9 @@ func layout() -> void:
 	if page != null and page_name == "report":
 		page.position = safe.position
 		page.size = safe.size
+	if page != null and page_name == "editor":
+		page.position = safe.position
+		page.size = safe.size - Vector2(0, keyboard_height)
 	if page != null and page_name in ["report-phase", "report-accuracy", "report-metric-info"]: fit_wood_dialog()
 	if page != null and page_name in ["report-settings", "report-value", "retry-settings", "report-classifications", "report-story-info", "report-move"]:
 		var available = safe
@@ -347,6 +350,7 @@ func apply_theme() -> void:
 		for item in page.find_children("*", "Label", true, false): report_colors[item] = item.get_theme_color("font_color")
 	super.apply_theme()
 	for item in report_colors: item.add_theme_color_override("font_color", report_colors[item])
+	if page_name == "editor" and is_instance_valid(editor): editor.apply_theme()
 	if toolbar == null: return
 	for item in toolbar.get_children():
 		item.add_theme_stylebox_override("normal", Design.box(Color(0, 0, 0, 0.12), 5, 4))
@@ -656,6 +660,7 @@ func show_menu() -> void:
 	if app.session != null: column.add_child(button("当前联机", show_connection))
 
 func back() -> void:
+	if page_name == "editor" and is_instance_valid(editor) and editor.interaction.pointer_id != -2: editor.interaction.cancel(); return
 	if page_name == "evaluation-options": _board_keep(); return
 	if page_name in ["variations", "variation-move", "variation-policy"]: _board_keep(); return
 	if page == null and study_active(): finish_study(); return
@@ -730,10 +735,13 @@ func show_editor() -> void:
 	column.add_child(editor)
 	editor.build(self, source)
 	editor.submitted.connect(func(sfen):
+		var orientation: bool = editor.flipped
 		var next = app.Game.new()
 		if not next.set_initial(sfen): return
+		next.update_result()
 		next.mode = "local"
 		adopt_game(next)
+		if app.game == next: app.flipped = orientation; app._refresh()
 	)
 
 func adopt_game(next) -> void:
@@ -1801,6 +1809,7 @@ func show_board_settings() -> void:
 	extra_toggle(column, "显示引擎箭头", "arrows")
 	extra_toggle(column, "显示评价条", "eval_bar")
 	evaluation_position_choice(column)
+	extra_toggle(column, "局面编辑器显示实时评分", "editor_eval_bar")
 	extra_toggle(column, "显示受攻击的棋子", "threats")
 	var speed = choice(column, "棋子动画", ["关闭", "快速", "标准", "慢速"], 2)
 	speed.item_selected.connect(func(index): set_extra("animation", [0.0, 0.12, 0.22, 0.5][index]))

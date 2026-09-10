@@ -1,0 +1,684 @@
+{
+  "version": "0.27.0",
+  "functional_checks": {
+    "editor-core.json": 33,
+    "ui/ui-tests.json": 175,
+    "variation-core.json": 67,
+    "evaluation-core.json": 51,
+    "evaluation/ui-tests.json": 289,
+    "variations/ui-tests.json": 108,
+    "animation/ui-tests.json": 5821,
+    "chessis16_test/results.json": 92,
+    "chessis13_test/results.json": 101,
+    "chessis11_test/ui-tests.json": 95,
+    "package/windows-package-probe.json": 101,
+    "package/verification.json": 59,
+    "rules_test": 671,
+    "chessis_core_test": 37,
+    "report12_test": 35,
+    "story19_test": 68,
+    "tournament_sync20_test": 38
+  },
+  "functional_total": 7841,
+  "failures": [],
+  "collector_tests": 8,
+  "historic_games_replayed": 195,
+  "historic_plies": 23115,
+  "interruption_scenarios": [
+    {
+      "appearance": "minimal",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 2
+    },
+    {
+      "appearance": "minimal",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 3
+    },
+    {
+      "appearance": "minimal",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 4
+    },
+    {
+      "appearance": "minimal",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "minimal",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 0
+    },
+    {
+      "appearance": "minimal",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "minimal",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "minimal",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 3
+    },
+    {
+      "appearance": "minimal",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 2
+    },
+    {
+      "appearance": "minimal",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 2
+    },
+    {
+      "appearance": "minimal",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 3
+    },
+    {
+      "appearance": "minimal",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 4
+    },
+    {
+      "appearance": "minimal",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "minimal",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 0
+    },
+    {
+      "appearance": "minimal",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "minimal",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "minimal",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 3
+    },
+    {
+      "appearance": "minimal",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 2
+    },
+    {
+      "appearance": "wood",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 2
+    },
+    {
+      "appearance": "wood",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 3
+    },
+    {
+      "appearance": "wood",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 4
+    },
+    {
+      "appearance": "wood",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "wood",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 0
+    },
+    {
+      "appearance": "wood",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "wood",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "wood",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 3
+    },
+    {
+      "appearance": "wood",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 2
+    },
+    {
+      "appearance": "wood",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 2
+    },
+    {
+      "appearance": "wood",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 3
+    },
+    {
+      "appearance": "wood",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 4
+    },
+    {
+      "appearance": "wood",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "wood",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 0
+    },
+    {
+      "appearance": "wood",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "wood",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "wood",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 3
+    },
+    {
+      "appearance": "wood",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 2
+    }
+  ],
+  "timing": [
+    {
+      "scenario": "minimal-report-reverse-0",
+      "max_gap_ms": 469.675,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "minimal-report-capture-0",
+      "max_gap_ms": 474.402,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "minimal-report-reverse-1",
+      "max_gap_ms": 18.566,
+      "within_50_ms_budget": true
+    },
+    {
+      "scenario": "minimal-report-capture-1",
+      "max_gap_ms": 470.416,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "minimal-report-reverse-2",
+      "max_gap_ms": 474.772,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "minimal-report-capture-2",
+      "max_gap_ms": 456.789,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "minimal-play-7g7f",
+      "max_gap_ms": 18.313,
+      "within_50_ms_budget": true
+    },
+    {
+      "scenario": "minimal-play-3c3d",
+      "max_gap_ms": 421.531,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "minimal-play-8h2b+",
+      "max_gap_ms": 17.755,
+      "within_50_ms_budget": true
+    },
+    {
+      "scenario": "minimal-play-3a2b",
+      "max_gap_ms": 475.991,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "minimal-play-B*4e",
+      "max_gap_ms": 477.649,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "wood-report-reverse-0",
+      "max_gap_ms": 421.778,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "wood-report-capture-0",
+      "max_gap_ms": 21.428,
+      "within_50_ms_budget": true
+    },
+    {
+      "scenario": "wood-report-reverse-1",
+      "max_gap_ms": 476.802,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "wood-report-capture-1",
+      "max_gap_ms": 475.324,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "wood-report-reverse-2",
+      "max_gap_ms": 472.014,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "wood-report-capture-2",
+      "max_gap_ms": 471.218,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "wood-play-7g7f",
+      "max_gap_ms": 432.786,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "wood-play-3c3d",
+      "max_gap_ms": 20.865,
+      "within_50_ms_budget": true
+    },
+    {
+      "scenario": "wood-play-8h2b+",
+      "max_gap_ms": 419.06,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "wood-play-3a2b",
+      "max_gap_ms": 21.317,
+      "within_50_ms_budget": true
+    },
+    {
+      "scenario": "wood-play-B*4e",
+      "max_gap_ms": 463.731,
+      "within_50_ms_budget": false
+    }
+  ],
+  "missed_frame_budget_scenarios": [
+    "minimal-report-reverse-0",
+    "minimal-report-capture-0",
+    "minimal-report-capture-1",
+    "minimal-report-reverse-2",
+    "minimal-report-capture-2",
+    "minimal-play-3c3d",
+    "minimal-play-3a2b",
+    "minimal-play-B*4e",
+    "wood-report-reverse-0",
+    "wood-report-reverse-1",
+    "wood-report-capture-1",
+    "wood-report-reverse-2",
+    "wood-report-capture-2",
+    "wood-play-7g7f",
+    "wood-play-8h2b+",
+    "wood-play-B*4e"
+  ],
+  "render_stall_resolved": false,
+  "android_device_tested": false,
+  "github_ci_executed_locally": false,
+  "recent_games": 26,
+  "catalog_checked_utc": "2026-09-10T23:16:03.003069+00:00",
+  "artifacts": [
+    {
+      "path": "builds/Shogi-0.27.0-windows-x64.zip",
+      "bytes": 150241305,
+      "sha256": "71aa9532cd461b26234a7303ffc056543e388652359efb3f918973a5583ed36f"
+    },
+    {
+      "path": "builds/Shogi-0.27.0-android-arm64.apk",
+      "bytes": 136213706,
+      "sha256": "359d1f754ff138887608bb6d2c0be7c8849d7d4ee2157e5136f3e2ae65154970"
+    }
+  ],
+  "compiled_android_scripts": {
+    "shogi_app": "631506b6c84d2d35518c2960c97cd41254a446559e69300f8f24672eb80e6777",
+    "shogi_chessis_menu": "45a2a85d1b732324d68e0bc012194d61c9f6a2e86868361df641b1264279e9bd",
+    "shogi_position_editor": "e7a8e0da5014115baa1d936725e5f21dd3a5d09d3843a5476390291c2f11700e",
+    "shogi_editor_history": "fa1fbce17ec1351f416eaeeb6814392e71e2bae46e384b14da45ae7e66a2b38f",
+    "shogi_editor_analysis": "6fb4de53e461f390472ee7bd7be0b3c9888e685f96f3308e70ad35792aad555d",
+    "shogi_editor_layout": "b3b8f5b646748286c58b131ff7045d15062d97a88528109636ed3a71cbdd6292",
+    "shogi_editor_input": "2436c0f73cd52bb2910bf92703556a1748e553f540b8cc88340e68833e619005",
+    "shogi_editor_cell": "fb41441282c00baca4b86f1b702237ca4e7b8761b07b9a64a0e8cfe567cd5912",
+    "shogi_editor_eval_bar": "b23b0aa2df98644b0fa6001924a75d911d5b6549512c7ebda55bdc11e419b7a8",
+    "shogi_package_probe": "7e3165eca9ca979123b148948465b0017019a55d24d2eef0a6fd7f892c6286c4"
+  },
+  "reference_evidence": {
+    "apk_sha256": "14df01b58e777a130aee977c51a9b7823c8c8ada31479843b2f01b765b49f111",
+    "method": "Static resource and locally decompiled control-code inspection; original APK not executed; no pixel-parity claim.",
+    "adaptation": {
+      "board": "9x9 with hands and promotion instead of chess-specific rules",
+      "evaluation_width_px": 18,
+      "edit_debounce_ms": 250,
+      "engine_movetime_ms": 500,
+      "animation_ms": 750,
+      "history_limit": 50,
+      "max_engine_retries": 2,
+      "retry_delay_ms": 500,
+      "camera_scanner_implemented": false,
+      "invalid_king_flash_implemented": false
+    },
+    "files": [
+      {
+        "path": "res/layout/dialog_board_setup.xml",
+        "sha256": "2dadab165dd00230d240489057648773e348cfe58f3925ba471da965a9ee6ad5"
+      },
+      {
+        "path": "res/drawable/score_progressbar_vertical_bg.xml",
+        "sha256": "c910169fa5813d843d4a7180b7361d3ee82314c441dd78fba72ffcf4273a96ea"
+      },
+      {
+        "path": "res/xml/preference_main_settings.xml",
+        "sha256": "e65e78e3363c90749bcc8e789ad17e7f8367b58670dc9a54f4df7c9811115e5d"
+      },
+      {
+        "path": "java/sources/p359w2/C4772p.java",
+        "sha256": "1e2282cf6937bf938392fce8ce6bed322325733dfd42fdc896774ff248537998"
+      },
+      {
+        "path": "java/sources/p359w2/C4773q.java",
+        "sha256": "146373f49129b2b68dd08d0536417e70c648cb19f71a7f392bfc7d8a8b0e144c"
+      },
+      {
+        "path": "java/sources/p359w2/RunnableC4770n.java",
+        "sha256": "cb6f0c5035e3b2663689e384dcfee50f4d235326f536fd53d474af18a7c55261"
+      },
+      {
+        "path": "java/sources/p359w2/ViewOnClickListenerC4766j.java",
+        "sha256": "df347ebb98bec677d3d228043fac4d1655decb9f1710bd3b2252e6fc007ed2f0"
+      },
+      {
+        "path": "java/sources/p359w2/C4757a.java",
+        "sha256": "255cfc9b26d7ac686079ed67dc6d3d94baffe27c76777439a111c611628544c5"
+      },
+      {
+        "path": "java/sources/p359w2/C4762f.java",
+        "sha256": "9cb2ad0b1b470bee07ffd9c5967cf64d2286d6c9f53949f954072c81a5235efb"
+      },
+      {
+        "path": "java/sources/p352v1/C4718l.java",
+        "sha256": "e0e2fb1d2c4bbfe452adb5d3a4ec230f7d747ec5f339ace6cac5303834bd85b9"
+      },
+      {
+        "path": "java/sources/p016C0/RunnableC0151b.java",
+        "sha256": "16753595fc29653d86c01f06eb75aea937b6864a7624bd660c6052b6ded85ecb"
+      },
+      {
+        "path": "java/sources/p041F2/ViewOnClickListenerC0396e.java",
+        "sha256": "44fe9f70a22cf201ec9fd62c3a099452d702daaefa98ce80cda37cc1261e24b3"
+      },
+      {
+        "path": "java/sources/p054H1/RunnableC0466a.java",
+        "sha256": "fd4b2771660aadc9c6aad081f23c0c87d5e900fd0e0e20713a840383e0ae593f"
+      }
+    ]
+  },
+  "runtime_sources_match_release_receipt": true,
+  "windows_zip_matches_tested_executable": true,
+  "packaged_motion_frames": {
+    "cached-report": [
+      {
+        "elapsed_ms": 9.133,
+        "progress": 0.000541315821465105
+      },
+      {
+        "elapsed_ms": 14.206,
+        "progress": 0.0579719208180904
+      },
+      {
+        "elapsed_ms": 17.518,
+        "progress": 0.145068764686584
+      },
+      {
+        "elapsed_ms": 27.447,
+        "progress": 0.247090116143227
+      },
+      {
+        "elapsed_ms": 44.071,
+        "progress": 0.418105840682983
+      },
+      {
+        "elapsed_ms": 60.934,
+        "progress": 0.627702116966248
+      },
+      {
+        "elapsed_ms": 77.492,
+        "progress": 0.784932136535645
+      },
+      {
+        "elapsed_ms": 94.089,
+        "progress": 0.890178382396698
+      },
+      {
+        "elapsed_ms": 110.734,
+        "progress": 0.953876495361328
+      },
+      {
+        "elapsed_ms": 127.547,
+        "progress": 0.986454546451569
+      },
+      {
+        "elapsed_ms": 144.152,
+        "progress": 0.998351752758026
+      },
+      {
+        "elapsed_ms": 160.971,
+        "progress": 1.0
+      }
+    ],
+    "practice-answer": [
+      {
+        "elapsed_ms": 3.642,
+        "progress": 3.389060657355e-05
+      },
+      {
+        "elapsed_ms": 7.256,
+        "progress": 0.0361839830875397
+      },
+      {
+        "elapsed_ms": 11.19,
+        "progress": 0.108591809868813
+      },
+      {
+        "elapsed_ms": 22.244,
+        "progress": 0.18640024960041
+      },
+      {
+        "elapsed_ms": 38.634,
+        "progress": 0.33063992857933
+      },
+      {
+        "elapsed_ms": 55.469,
+        "progress": 0.533313274383545
+      },
+      {
+        "elapsed_ms": 71.861,
+        "progress": 0.718464970588684
+      },
+      {
+        "elapsed_ms": 88.621,
+        "progress": 0.846731305122375
+      },
+      {
+        "elapsed_ms": 105.191,
+        "progress": 0.928574025630951
+      },
+      {
+        "elapsed_ms": 123.199,
+        "progress": 0.974471986293793
+      },
+      {
+        "elapsed_ms": 138.278,
+        "progress": 0.99469530582428
+      },
+      {
+        "elapsed_ms": 154.906,
+        "progress": 0.999841213226318
+      },
+      {
+        "elapsed_ms": 171.634,
+        "progress": 1.0
+      }
+    ],
+    "replay": [
+      {
+        "elapsed_ms": 415.708,
+        "progress": 0.00134017632808536
+      },
+      {
+        "elapsed_ms": 425.335,
+        "progress": 0.838506460189819
+      },
+      {
+        "elapsed_ms": 429.342,
+        "progress": 0.890825748443604
+      },
+      {
+        "elapsed_ms": 503.01,
+        "progress": 0.946164429187775
+      },
+      {
+        "elapsed_ms": 506.838,
+        "progress": 1.0
+      }
+    ]
+  },
+  "initial_package_probe_failures": [
+    "packaged cached report replay displays intermediate motion"
+  ],
+  "initial_package_probe_sha256": "1eb97695dfb094e5bc2d47596529fe5c69448058a8116a74c33741d5ac838029",
+  "second_package_probe_failures": [
+    "packaged cached report replay displays intermediate motion"
+  ],
+  "package_probe_change": "Rebuilt after replacing single 50/60 ms timer snapshots with actual rendered-frame observations. Animation implementation and speed were not changed."
+}

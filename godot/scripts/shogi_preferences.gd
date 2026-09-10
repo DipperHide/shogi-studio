@@ -24,6 +24,9 @@ func _init() -> void:
 	studio["variation_policy"] = "replace"
 	studio["variation_policy_confirmed"] = false
 	studio["eval_position"] = "smart"
+	studio["editor_eval_bar"] = true
+	studio["editor_eval_running"] = true
+	studio["editor_positions"] = []
 	var locale = OS.get_locale_language()
 	language = locale if locale in ["ja", "en"] else "zh"
 
@@ -54,6 +57,7 @@ func load_from(path: String = PATH) -> void:
 	studio.autoplay = clampf(studio.autoplay, 0.3, 5)
 	if studio.variation_policy not in ["replace", "never"]: studio.variation_policy = "replace"
 	if studio.eval_position not in ["smart", "left", "bottom", "left_on_game_report"]: studio.eval_position = "smart"
+	studio.editor_positions = preload("res://scripts/shogi_editor_history.gd").normalized(studio.editor_positions)
 	for key in ["confirm_move","sound","hints","last_move","coordinates","auto_flip"]:
 		var value = config.get_value("preferences",key,get(key))
 		if value is bool:
