@@ -73,9 +73,16 @@ var practice
 var practice_scroll: ScrollContainer
 var practice_panel: VBoxContainer
 var retry_from_report: bool = false
+var study
+var variation_ui
+var study_bar: HBoxContainer
 
 func initialize(owner_node) -> void:
 	super.initialize(owner_node)
+	study = preload("res://scripts/shogi_variation_study.gd").new()
+	study.app = app
+	variation_ui = preload("res://scripts/shogi_variation_view.gd").new()
+	variation_ui.ui = self
 	tournaments = preload("res://scripts/shogi_tournament_sync.gd").new()
 	add_child(tournaments)
 	tournaments.initialize(ProjectSettings.globalize_path("res://../.work/tournaments-ui-test") if app.testing else "user://tournaments", not app.testing)
@@ -131,6 +138,11 @@ func initialize(owner_node) -> void:
 	root.add_child(live_panel)
 	var row = HBoxContainer.new()
 	live_panel.add_child(row)
+	study_bar = HBoxContainer.new()
+	study_bar.name = "VariationControls"
+	study_bar.add_theme_constant_override("separation", 4)
+	live_panel.add_child(study_bar)
+	study_bar.hide()
 	win_rate_label = label("胜率估计 · 计算中…", 12)
 	win_rate_label.name = "WinRate"
 	win_rate_label.tooltip_text = "根据当前引擎评分换算的局面胜率估计，不是实际获胜保证。分数 s 按 1 / (1 + exp(-s/600)) 换算；先后手固定，翻转棋盘不会交换名称。"
@@ -237,9 +249,15 @@ func banner(parent: Control, _compact: bool = false) -> void:
 
 func close() -> void:
 	var practicing = practice_active()
+	var studying = study_active()
 	var practice_view = app.review_game
 	var practice_ply: int = app.replay_index
 	super.close()
+	if studying:
+		app.review_game = study.view
+		app.review_path = study.record_path
+		app.replay_index = study.tree.nodes[study.tree.cursor].depth
+		app._refresh()
 	if practicing:
 		app.review_game = practice_view
 		app.replay_index = practice_ply
@@ -278,7 +296,7 @@ func layout() -> void:
 	top_bar.position = safe.position + Vector2(10, 0)
 	top_bar.size = Vector2(safe.size.x - 20, 48)
 	move_scroll.position = safe.position + Vector2(10, 3)
-	move_scroll.size = Vector2(safe.size.x - 20, 32)
+	move_scroll.size = Vector2(safe.size.x - 20, 62 if study_active() else 32)
 	toolbar.position = Vector2(safe.position.x + 5, safe.end.y - 55)
 	toolbar.size = Vector2(safe.size.x - 10, 50)
 	var x = app.bottom_player_rect.position.x
@@ -330,9 +348,11 @@ func _process(delta: float) -> void:
 		set_reference_icon(toolbar.get_child(4), "ic_nav_pause" if autoplay_on else "ic_nav_play")
 		for index in [2, 3, 4, 5]: toolbar.get_child(index).disabled = practice_active() and (index == 2 or practice.stage != "preview")
 		toolbar.get_child(6).disabled = practice.stage in ["wrong", "complete"] if practice_active() else app.game.moves.is_empty() or app.replay_index >= 0 or app.review_game != null or not pv_context.is_empty()
+		if study_active(): toolbar.get_child(6).disabled = study.history.is_empty()
 		if practice_active(): set_reference_icon(toolbar.get_child(4), "ic_nav_pause" if practice.preview_playing else "ic_nav_play")
 	if continue_button != null: continue_button.visible = app.replay_index >= 0 and pv_context.is_empty() and app.session == null and not practice_active()
 	update_coach_display()
+	if variation_ui != null: variation_ui.update_bar()
 	if page == null:
 		update_ribbon()
 		refresh_report_board()
@@ -353,6 +373,7 @@ func _process(delta: float) -> void:
 
 func update_ribbon() -> void:
 	if practice_active(): return
+	if study_active(): variation_ui.update_ribbon(); return
 	var viewed = app._view_game()
 	var ply: int = viewed.moves.size() if app.replay_index < 0 else app.replay_index
 	var key = str([viewed.get_instance_id(), viewed.moves.size(), ply, viewed.comments])
@@ -384,6 +405,7 @@ func show_history(ply: int) -> void:
 	update_inline_report()
 
 func undo_from_board() -> void:
+	if study_active(): study.undo(); return
 	if practice_active(): practice.retry(); return
 	if app.replay_index >= 0 or app.review_game != null or not pv_context.is_empty(): return
 	live_enabled = false
@@ -601,8 +623,9 @@ func show_drawer() -> void:
 
 func show_menu() -> void:
 	var column = _page("更多选项", "menu", true)
+	column.add_child(button("变化线路" if study_active() else "试下变化", show_variations if study_active() else start_variation_analysis))
 	for entry in [["返回棋盘", _board_keep], ["悔棋", func(): close(); app._undo_move()], ["新对局", show_play], ["从此处继续", branch_here], ["整局分析报告", func(): start_report(false)], ["添加注释", show_comment], ["编辑棋谱信息", show_tags], ["画箭头与圆圈", start_drawing], ["清除本步标记", clear_annotations], ["保存棋谱", func():
-		var saved: String = app.records.archive(app._view_game())
+		var saved: String = app.records.archive(record_game())
 		if saved.is_empty(): show_message(app.records.error)
 		else: show_record_details(saved)
 	], ["导出棋谱 / SFEN", show_export], ["入玉宣言", show_declaration], ["认输", show_resign]]:
@@ -612,6 +635,8 @@ func show_menu() -> void:
 	if app.session != null: column.add_child(button("当前联机", show_connection))
 
 func back() -> void:
+	if page_name in ["variations", "variation-move", "variation-policy"]: _board_keep(); return
+	if page == null and study_active(): finish_study(); return
 	if page_name == "report-move":
 		if report_move_from_report: show_report()
 		else: open_report_position(report_selected_ply)
@@ -690,6 +715,7 @@ func show_editor() -> void:
 	)
 
 func adopt_game(next) -> void:
+	if not finish_study(false): return
 	if app.coach != null: app.coach.clear()
 	if not app._archive_game(): show_message(app.notice); return
 	if not app._leave_network(): return
@@ -704,8 +730,8 @@ func adopt_game(next) -> void:
 
 func branch_here() -> void:
 	if app.session != null: show_message("联机中不能从历史局面创建分支。"); return
-	var data: Dictionary = app._view_game().to_data().duplicate(true)
-	if app.replay_index >= 0: data.moves = data.moves.slice(0, app.replay_index)
+	var data: Dictionary = (study.fork_at_cursor(app.replay_index).to_data() if study != null and study.active and app.review_game == study.view else app._view_game().to_data()).duplicate(true)
+	if app.replay_index >= 0: app.Game.truncate_data(data, app.replay_index)
 	for key in ["resigned", "resigned_side", "agreed_draw", "declared_side", "clock"]: data.erase(key)
 	data.mode = app.game.mode
 	data.human_side = app._display_position().turn
@@ -906,13 +932,14 @@ func import_record() -> void:
 	file_dialog.add_filter("*.json,*.kif,*.kifu,*.csa,*.usi,*.sfen,*.txt", "将棋棋谱")
 
 func show_export() -> void:
-	var viewed = app._view_game()
+	var viewed = record_game()
 	var column = _page("导出棋谱", "export")
-	var selector = choice(column, "格式", ["KIF", "CSA", "USI", "SFEN", "JSON"], 0)
+	var selector = choice(column, "格式", ["KIF", "CSA", "USI", "SFEN", "JSON"], 4 if viewed.variation_tree != null else 0)
+	if viewed.variation_tree != null: column.add_child(label("JSON 保存全部变化、注释和标记；KIF、CSA、USI 仅导出主线。", 13))
 	var text = TextEdit.new()
 	text.custom_minimum_size.y = 220
 	text.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
-	text.text = Exchange.export_game(viewed, "KIF")
+	text.text = Exchange.export_game(viewed, "JSON" if viewed.variation_tree != null else "KIF")
 	column.add_child(text)
 	selector.item_selected.connect(func(index):
 		text.text = Exchange.export_game(viewed, ["KIF", "CSA", "USI", "SFEN", "JSON"][index])
@@ -960,6 +987,10 @@ func show_tags() -> void:
 	))
 
 func persist_viewed() -> void:
+	if study_active():
+		study.persist_view()
+		if not study.error.is_empty(): show_message(study.error)
+		return
 	if app.review_game == null: app._save()
 	elif not app.review_path.is_empty():
 		var title = app.review_path.get_file()
@@ -1024,6 +1055,7 @@ func show_openings(query: String = "") -> void:
 func start_report(deep: bool) -> void:
 	if not pv_context.is_empty(): stop_pv(false)
 	var source = app._view_game()
+	if study_active(): study.paused = true
 	_board_keep()
 	live_enabled = false
 	app._pause_search()
@@ -1132,7 +1164,7 @@ func show_report_value(prefix: String) -> void:
 func update_inline_report() -> void:
 	if report_inline == null: return
 	for child in report_inline.get_children(): report_inline.remove_child(child); child.queue_free()
-	if report.game == null or practice_active(): report_inline.hide(); return
+	if report.game == null or practice_active() or study_active(): report_inline.hide(); return
 	var viewed = app._view_game()
 	report_inline.visible = viewed.initial_sfen == report.game.initial_sfen and viewed.moves == report.game.moves
 	if not report_inline.visible: return
@@ -1733,6 +1765,34 @@ func show_board_settings() -> void:
 	speed.item_selected.connect(func(index): set_extra("animation", [0.0, 0.12, 0.22, 0.5][index]))
 	var replay = choice(column, "自动回放间隔", ["0.5 秒", "1 秒", "2 秒", "3 秒"], 1)
 	replay.item_selected.connect(func(index): set_extra("autoplay", [0.5, 1.0, 2.0, 3.0][index]))
+	var policy = choice(column, "分析棋盘的新变化", ["替换后续主线", "保留主线，另存为变化"], 1 if app.preferences.studio.variation_policy == "never" else 0)
+	policy.item_selected.connect(func(index): set_extra("variation_policy", "never" if index == 1 else "replace"); set_extra("variation_policy_confirmed", true))
+
+func study_active() -> bool:
+	return study != null and study.effective()
+
+func start_variation_analysis(source = null, ply: int = -2, path: String = "") -> void:
+	if not pv_context.is_empty(): stop_pv(false)
+	if source == null and study.active and app.review_game == study.view: study.resume(); return
+	if source == null:
+		source = app._view_game()
+		path = app.review_path
+	if ply == -2: ply = app.replay_index if app.replay_index >= 0 else source.moves.size()
+	if not study.start(source, ply, path): show_message(study.error)
+
+func finish_study(restore: bool = true) -> bool:
+	if study == null or not study.active: return true
+	if not study.stop(restore): show_message(study.error); return false
+	return true
+
+func record_game():
+	return study.document() if study != null and study.active and app.review_game == study.view else app._view_game()
+
+func show_variations() -> void:
+	variation_ui.show_lines()
+
+func show_variation_policy(move: Dictionary, key: String, parent: int) -> void:
+	variation_ui.show_policy(move, key, parent)
 
 func preference_toggle(column: VBoxContainer, title: String, key: String) -> void:
 	var item = CheckButton.new()

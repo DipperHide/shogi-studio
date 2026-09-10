@@ -26,6 +26,8 @@ var metadata: Dictionary = {}
 var comments: Dictionary = {}
 var annotations: Dictionary = {}
 var engine_match: bool = false
+var variation_tree
+const MAX_SAVE_BYTES = 2097152
 
 func initial_command() -> String:
 	return "startpos" if initial_sfen.is_empty() else "sfen " + initial_sfen
@@ -38,6 +40,7 @@ func set_initial(value: String) -> bool:
 	positions = [parsed.copy()]
 	moves.clear()
 	labels.clear()
+	variation_tree = null
 	return true
 
 static func position_error(pos) -> String:
@@ -71,6 +74,7 @@ func play(move: Dictionary) -> bool:
 		return false
 	if not result.is_empty() or move not in position.legal_moves():
 		return false
+	if variation_tree != null and variation_tree.append_main(move) < 0: return false
 	labels.append(position.notation(move))
 	moves.append(move.duplicate())
 	position = position.after(move)
@@ -163,6 +167,9 @@ func undo() -> void:
 		labels.pop_back()
 		positions.pop_back()
 	position = positions.back().copy()
+	if variation_tree != null:
+		variation_tree.main = variation_tree.main.slice(0, moves.size())
+		variation_tree.cursor = variation_tree.main.back() if not variation_tree.main.is_empty() else 0
 	for key in comments.keys():
 		if str(key).is_valid_int() and int(key) > moves.size(): comments.erase(key)
 	for key in annotations.keys():
@@ -173,7 +180,17 @@ func undo() -> void:
 	update_result()
 
 func to_data() -> Dictionary:
-	return {"version": 1, "mode": mode, "moves": moves, "resigned": resigned, "resigned_side": resigned_side, "agreed_draw": agreed_draw, "declared_side": declared_side, "clock": clock.to_data(), "human_side":human_side,"difficulty":difficulty,"engine_level":engine_level,"engine_provider":engine_provider, "initial_sfen": initial_sfen, "metadata": metadata, "comments": comments, "annotations": annotations, "engine_match": engine_match}
+	var data = {"version": 1, "mode": mode, "moves": moves, "resigned": resigned, "resigned_side": resigned_side, "agreed_draw": agreed_draw, "declared_side": declared_side, "clock": clock.to_data(), "human_side":human_side,"difficulty":difficulty,"engine_level":engine_level,"engine_provider":engine_provider, "initial_sfen": initial_sfen, "metadata": metadata, "comments": comments, "annotations": annotations, "engine_match": engine_match}
+	if variation_tree != null:
+		variation_tree.main_notes(comments, annotations)
+		data["variations"] = variation_tree.to_data()
+	return data
+
+static func truncate_data(data: Dictionary, ply: int) -> void:
+	data.moves = data.moves.slice(0, ply)
+	if data.has("variations"):
+		data.variations.main = data.variations.main.slice(0, ply)
+		data.variations.cursor = data.variations.main.back() if not data.variations.main.is_empty() else 0
 
 func declare_win(side: int) -> bool:
 	if clock_authority: clock.tick(clock.paused)
@@ -261,13 +278,19 @@ static func from_data(data: Variant) -> ShogiGame:
 		else:
 			game.clock = restored_clock
 		game.clock.paused = true
+	if data.has("variations"):
+		game.variation_tree = preload("res://scripts/shogi_variation_tree.gd").from_data(data.variations, game.positions[0], game.moves)
+		if game.variation_tree == null: return null
+		game.variation_tree.main_notes(game.comments, game.annotations)
 	return game
 
 func save_to(path: String) -> Error:
+	var serialized = JSON.stringify(to_data())
+	if serialized.to_utf8_buffer().size() > MAX_SAVE_BYTES: return ERR_INVALID_DATA
 	var file = FileAccess.open(path + ".tmp", FileAccess.WRITE)
 	if file == null:
 		return FileAccess.get_open_error()
-	file.store_string(JSON.stringify(to_data()))
+	file.store_string(serialized)
 	file.flush()
 	var write_error = file.get_error()
 	file.close()
@@ -284,7 +307,7 @@ static func load_from(path: String) -> ShogiGame:
 		if not FileAccess.file_exists(candidate):
 			continue
 		var file = FileAccess.open(candidate, FileAccess.READ)
-		if file == null or file.get_length() > 1024 * 1024:
+		if file == null or file.get_length() > MAX_SAVE_BYTES:
 			continue
 		var parser = JSON.new()
 		if parser.parse(file.get_as_text()) != OK:

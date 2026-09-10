@@ -909,7 +909,8 @@ func show_record_details(path: String) -> void:
 	column.add_child(label(record_display_title(title), 22))
 	column.add_child(label(str(game.moves.size()) + "  ·  " + app.i18n.result(game)))
 	column.add_child(button(app.t("查看"), func():
-		if app._load_archive(path): show_history(app.review_game.moves.size())
+		if app._load_archive(path):
+			if not app._study_active(): show_history(app.review_game.moves.size())
 		else: show_message(app.t("联机中只能查看当前棋谱，退出联机后可继续其他棋局。") if app.session != null else app.records.error)
 	))
 	column.add_child(button(app.t("重命名"), func():

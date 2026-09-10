@@ -117,6 +117,11 @@
       "decoded_sha256": "dcd2732f7aa3af8795f22b19f97a23d80a7507b3d27878ddccf69f51ed4b172b"
     },
     {
+      "asset": "ic_remove_variation.svg",
+      "source": "res/drawable/ic_remove_variation.xml",
+      "decoded_sha256": "bc14cff10f8f989675e6cec4afb822c3774c7f9cf0aceaf34475e26df272a3cb"
+    },
+    {
       "asset": "ic_book_move.svg",
       "source": "res/drawable/ic_book_move.xml",
       "decoded_sha256": "4788af013333c29b77d392ea45adae58e999f5e749e3e5d67f6dc55a383b6a44"

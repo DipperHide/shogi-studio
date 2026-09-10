@@ -30,7 +30,7 @@ jobs:
       - name: Rules, record parsing, reports and update recovery
         run: |
           set -euo pipefail
-          for test in rules_test chessis_core_test report12_test story19_test report_chart22_test report_quality23_test tournament_sync20_test historic_games_test; do
+          for test in rules_test chessis_core_test report12_test story19_test report_chart22_test report_quality23_test tournament_sync20_test historic_games_test variation25_test; do
             Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script "res://tests/$test.gd" -- --chessis20-regression
           done
           python scripts/check_rules_oracle.py --report review/app/chessis20/rules-oracle.json
@@ -39,6 +39,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y xvfb libgl1-mesa-dri
           xvfb-run -a Godot_v4.7.2-stable_linux.x86_64 --path godot --audio-driver Dummy -- --unified-test --chessis24 --interrupt-only
+      - name: Variation UI on a virtual display
+        run: xvfb-run -a Godot_v4.7.2-stable_linux.x86_64 --path godot --audio-driver Dummy -- --unified-test --chessis25 --portable-variation
       - name: Keep test evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -49,3 +51,4 @@ jobs:
             review/app/chessis22
             review/app/chessis23
             review/app/chessis24
+            review/app/chessis25

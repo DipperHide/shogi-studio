@@ -2,15 +2,15 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
 
-Android・Windows 向けの無料将棋アプリです。Godot 4.7.2 と、やねうら王のローカル解析エンジンを使用します。現在のバージョンは **0.24.0**。**既存の機能はすべて無料で、会員制度・購入画面・有料解除はありません。**
+Android・Windows 向けの無料将棋アプリです。Godot 4.7.2 と、やねうら王のローカル解析エンジンを使用します。現在のバージョンは **0.25.0**。**既存の機能はすべて無料で、会員制度・購入画面・有料解除はありません。**
 
 ![木製の将棋盤](docs/images/board-0.20.png)
 
 ## インストール
 
-[Releases](https://github.com/DipperHide/shogi-studio/releases) から `Shogi-0.24.0-android-arm64.apk` をダウンロードしてください。ARM64 対応 Android 端末向けの完全な APK です。Windows は `Shogi-0.24.0-windows-x64.zip` を展開し、`Shogi.exe` を実行します。`engines` フォルダーは同じ場所に置いてください。
+[Releases](https://github.com/DipperHide/shogi-studio/releases) から `Shogi-0.25.0-android-arm64.apk` をダウンロードしてください。ARM64 対応 Android 端末向けの完全な APK です。Windows は `Shogi-0.25.0-windows-x64.zip` を展開し、`Shogi.exe` を実行します。`engines` フォルダーは同じ場所に置いてください。
 
-Android のパッケージ名は `org.shogistudio.artpreview`、versionCode は 42 です。release テンプレートで書き出し、上書き更新のため従来の開発用署名を継続しています。秘密鍵は含めません。異なる署名のビルドを入れる前に棋譜をバックアップしてください。
+Android のパッケージ名は `org.shogistudio.artpreview`、versionCode は 43 です。release テンプレートで書き出し、上書き更新のため従来の開発用署名を継続しています。秘密鍵は含めません。異なる署名のビルドを入れる前に棋譜をバックアップしてください。
 
 ## 主な機能
 
@@ -23,6 +23,9 @@ Android のパッケージ名は `org.shogistudio.artpreview`、versionCode は 
 - 0.22 の評価グラフは先後の優勢領域と重要な着手のアイコンを表示します。アイコン選択、キーボード・ドラッグ操作、段階境界の位置合わせに対応します。
 - 0.23 では分類統計を折りたたみ表示にし、品質グラフに重み付き割合を明記しました。説明表示、回転、キーボード選択、分類から棋譜への移動に対応します。
 - 0.24 では再生位置を素早く変更しても、表示中の駒の位置・大きさ・成りの裏返しを引き継ぎます。駒取り、駒打ち、逆再生、盤の反転に対応します。
+- 0.25 では入れ子の変化、二段の指し手欄、長押しによる本譜への昇格、削除の取り消し、変化ごとの注釈に対応します。本譜を残すか自動で置き換えるかを選べます。全変化の保存・出力・バックアップには JSON を使用します。
+
+[変化の使い方](docs/VARIATIONS.md) · [0.25 の検証結果](docs/TESTING-0.25.md)（中国語）
 
 高度な画面とレッスン本文は主に中国語です。基本ナビゲーションは中・英・日文に対応しますが、三言語 README はアプリ全体の翻訳完了を意味しません。
 
@@ -44,11 +47,13 @@ Windows、Python 3.11 以降、Godot **4.7.2** と対応テンプレート、JDK
 python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -r requirements-dev.txt
 ./scripts/build_android.ps1
-./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.24.0
+./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.25.0
 ./scripts/test_chessis20.ps1
 ./scripts/test_chessis20.ps1 -CoreOnly -Network
 ./scripts/test_chessis23.ps1
 ./scripts/test_chessis24.ps1
+./scripts/test_chessis25.ps1 -CoreOnly
+./scripts/test_chessis25.ps1
 ```
 
 開発時は Godot で `godot/project.godot` を開きます。実行用素材、エンジン、NNUE は同梱し、対応するエンジンソースはビルド時に同梱アーカイブから展開します。release APK にはローカルで `GODOT_ANDROID_KEYSTORE_RELEASE_PATH`、`GODOT_ANDROID_KEYSTORE_RELEASE_USER`、`GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD` を設定し、`./scripts/build_android.ps1 -Release` を実行します。署名情報をコミットしないでください。

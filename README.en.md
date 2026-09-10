@@ -2,15 +2,15 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
 
-A free shogi app for Android and Windows, built with Godot 4.7.2 and a local YaneuraOu engine. Current version: **0.24.0**. **All existing features are free: no membership, purchase screen or paid unlock.**
+A free shogi app for Android and Windows, built with Godot 4.7.2 and a local YaneuraOu engine. Current version: **0.25.0**. **All existing features are free: no membership, purchase screen or paid unlock.**
 
 ![Wooden board](docs/images/board-0.20.png)
 
 ## Install
 
-Download `Shogi-0.24.0-android-arm64.apk` from [Releases](https://github.com/DipperHide/shogi-studio/releases) for ARM64 Android devices. On Windows, extract `Shogi-0.24.0-windows-x64.zip`, run `Shogi.exe` and keep the `engines` folder beside it.
+Download `Shogi-0.25.0-android-arm64.apk` from [Releases](https://github.com/DipperHide/shogi-studio/releases) for ARM64 Android devices. On Windows, extract `Shogi-0.25.0-windows-x64.zip`, run `Shogi.exe` and keep the `engines` folder beside it.
 
-Android package: `org.shogistudio.artpreview`, versionCode 42. This build uses the release template with the previous development signing key for upgrade compatibility. Private keys are excluded. Back up your games before installing a build with a different signer.
+Android package: `org.shogistudio.artpreview`, versionCode 43. This build uses the release template with the previous development signing key for upgrade compatibility. Private keys are excluded. Back up your games before installing a build with a different signer.
 
 ## Features
 
@@ -23,6 +23,9 @@ Android package: `org.shogistudio.artpreview`, versionCode 42. This build uses t
 - Version 0.22 adds two advantage zones and significant-move icons to the score chart, with icon selection, keyboard/drag navigation and aligned phase boundaries.
 - Version 0.23 adds expandable category statistics and weighted quality doughnuts, with explanations, rotation, keyboard selection and category navigation back to the board.
 - Version 0.24 retargets replay from the currently visible piece poses, preserving position, size and promotion flips across captures, drops, reverse replay and board flipping.
+- Version 0.25 adds nested variations, a two-row move ribbon, long-press promotion, undoable deletion and branch-specific comments. Keep the main line or replace it automatically; JSON preserves the complete tree for export and backup.
+
+[Variation guide](docs/VARIATIONS.md) · [0.25 test results](docs/TESTING-0.25.md) (Chinese)
 
 Advanced screens and lessons are mainly in Chinese. Basic navigation supports Chinese, English and Japanese; these READMEs do not imply a fully translated UI.
 
@@ -44,11 +47,13 @@ Use Windows, Python 3.11+, Godot **4.7.2** with matching export templates, JDK 1
 python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -r requirements-dev.txt
 ./scripts/build_android.ps1
-./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.24.0
+./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.25.0
 ./scripts/test_chessis20.ps1
 ./scripts/test_chessis20.ps1 -CoreOnly -Network
 ./scripts/test_chessis23.ps1
 ./scripts/test_chessis24.ps1
+./scripts/test_chessis25.ps1 -CoreOnly
+./scripts/test_chessis25.ps1
 ```
 
 Open `godot/project.godot` in Godot for desktop development. Runtime assets, engines and NNUE are included; builds restore engine source from its packaged archive. For a release APK, set `GODOT_ANDROID_KEYSTORE_RELEASE_PATH`, `GODOT_ANDROID_KEYSTORE_RELEASE_USER` and `GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD` locally, then run `./scripts/build_android.ps1 -Release`. Never commit signing credentials.

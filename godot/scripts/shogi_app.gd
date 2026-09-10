@@ -160,7 +160,7 @@ func _ready() -> void:
 		test_runner = load("res://scripts/shogi_package_probe.gd").new()
 		test_runner.run.call_deferred(self)
 	elif "--unified-test" in args or "--unified-peer" in args:
-		test_runner = load("res://tests/chessis24_test.gd" if "--chessis24" in args else "res://tests/chessis23_test.gd" if "--chessis23" in args else "res://tests/chessis22_test.gd" if "--chessis22" in args else "res://tests/chessis21_test.gd" if "--chessis21" in args else "res://tests/chessis20_test.gd" if "--chessis20" in args else "res://tests/chessis19_test.gd" if "--chessis19" in args else "res://tests/chessis18_test.gd" if "--chessis18" in args else "res://tests/chessis17_test.gd" if "--chessis17" in args else "res://tests/chessis16_test.gd" if "--chessis16" in args else "res://tests/chessis15_test.gd" if "--chessis15" in args else "res://tests/chessis14_test.gd" if "--chessis14" in args else "res://tests/chessis13_test.gd" if "--chessis13" in args else "res://tests/chessis12_test.gd" if "--chessis12" in args else "res://tests/chessis11_test.gd" if "--chessis11" in args else "res://tests/chessis_motion_test.gd" if "--motion-probe" in args else "res://tests/chessis10_test.gd" if "--chessis10" in args else "res://tests/chessis09_test.gd" if "--chessis09" in args else "res://tests/chessis_ui_test.gd" if "--chessis" in args else "res://tests/ui08_test.gd" if "--ui08" in args else "res://tests/ui07_test.gd" if "--ui07" in args else "res://tests/unified_peer_test.gd" if "--unified-peer" in args else "res://tests/unified_test.gd").new()
+		test_runner = load("res://tests/chessis25_test.gd" if "--chessis25" in args else "res://tests/chessis24_test.gd" if "--chessis24" in args else "res://tests/chessis23_test.gd" if "--chessis23" in args else "res://tests/chessis22_test.gd" if "--chessis22" in args else "res://tests/chessis21_test.gd" if "--chessis21" in args else "res://tests/chessis20_test.gd" if "--chessis20" in args else "res://tests/chessis19_test.gd" if "--chessis19" in args else "res://tests/chessis18_test.gd" if "--chessis18" in args else "res://tests/chessis17_test.gd" if "--chessis17" in args else "res://tests/chessis16_test.gd" if "--chessis16" in args else "res://tests/chessis15_test.gd" if "--chessis15" in args else "res://tests/chessis14_test.gd" if "--chessis14" in args else "res://tests/chessis13_test.gd" if "--chessis13" in args else "res://tests/chessis12_test.gd" if "--chessis12" in args else "res://tests/chessis11_test.gd" if "--chessis11" in args else "res://tests/chessis_motion_test.gd" if "--motion-probe" in args else "res://tests/chessis10_test.gd" if "--chessis10" in args else "res://tests/chessis09_test.gd" if "--chessis09" in args else "res://tests/chessis_ui_test.gd" if "--chessis" in args else "res://tests/ui08_test.gd" if "--ui08" in args else "res://tests/ui07_test.gd" if "--ui07" in args else "res://tests/unified_peer_test.gd" if "--unified-peer" in args else "res://tests/unified_test.gd").new()
 		test_runner.run.call_deferred(self)
 	elif testing:
 		test_runner = load("res://tests/network_ui_test.gd" if "--network-ui-test" in args else "res://tests/complete_ui_test.gd" if "--complete-test" in args else "res://tests/minimal_test.gd").new()
@@ -202,16 +202,17 @@ func _layout() -> void:
 		bottom_player_rect = Rect2(panel_x, usable.position.y + 156, panel_width, 42)
 	# Keep the board-first workbench's move ribbon and analysis controls visible.
 	if ui != null and ui.has_method("receive_info"):
+		var variation_margin = 30 if _study_active() else 0
 		if not wide_layout:
-			edge = maxf(108, minf(usable.size.x - 14, usable.size.y - 433))
+			edge = maxf(108, minf(usable.size.x - 14, usable.size.y - 433 - variation_margin))
 			cell = edge / 9.0
-			board_rect = Rect2(Vector2(usable.get_center().x - edge / 2, usable.position.y + 126), Vector2.ONE * edge)
+			board_rect = Rect2(Vector2(usable.get_center().x - edge / 2, usable.position.y + 126 + variation_margin), Vector2.ONE * edge)
 			top_player_rect = Rect2(board_rect.position - Vector2(0, 88), Vector2(edge, 42))
 			bottom_player_rect = Rect2(Vector2(board_rect.position.x, board_rect.end.y + 50), Vector2(edge, 42))
 		else:
-			edge = maxf(108, minf(usable.size.x - 300, usable.size.y - 150))
+			edge = maxf(108, minf(usable.size.x - 300, usable.size.y - 150 - variation_margin))
 			cell = edge / 9.0
-			board_rect = Rect2(Vector2(usable.position.x + 10, usable.position.y + 40), Vector2.ONE * edge)
+			board_rect = Rect2(Vector2(usable.position.x + 10, usable.position.y + 40 + variation_margin), Vector2.ONE * edge)
 			var panel_x = board_rect.end.x + 16
 			var panel_width = maxf(160, usable.end.x - panel_x - 10)
 			top_player_rect = Rect2(panel_x, usable.position.y + 40, panel_width, 42)
@@ -266,6 +267,7 @@ func _clear_selection() -> void:
 	_redraw()
 
 func _can_play() -> bool:
+	if _study_active(): return active and motion_progress >= 1.0 and not ui.is_open() and ui.study.current.result.is_empty()
 	if _practice_active(): return active and motion_progress >= 1.0 and not ui.is_open() and ui.practice.can_answer()
 	if game.engine_match: return false
 	return active and motion_progress >= 1.0 and review_game == null and (ui == null or not ui.is_open()) and replay_index < 0 and game.result.is_empty() and (session.can_move() if session != null else (game.mode == "local" or game.position.turn == game.human_side))
@@ -343,6 +345,7 @@ func _confirm_pending_move() -> bool:
 	return true
 
 func _commit(move: Dictionary) -> void:
+	if _study_active(): ui.study.commit(move); return
 	if _practice_active(): ui.practice.submit(move); return
 	if session != null:
 		if session.submit(move): _clear_selection()
@@ -378,6 +381,7 @@ func _retry_save() -> void:
 	_save()
 
 func _new_game() -> bool:
+	if ui != null and ui.has_method("finish_study") and not ui.finish_study(false): return false
 	if _practice_active(): ui.practice.stop(false)
 	if coach != null: coach.clear()
 	if not _leave_network(): return false
@@ -497,6 +501,7 @@ func _key(event: InputEventKey) -> void:
 	_redraw()
 
 func _ai_allowed() -> bool:
+	if _study_active(): return false
 	if _practice_active(): return false
 	return session == null and review_game == null and active and motion_progress >= 1.0 and (ui == null or not ui.is_open()) and replay_index < 0 and game.result.is_empty() and game.mode == "ai" and (game.engine_match or game.position.turn != game.human_side)
 
@@ -585,7 +590,11 @@ func _practice_active() -> bool:
 	return ui != null and ui.has_method("practice_active") and ui.practice_active()
 
 func _play_game():
+	if _study_active(): return ui.study.current
 	return ui.practice.exercise if _practice_active() else game
+
+func _study_active() -> bool:
+	return ui != null and ui.has_method("study_active") and ui.study_active()
 
 func _load_engine() -> void:
 	if engine_start_ms < 0: engine_start_ms = Time.get_ticks_msec()
@@ -704,6 +713,7 @@ func _save_settings() -> void:
 	_save()
 
 func _undo_move() -> void:
+	if _study_active(): ui.study.undo(); return
 	if _practice_active(): ui.practice.retry(); return
 	if coach != null: coach.clear()
 	var before = _view_tokens()
@@ -756,6 +766,7 @@ func _list_archives() -> Array:
 
 func _load_archive(path: String) -> bool:
 	if session != null: return false
+	if ui != null and ui.has_method("finish_study") and not ui.finish_study(false): return false
 	var saved = records.read(path)
 	if saved == null: notice = records.error; return false
 	_pause_search()
@@ -764,6 +775,8 @@ func _load_archive(path: String) -> bool:
 	replay_index = saved.moves.size()
 	_clear_selection()
 	_refresh()
+	if saved.variation_tree != null and ui.has_method("start_variation_analysis"):
+		ui.start_variation_analysis(saved, -1, path)
 	return true
 
 func _restart_request() -> void:
@@ -773,6 +786,7 @@ func _restart_request() -> void:
 		_start_match(game.mode, game.human_side, engine_level, engine_provider, game.clock.preset)
 
 func _prepare_network() -> bool:
+	if ui != null and ui.has_method("finish_study") and not ui.finish_study(false): return false
 	if not _archive_game(): return false
 	if not _leave_network(): return false
 	_leave_review()
@@ -990,6 +1004,7 @@ func _leave_review() -> void:
 	replay_index = -1
 
 func _set_replay(ply: int) -> void:
+	if _study_active(): ui.study.seek(ply); return
 	var before = _view_tokens()
 	_pause_search()
 	replay_index = clampi(ply, 0, _view_game().moves.size())
@@ -1000,7 +1015,7 @@ func _continue_review() -> bool:
 	if session != null or review_game == null or not _archive_game(): return false
 	var data = review_game.to_data().duplicate(true)
 	if replay_index >= 0 and replay_index < review_game.moves.size():
-		data.moves = data.moves.slice(0, replay_index)
+		Game.truncate_data(data, replay_index)
 		for key in ["resigned", "resigned_side", "agreed_draw", "declared_side", "clock"]: data.erase(key)
 	var next = Game.from_data(data)
 	if next == null: return false

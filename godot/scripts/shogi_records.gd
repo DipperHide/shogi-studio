@@ -18,6 +18,10 @@ func read(path: String):
 
 func write(path: String, game, title: String) -> bool:
 	error = ""
+	var serialized = JSON.stringify({"record_version": 1, "title": title.strip_edges().left(100), "game": game.to_data()}, "\t")
+	if serialized.to_utf8_buffer().size() > Game.MAX_SAVE_BYTES:
+		error = "棋谱文件过大，请拆分变化或缩短注释后保存。"
+		return false
 	if DirAccess.make_dir_recursive_absolute(path.get_base_dir()) != OK:
 		error = "无法建立棋谱目录"
 		return false
@@ -25,7 +29,7 @@ func write(path: String, game, title: String) -> bool:
 	if f == null:
 		error = "保存棋谱失败"
 		return false
-	f.store_string(JSON.stringify({"record_version": 1, "title": title.strip_edges().left(100), "game": game.to_data()}, "\t"))
+	f.store_string(serialized)
 	f.flush()
 	var code = f.get_error()
 	f.close()

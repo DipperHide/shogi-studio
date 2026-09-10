@@ -17,6 +17,7 @@ names = ['ic_eye', 'ic_play', 'ic_pause', 'ic_report', 'ic_quick_report', 'ic_de
 names.append('ic_tune')
 names.append('ic_undo')
 names.append('ic_circle_check')
+names.append('ic_remove_variation')
 strength_names = ['ic_book_move', 'ic_brilliant_move', 'ic_great_move', 'ic_bestmove', 'ic_forced_move', 'ic_excellent_move', 'ic_good_move', 'ic_inaccuracy', 'ic_mistake', 'ic_blunder_icon', 'ic_missed_win']
 neutral_names = ['ic_accurate_neutral', 'ic_trophy_neutral', 'ic_rating_trend_neutral']
 logger.remove()
