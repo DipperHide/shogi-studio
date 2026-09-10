@@ -1240,11 +1240,13 @@ func show_report() -> void:
 	report_chart.custom_minimum_size.y = 168
 	report_phases = preload("res://scripts/shogi_report_phases.gd").new()
 	report_phases.name = "PhaseRibbon"
+	report_phases.ui = self
 	report_phases.report = report
 	report_phases.show_cpl = app.preferences.studio.report_cpl
 	report_phases.selected.connect(show_phase_accuracy)
 	report_phases.accuracy_selected.connect(show_accuracy_insight)
 	report_phases.acpl_selected.connect(show_acpl_info)
+	report_phases.rating_selected.connect(show_rating_info)
 	graph_panel.add_child(report_phases)
 	if report.game != null:
 		var opening = ""
@@ -1403,6 +1405,17 @@ func show_accuracy_insight(side: int) -> void:
 	column.add_child(report_accuracy_view)
 	report_accuracy_view.build(self, side)
 
+func show_rating_info(side: int) -> void:
+	if report.game == null or side not in [1, -1]: return
+	var column = report_dialog("估计等级分", "report-metric-info", "")
+	column.add_child(label(("先手" if side == 1 else "后手") + " · " + report.player_name(side), 15))
+	column.add_child(label("暂无等级分估计", 23))
+	column.add_child(label("当前报告未提供将棋等级分估计。单局表现受对手、用时和局面影响，不能视为正式等级分或段位。", 15))
+	column.add_child(label("你仍可查看准确率、阶段表现和每一步的引擎线路。", 13))
+	column.add_child(compact_button("返回分析报告", show_report, 40))
+	style_report_buttons()
+	fit_wood_dialog()
+
 func show_acpl_info(side: int) -> void:
 	if report.game == null: return
 	var column = report_dialog("平均评价损失", "report-metric-info", "")
@@ -1428,7 +1441,7 @@ func report_panel(parent: Control, fill: Color, border: Color, margin: int) -> V
 
 func style_report_buttons() -> void:
 	for item in page.find_children("*", "Button", true, false):
-		if str(item.name).begins_with("ClassificationCount"): continue
+		if str(item.name).begins_with("ClassificationCount") or item.has_meta("phase_ribbon_control"): continue
 		if item.name in ["ToggleStoryMoments","StoryMomentsHelp"]: continue
 		item.add_theme_color_override("font_color", Color("f8f1e6"))
 		item.add_theme_color_override("icon_normal_color", Color("f8f1e6"))
@@ -1603,7 +1616,7 @@ func report_changed() -> void:
 		report_chart.samples = report.samples
 		report_chart.phases = report.phases()
 		report_chart.queue_redraw()
-	if report_phases != null and is_instance_valid(report_phases): report_phases.queue_redraw()
+	if report_phases != null and is_instance_valid(report_phases): report_phases.refresh()
 	if not report.running and report_progress != null and not report_progress.has_meta("finished"):
 		report_progress.set_meta("finished", true)
 		# Defer one rebuild when a running report reaches completion.

@@ -1,6 +1,7 @@
 param(
     [string]$Repository = 'DipperHide/shogi-studio',
-    [ValidateSet('public', 'private')][string]$Visibility = 'public'
+    [ValidateSet('public', 'private')][string]$Visibility = 'public',
+    [string]$ReportDirectory = ''
 )
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path -Parent $PSScriptRoot
@@ -10,7 +11,8 @@ if ($LASTEXITCODE -ne 0) { throw 'GitHub authentication has expired. Run gh auth
 if ($Repository -notmatch '^[A-Za-z0-9-]+/[A-Za-z0-9_.-]+$') { throw 'Expected owner/repository.' }
 $taskVersion = [regex]::Match((Get-Content godot/project.godot -Raw), 'config/version="([^"]+)"').Groups[1].Value
 $taskTag = "v$taskVersion"
-$taskRelease = Get-Content -LiteralPath "review/app/chessis20/release.json" -Raw -Encoding UTF8 | ConvertFrom-Json
+$taskReportDirectory = if ($ReportDirectory) { $ReportDirectory } else { "review/app/chessis$($taskVersion.Split('.')[1])" }
+$taskRelease = Get-Content -LiteralPath (Join-Path $taskReportDirectory 'release.json') -Raw -Encoding UTF8 | ConvertFrom-Json
 if ($taskRelease.version -ne $taskVersion) { throw 'Release manifest version mismatch.' }
 foreach ($taskArtifact in $taskRelease.artifacts) {
     $taskHash = (Get-FileHash -LiteralPath $taskArtifact.path -Algorithm SHA256).Hash.ToLowerInvariant()

@@ -172,6 +172,21 @@
       "decoded_sha256": "b919107a0b4284f0eeec0e54574157bcb86ebe6faca8f00c954bed1720f103a9"
     },
     {
+      "asset": "ic_accurate_neutral.svg",
+      "source": "res/drawable/ic_accurate_neutral.xml",
+      "decoded_sha256": "9592ca9b6f113ac520e6e9b5969fa68ff1a066d38bea8e620695e5e18c1ac03d"
+    },
+    {
+      "asset": "ic_trophy_neutral.svg",
+      "source": "res/drawable/ic_trophy_neutral.xml",
+      "decoded_sha256": "7a59ccd15d99c4487cc70583830ffd34663411f73c692f8f43a42d19ebb57ffd"
+    },
+    {
+      "asset": "ic_rating_trend_neutral.svg",
+      "source": "res/drawable/ic_rating_trend_neutral.xml",
+      "decoded_sha256": "03f0ff483d6c8e2b630e26b1aa3305ea3d95d041a394edeb49f226a34725dc6d"
+    },
+    {
       "asset": "wood_dark.png",
       "source": "supplied APK wood_dark drawable",
       "sha256": "9926ff44d1ef5193d4214fbb40e69b374ec5b37dfb64e2487d4e40b515a2d1b7"

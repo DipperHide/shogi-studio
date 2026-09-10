@@ -2,15 +2,15 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
 
-面向 Android 和 Windows 的免费将棋对弈、复盘与学习应用，使用 Godot 4.7.2 和 YaneuraOu 本地引擎。当前版本 **0.20.0**，**所有功能免费开放，没有会员、购买入口或付费解锁**。
+面向 Android 和 Windows 的免费将棋对弈、复盘与学习应用，使用 Godot 4.7.2 和 YaneuraOu 本地引擎。当前版本 **0.21.0**，**所有功能免费开放，没有会员、购买入口或付费解锁**。
 
 ![木制棋盘](docs/images/board-0.20.png)
 
 ## 安装
 
-从 [Releases](https://github.com/DipperHide/shogi-studio/releases) 下载 `Shogi-0.20.0-android-arm64.apk`，适用于 ARM64 Android 设备。Windows 下载 `Shogi-0.20.0-windows-x64.zip`，解压后运行 `Shogi.exe`，保留同目录的 `engines` 文件夹。
+从 [Releases](https://github.com/DipperHide/shogi-studio/releases) 下载 `Shogi-0.21.0-android-arm64.apk`，适用于 ARM64 Android 设备。Windows 下载 `Shogi-0.21.0-windows-x64.zip`，解压后运行 `Shogi.exe`，保留同目录的 `engines` 文件夹。
 
-Android 包名 `org.shogistudio.artpreview`，versionCode 38。使用 release 导出模板，沿用前版开发签名以便覆盖升级；私钥不在仓库中。安装不同签名的构建前请导出备份。
+Android 包名 `org.shogistudio.artpreview`，versionCode 39。使用 release 导出模板，沿用前版开发签名以便覆盖升级；私钥不在仓库中。安装不同签名的构建前请导出备份。
 
 ## 功能
 
@@ -18,6 +18,7 @@ Android 包名 `org.shogistudio.artpreview`，versionCode 38。使用 release �
 - 二维／三维棋盘、明暗主题、自定义颜色、翻转、拖动、坐标、固定比例持驹。0.20 加宽并调亮木制棋盘。
 - 主界面悔棋、带移动动画的逐手／自动回放、分析快照、候选线路预览，从任意选定局面继续下。
 - 本地引擎、1–5 条候选线路、快速／深度整局报告、好棋线路、坏棋提醒、局面胜率估计、失误练习和阶段统计。
+- 0.21 调整阶段报告：棋手独立成行、胜者奖杯、按手数分配的评分条与可换行摘要；支持触摸及键盘打开详情。等级分尚未校准，显示“—”。
 - JSON／KIF／CSA／USI／SFEN 棋谱交换、局面编辑、互动教程、棋谱库、备份与恢复。图标为龙王「龍」。
 
 主要页面和教程文字以中文为主，基础导航支持中、英、日文。三语 README 不代表应用全部页面已完整翻译。
@@ -40,7 +41,7 @@ Android 包名 `org.shogistudio.artpreview`，versionCode 38。使用 release �
 python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -r requirements-dev.txt
 ./scripts/build_android.ps1
-./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.20.0
+./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.21.0
 ```
 
 用 Godot 打开 `godot/project.godot` 可开发桌面版。运行素材、引擎和 NNUE 已包含；构建脚本会从同梱源码包恢复引擎源码目录。release APK 需在本机设置 `GODOT_ANDROID_KEYSTORE_RELEASE_PATH`、`GODOT_ANDROID_KEYSTORE_RELEASE_USER`、`GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD` 后运行 `./scripts/build_android.ps1 -Release`。不要提交 keystore 或密码。
@@ -51,10 +52,11 @@ python -m venv .venv
 ./scripts/test_chessis20.ps1
 ./scripts/test_chessis20.ps1 -CoreOnly
 ./scripts/test_chessis20.ps1 -CoreOnly -Network
-./scripts/test_package.ps1 -ReportDirectory review/app/chessis20/package -Executable builds/windows-0.20.0/Shogi.exe
+./scripts/test_chessis21.ps1
+./scripts/test_package.ps1 -ReportDirectory review/app/chessis21/package -Executable builds/windows-0.21.0/Shogi.exe
 ```
 
-[CI](.github/workflows/ci.yml) 在 push／PR 时运行核心测试。本地另测四种尺寸、两个方向、明暗模式、持驹、吃子／升变／打入动画和实际引擎。结果见 [0.20 验证记录](docs/TESTING-0.20.md)。测试降低已覆盖场景的回归风险，不能保证绝对没有 bug；本轮未连接 Android 真机，蓝牙双机和系统后台恢复仍需设备验收。
+[CI](.github/workflows/ci.yml) 在 push／PR 时运行核心测试。本地另测四种尺寸、两个方向、明暗模式、持驹、吃子／升变／打入动画和实际引擎。结果见 [0.21 报告界面验证](docs/TESTING-0.21.md) 和 [0.20 棋盘／赛事验证](docs/TESTING-0.20.md)。测试降低已覆盖场景的回归风险，不能保证绝对没有 bug；本轮未连接 Android 真机，蓝牙双机和系统后台恢复仍需设备验收。
 
 ## 数据与来源
 

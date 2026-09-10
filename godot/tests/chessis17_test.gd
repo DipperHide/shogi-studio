@@ -3,11 +3,12 @@ const Insight=preload("res://scripts/shogi_accuracy_insight.gd")
 
 func tap_ribbon(kind: String, side: int) -> void:
 	app.ui.show_report()
-	app.ui.page_scroll.ensure_control_visible(app.ui.report_phases)
 	await settle()
-	for hit in app.ui.report_phases.hits:
+	for hit in app.ui.report_phases.targets:
 		if hit.side==side and hit.get("kind","phase")==kind:
-			await tap(app.ui.report_phases.global_position+hit.rect.get_center())
+			app.ui.page_scroll.ensure_control_visible(hit.button)
+			await settle()
+			await tap(hit.button.get_global_rect().get_center())
 			return
 	check(false,"ribbon target exists "+kind)
 
@@ -39,6 +40,7 @@ func key(code: Key) -> void:
 func run(instance) -> void:
 	app=instance
 	output=ProjectSettings.globalize_path("res://../review/app/chessis17/ui")
+	if "--chessis21-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis21/chessis17_test")
 	if "--chessis18-regression" in OS.get_cmdline_user_args(): output=ProjectSettings.globalize_path("res://../review/app/chessis18/accuracy-ui")
 	DirAccess.make_dir_recursive_absolute(output)
 	app.records.root=output.path_join("records")

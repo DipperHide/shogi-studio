@@ -18,6 +18,7 @@ names.append('ic_tune')
 names.append('ic_undo')
 names.append('ic_circle_check')
 strength_names = ['ic_book_move', 'ic_brilliant_move', 'ic_great_move', 'ic_bestmove', 'ic_forced_move', 'ic_excellent_move', 'ic_good_move', 'ic_inaccuracy', 'ic_mistake', 'ic_blunder_icon', 'ic_missed_win']
+neutral_names = ['ic_accurate_neutral', 'ic_trophy_neutral', 'ic_rating_trend_neutral']
 logger.remove()
 with ZipFile('C:/Users/jinda/xwechat_files/wxid_g7vifo7syngj22_7823/msg/file/2026-09/base.apk.1') as apk:
     resources = ARSCParser(apk.read('resources.arsc'))
@@ -27,6 +28,7 @@ colors = {element.get('name'): element.text for element in ET.fromstring(colors_
 
 
 def color(value):
+    value = {'@android:0106000D': '#00000000', '@android:0106000B': '#FFFFFF', '@android:0106000C': '#000000'}.get(value, value)
     if value.startswith('@color/'):
         return color(colors[value.split('/')[1]])
     if value == '@android:color/transparent': return '#000000', 0
@@ -55,16 +57,18 @@ def copy_nodes(source, destination, colored):
         if node.get(A+'strokeColor'):
             stroke, alpha = color(node.get(A+'strokeColor'))
             attrs.update({'stroke': stroke, 'stroke-opacity': str(alpha * float(node.get(A+'strokeAlpha', '1'))), 'stroke-width': node.get(A+'strokeWidth', '1')})
+        for source_attr, svg_attr in [('strokeLineCap', 'stroke-linecap'), ('strokeLineJoin', 'stroke-linejoin')]:
+            if node.get(A+source_attr): attrs[svg_attr] = {'0':'butt' if source_attr == 'strokeLineCap' else 'miter', '1':'round', '2':'square' if source_attr == 'strokeLineCap' else 'bevel'}.get(node.get(A+source_attr), node.get(A+source_attr))
         ET.SubElement(destination, 'path', attrs)
 
 
 manifest = []
-for name in names + strength_names:
+for name in names + strength_names + neutral_names:
     source = SOURCE / 'res/drawable' / (name + '.xml')
     vector = ET.parse(source).getroot()
     assert vector.tag == 'vector'
     svg = ET.Element('svg', xmlns='http://www.w3.org/2000/svg', width='24', height='24', viewBox=f"0 0 {vector.get(A+'viewportWidth')} {vector.get(A+'viewportHeight')}")
-    copy_nodes(vector, svg, name in strength_names)
+    copy_nodes(vector, svg, name in strength_names + neutral_names)
     ET.ElementTree(svg).write(OUT / (name + '.svg'), encoding='utf-8', xml_declaration=False)
     manifest.append({'asset': name+'.svg', 'source': 'res/drawable/'+name+'.xml', 'decoded_sha256': hashlib.sha256(source.read_bytes()).hexdigest()})
 shutil.copyfile(SOURCE / 'wood_dark.png', OUT / 'wood_dark.png')

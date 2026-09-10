@@ -9,6 +9,7 @@ func capture(name: String) -> void:
 func run(instance) -> void:
 	app = instance
 	output = ProjectSettings.globalize_path("res://../review/app/chessis12/ui")
+	if "--chessis21-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis21/chessis12_test")
 	if "--chessis13-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis13/report-ui")
 	if "--chessis14-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis14/report-ui")
 	if "--chessis15-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis15/report-ui")
@@ -70,7 +71,7 @@ func run(instance) -> void:
 		await capture("report-%dx%d" % [dimensions.x, dimensions.y])
 		check(app.safe_rect().encloses(app.ui.page.get_global_rect()), "full report fits " + str(dimensions))
 		check(ribbon.size.x <= app.ui.page.size.x and app.ui.report_chart.size.x == ribbon.size.x, "phase rows and chart share width " + str(dimensions))
-		check(ribbon.hits.size() == 8, "both players have three phase targets and one accuracy target " + str(dimensions))
+		check(ribbon.hits.size() == 10, "both players have three phase targets plus accuracy and rating targets " + str(dimensions))
 		for hit in ribbon.hits: check(Rect2(Vector2.ZERO, ribbon.size).encloses(hit.rect), "phase touch region fits at " + str(dimensions))
 	await resize(Vector2i(393, 852))
 	app.ui.select_report_move(14)
@@ -86,7 +87,7 @@ func run(instance) -> void:
 	await settle()
 	app.ui.page_scroll.ensure_control_visible(app.ui.report_phases)
 	await settle()
-	var last: Dictionary = app.ui.report_phases.hits.back()
+	var last: Dictionary = app.ui.report_phases.hits.filter(func(item): return item.side == -1 and item.kind == "accuracy")[0]
 	check(app.ui.page_scroll.get_global_rect().has_point(app.ui.report_phases.global_position + last.rect.get_center()), "accuracy target is visibly scrolled into viewport before tapping")
 	await tap(app.ui.report_phases.global_position + last.rect.get_center())
 	check(app.ui.page_name == "report-accuracy", "other player's accuracy chip opens dedicated per-move insight")

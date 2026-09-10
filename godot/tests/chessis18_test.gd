@@ -42,6 +42,7 @@ func analyze(source) -> void:
 func run(instance) -> void:
 	app=instance
 	output=ProjectSettings.globalize_path("res://../review/app/chessis18/ui")
+	if "--chessis21-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis21/chessis18_test")
 	if "--chessis19-regression" in OS.get_cmdline_user_args(): output=ProjectSettings.globalize_path("res://../review/app/chessis19/phase-ui")
 	if "--chessis20-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis20/chessis18_test")
 	DirAccess.make_dir_recursive_absolute(output)
