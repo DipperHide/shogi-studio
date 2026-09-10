@@ -1,0 +1,7 @@
+{
+  "name": "shogi-studio",
+  "private": true,
+  "type": "module",
+  "scripts": {"build:art": ".venv\\Scripts\\python.exe scripts/build_models.py", "serve": "node scripts/serve.mjs", "review": "node scripts/render_review.mjs", "test:app": "powershell -ExecutionPolicy Bypass -File scripts/test_app.ps1", "test:minimal": "powershell -ExecutionPolicy Bypass -File scripts/test_minimal.ps1", "build:android": "powershell -ExecutionPolicy Bypass -File scripts/build_android.ps1", "build:windows": "powershell -ExecutionPolicy Bypass -File scripts/build_windows.ps1"},
+  "dependencies": {"three": "0.180.0", "gltf-validator": "2.0.0-dev.3.10"}
+}

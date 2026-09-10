@@ -1,0 +1,8 @@
+{
+  "board_width": 9.6, "board_depth": 10.6,
+  "board_top": 2.8, "board_body": 1.35,
+  "tray_top": 2.8, "tray_width": 3.4, "tray_depth": 3.5,
+  "tray_x": 6.5, "tray_z": 3.55,
+  "cell_width": 0.98, "cell_depth": 1.08,
+  "piece_clearance": 0.015
+}

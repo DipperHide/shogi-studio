@@ -1,0 +1,13 @@
+{
+  "tool": "image_gen.imagegen",
+  "user_authorized_reference_generation_and_cropping": true,
+  "assets": [
+    {
+      "file": "assets\\materials\\piece-v043\\tsuge-fine-grain.png",
+      "sha256": "7132df455cbc8b39b01ce6833dcaffc9f3b1b4d4d96dba8974a2ad3ee8d1423c"
+    }
+  ],
+  "prompts": "prompt.txt",
+  "preparation": "scripts/build_piece_faces.py",
+  "calligraphy_license": "CC-BY-SA-4.0; LuffyKudo; assets/calligraphy/ryoko/provenance.json"
+}

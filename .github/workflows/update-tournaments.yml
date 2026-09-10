@@ -1,0 +1,32 @@
+name: Update tournament catalog
+on:
+  schedule:
+    - cron: '23 21 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: tournament-catalog
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check collector and update public metadata
+        run: |
+          python scripts/test_tournaments.py
+          python scripts/update_tournaments.py
+      - name: Publish refreshed catalog
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add godot/assets/data/tournament-index.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Update official tournament catalog'
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi

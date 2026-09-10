@@ -1,0 +1,29 @@
+{
+  "version": "0.20.0",
+  "checks": 5259,
+  "failures": [],
+  "oracle": {
+    "library": "python-shogi 1.1.1",
+    "positions": 280,
+    "legal_moves_compared": 8932,
+    "failures": []
+  },
+  "historic_games": 195,
+  "historic_plies": 23115,
+  "recent_games": 26,
+  "recent_plies": 3092,
+  "android_device_tested": false,
+  "github_ci_executed": false,
+  "artifacts": [
+    {
+      "path": "builds/Shogi-0.20.0-windows-x64.zip",
+      "bytes": 150150718,
+      "sha256": "c103f66df772112b5a6307ea9ba514426a662d59138845a3083993a5a9396dac"
+    },
+    {
+      "path": "builds/Shogi-0.20.0-android-arm64.apk",
+      "bytes": 136111104,
+      "sha256": "a75a16247d9797b2e28e6b9579cff87d41923e82f05f63a2ac7aabacd0c25d87"
+    }
+  ]
+}

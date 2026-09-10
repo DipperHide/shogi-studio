@@ -1,0 +1,42 @@
+name: Tests
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Collector unit tests
+        run: |
+          python -m pip install -r requirements-dev.txt
+          python scripts/test_tournaments.py
+      - name: Install verified Godot 4.7.2
+        run: |
+          curl --fail --location --retry 3 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          echo 'cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  /tmp/godot.zip' | sha256sum --check
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          chmod +x /tmp/godot/Godot_v4.7.2-stable_linux.x86_64
+          echo /tmp/godot >> "$GITHUB_PATH"
+      - name: Import assets
+        run: Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --editor --import --quit
+      - name: Rules, record parsing, reports and update recovery
+        run: |
+          set -euo pipefail
+          for test in rules_test chessis_core_test report12_test story19_test tournament_sync20_test historic_games_test; do
+            Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script "res://tests/$test.gd" -- --chessis20-regression
+          done
+          python scripts/check_rules_oracle.py --report review/app/chessis20/rules-oracle.json
+      - name: Keep test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-test-results
+          path: review/app/chessis20

@@ -1,0 +1,180 @@
+{
+  "apk_sha256": "14df01b58e777a130aee977c51a9b7823c8c8ada31479843b2f01b765b49f111",
+  "assets": [
+    {
+      "asset": "ic_eye.svg",
+      "source": "res/drawable/ic_eye.xml",
+      "decoded_sha256": "d81c1368104596ada1e04fd9d8676157c7f67a97ade639bdfb1b332f8a3e7ee7"
+    },
+    {
+      "asset": "ic_play.svg",
+      "source": "res/drawable/ic_play.xml",
+      "decoded_sha256": "da756147bfb1542d79e10337652b524cb8d8f577f4a3d177a433a59073fac231"
+    },
+    {
+      "asset": "ic_pause.svg",
+      "source": "res/drawable/ic_pause.xml",
+      "decoded_sha256": "35451e8ce0e33505dde5cb530494e6c01afffb56bed4d63fadfd6036ddb6c168"
+    },
+    {
+      "asset": "ic_report.svg",
+      "source": "res/drawable/ic_report.xml",
+      "decoded_sha256": "a9d5d8a6faa8c4ed5eea3d794b259a5869a50bcc4d09273e21bccaca7af0e823"
+    },
+    {
+      "asset": "ic_quick_report.svg",
+      "source": "res/drawable/ic_quick_report.xml",
+      "decoded_sha256": "a739b2f6ca227df57fdcf8d74f34df4c6a8c105ddb7290cd68e380221014b5a1"
+    },
+    {
+      "asset": "ic_deep_report.svg",
+      "source": "res/drawable/ic_deep_report.xml",
+      "decoded_sha256": "ad0381656ba2cf40fccbe190354f1ff78e27d3a657da1d26c0e1d056409f9c07"
+    },
+    {
+      "asset": "ic_settings.svg",
+      "source": "res/drawable/ic_settings.xml",
+      "decoded_sha256": "3aeb3bb860d5020d85f5bea7b4c7d6142c6c6fdcabd52e95198a7b04cedc80d1"
+    },
+    {
+      "asset": "ic_arrow_forward.svg",
+      "source": "res/drawable/ic_arrow_forward.xml",
+      "decoded_sha256": "f76551fbf72a1f4592c9079eebcaceefa85014c4bc983bea7d21ccde3f53650f"
+    },
+    {
+      "asset": "ic_arrow_drop_up.svg",
+      "source": "res/drawable/ic_arrow_drop_up.xml",
+      "decoded_sha256": "3e2ec9d75c3bd5e181dd396fa300f5f25008c4e5ae2152de430c818b21a99d58"
+    },
+    {
+      "asset": "ic_hint_up.svg",
+      "source": "res/drawable/ic_hint_up.xml",
+      "decoded_sha256": "7478fa6654a64edefb12c9d2664734d572cf0bc8a1fe67f8b52404f09d992be0"
+    },
+    {
+      "asset": "ic_stop.svg",
+      "source": "res/drawable/ic_stop.xml",
+      "decoded_sha256": "c0b7df1bdb064d5aa8c8676a89c1fe645f8e699cdec1016cd1c932a2c602b60c"
+    },
+    {
+      "asset": "ic_close.svg",
+      "source": "res/drawable/ic_close.xml",
+      "decoded_sha256": "2061d172969ca67d57789956a31528b6705aa61b51c0bada89013437ee93507f"
+    },
+    {
+      "asset": "ic_baseline_menu_24.svg",
+      "source": "res/drawable/ic_baseline_menu_24.xml",
+      "decoded_sha256": "a6ca281821fe16f5c96d91a6b56d5fb54d92a5681bc88a898b2e59a48fbef549"
+    },
+    {
+      "asset": "ic_search.svg",
+      "source": "res/drawable/ic_search.xml",
+      "decoded_sha256": "7588d1b700f1b1ced0e4edb940d7b3d9ebd592c76b21fa1e3d8caa62dd81cc5f"
+    },
+    {
+      "asset": "ic_flip_board.svg",
+      "source": "res/drawable/ic_flip_board.xml",
+      "decoded_sha256": "b367b603a70685af80bb91a7337b68fbce64535b3a2955c43fe6e57d09039d13"
+    },
+    {
+      "asset": "ic_nav_previous.svg",
+      "source": "res/drawable/ic_nav_previous.xml",
+      "decoded_sha256": "8e2d9c9f01a51a0cecc09767a2e52563e0244a0a9b736c2fe21e030e3651309a"
+    },
+    {
+      "asset": "ic_nav_next.svg",
+      "source": "res/drawable/ic_nav_next.xml",
+      "decoded_sha256": "6d28c47a54a4c24fa6f71290b7b7139a2f397a44f0c88a9f305e0e5373bf1158"
+    },
+    {
+      "asset": "ic_nav_play.svg",
+      "source": "res/drawable/ic_nav_play.xml",
+      "decoded_sha256": "1c4439027d16fa4874cd5bf2da9c719203e53c5387108526c0d2dd01051c6608"
+    },
+    {
+      "asset": "ic_nav_pause.svg",
+      "source": "res/drawable/ic_nav_pause.xml",
+      "decoded_sha256": "d99d7ed52d86471de07c12e2aab652b3b6945c3c743f8c40ef5fa0bb06b96f3d"
+    },
+    {
+      "asset": "ic_nav_more.svg",
+      "source": "res/drawable/ic_nav_more.xml",
+      "decoded_sha256": "0828ec3314ddc7f64fd24e6ebbfdf8d21a9fc94ae92799de465c5e171600a02c"
+    },
+    {
+      "asset": "ic_tune.svg",
+      "source": "res/drawable/ic_tune.xml",
+      "decoded_sha256": "1cc52daff244e5ece1a43bf5fcaaf5fe6acf68ae7898ffdfcbb7ac741cc681f7"
+    },
+    {
+      "asset": "ic_undo.svg",
+      "source": "res/drawable/ic_undo.xml",
+      "decoded_sha256": "5da5c37dec24c0846b7c68ab24ebc16115b2f3b6d37c3be857f016f597d73cd9"
+    },
+    {
+      "asset": "ic_circle_check.svg",
+      "source": "res/drawable/ic_circle_check.xml",
+      "decoded_sha256": "dcd2732f7aa3af8795f22b19f97a23d80a7507b3d27878ddccf69f51ed4b172b"
+    },
+    {
+      "asset": "ic_book_move.svg",
+      "source": "res/drawable/ic_book_move.xml",
+      "decoded_sha256": "4788af013333c29b77d392ea45adae58e999f5e749e3e5d67f6dc55a383b6a44"
+    },
+    {
+      "asset": "ic_brilliant_move.svg",
+      "source": "res/drawable/ic_brilliant_move.xml",
+      "decoded_sha256": "f781f98a9aadd4f7aedd8d13c09e4ee696df48b8df081c317ce07c8b9ab61ea7"
+    },
+    {
+      "asset": "ic_great_move.svg",
+      "source": "res/drawable/ic_great_move.xml",
+      "decoded_sha256": "aad3eb37569618379e32c9aedffce142870dab849d2913b189d443882112ab6f"
+    },
+    {
+      "asset": "ic_bestmove.svg",
+      "source": "res/drawable/ic_bestmove.xml",
+      "decoded_sha256": "2f73f62363eb5679fd3146972d2007c6f5b20c859df8903e9c203a6ecb0db7c7"
+    },
+    {
+      "asset": "ic_forced_move.svg",
+      "source": "res/drawable/ic_forced_move.xml",
+      "decoded_sha256": "9cccba120c9e0ab5933fad08f6d92326671572d74395d486f52d3e89a45b1b3e"
+    },
+    {
+      "asset": "ic_excellent_move.svg",
+      "source": "res/drawable/ic_excellent_move.xml",
+      "decoded_sha256": "9803b35860a67e7a42bca983b2033a36bfbb9a11ea96c642c57455367fc832a2"
+    },
+    {
+      "asset": "ic_good_move.svg",
+      "source": "res/drawable/ic_good_move.xml",
+      "decoded_sha256": "4af8961cc747304515c66aaff58b3c9820feb17e695579a75879413534f2cb7d"
+    },
+    {
+      "asset": "ic_inaccuracy.svg",
+      "source": "res/drawable/ic_inaccuracy.xml",
+      "decoded_sha256": "a9bdcf6d48d7b017a00d9e19d9610d9949f40324831de3fd755347c3859a8289"
+    },
+    {
+      "asset": "ic_mistake.svg",
+      "source": "res/drawable/ic_mistake.xml",
+      "decoded_sha256": "5c361ddfdceb37183416f4d84778c7747db6b07f3f606f10d98b18e5114ab3d5"
+    },
+    {
+      "asset": "ic_blunder_icon.svg",
+      "source": "res/drawable/ic_blunder_icon.xml",
+      "decoded_sha256": "9357d7f9010192ac668eeeb33a3e9fb3dced9f427c619dc8689f61dd8d25c9e2"
+    },
+    {
+      "asset": "ic_missed_win.svg",
+      "source": "res/drawable/ic_missed_win.xml",
+      "decoded_sha256": "b919107a0b4284f0eeec0e54574157bcb86ebe6faca8f00c954bed1720f103a9"
+    },
+    {
+      "asset": "wood_dark.png",
+      "source": "supplied APK wood_dark drawable",
+      "sha256": "9926ff44d1ef5193d4214fbb40e69b374ec5b37dfb64e2487d4e40b515a2d1b7"
+    }
+  ]
+}

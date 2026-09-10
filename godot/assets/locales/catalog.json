@@ -1,0 +1,1262 @@
+{
+  "菜单": [
+    "メニュー",
+    "Menu"
+  ],
+  "将棋": [
+    "将棋",
+    "Shogi"
+  ],
+  "继续对局": [
+    "対局に戻る",
+    "Resume game"
+  ],
+  "新开局": [
+    "新しい対局",
+    "New game"
+  ],
+  "主页": [
+    "ホーム",
+    "Home"
+  ],
+  "悔棋": [
+    "待った",
+    "Undo"
+  ],
+  "翻转棋盘": [
+    "盤を反転",
+    "Flip board"
+  ],
+  "提示与分析": [
+    "ヒント・解析",
+    "Hint & analysis"
+  ],
+  "本局棋谱": [
+    "現在の棋譜",
+    "Current record"
+  ],
+  "网络对战": [
+    "ネット対局",
+    "Network play"
+  ],
+  "蓝牙对战": [
+    "Bluetooth 対局",
+    "Bluetooth play"
+  ],
+  "当前联机": [
+    "接続中の対局",
+    "Connection"
+  ],
+  "保存棋谱": [
+    "棋譜を保存",
+    "Save record"
+  ],
+  "已存棋谱": [
+    "棋譜一覧",
+    "Saved records"
+  ],
+  "设置": [
+    "設定",
+    "Settings"
+  ],
+  "入玉宣言": [
+    "入玉宣言",
+    "Entering-king declaration"
+  ],
+  "认输": [
+    "投了",
+    "Resign"
+  ],
+  "返回棋盘": [
+    "盤に戻る",
+    "Back to board"
+  ],
+  "对弈方式": [
+    "対局方法",
+    "Game mode"
+  ],
+  "人机对弈": [
+    "コンピューター対局",
+    "Play computer"
+  ],
+  "同机双人": [
+    "同じ端末で二人対局",
+    "Two players"
+  ],
+  "我的先后手": [
+    "自分の手番",
+    "Play as"
+  ],
+  "先手": [
+    "先手",
+    "Sente"
+  ],
+  "后手": [
+    "後手",
+    "Gote"
+  ],
+  "随机": [
+    "ランダム",
+    "Random"
+  ],
+  "电脑": [
+    "コンピューター",
+    "Computer"
+  ],
+  "基础电脑": [
+    "基本エンジン",
+    "Basic engine"
+  ],
+  "难度": [
+    "強さ",
+    "Difficulty"
+  ],
+  "电脑难度": [
+    "コンピューターの強さ",
+    "Computer difficulty"
+  ],
+  "初学": [
+    "初心者",
+    "Beginner"
+  ],
+  "入门": [
+    "入門",
+    "Easy"
+  ],
+  "普通": [
+    "標準",
+    "Normal"
+  ],
+  "进阶": [
+    "中級",
+    "Advanced"
+  ],
+  "高手": [
+    "上級",
+    "Expert"
+  ],
+  "最强": [
+    "最強",
+    "Strongest"
+  ],
+  "用时": [
+    "持ち時間",
+    "Time control"
+  ],
+  "不限时": [
+    "時間制限なし",
+    "Untimed"
+  ],
+  "5 分钟 + 每手 30 秒": [
+    "5分・秒読み30秒",
+    "5 min + 30 s byoyomi"
+  ],
+  "10 分钟 + 每手 30 秒": [
+    "10分・秒読み30秒",
+    "10 min + 30 s byoyomi"
+  ],
+  "10 分钟 + 每手 60 秒": [
+    "10分・秒読み60秒",
+    "10 min + 60 s byoyomi"
+  ],
+  "每手 10 秒": [
+    "一手10秒",
+    "10 seconds per move"
+  ],
+  "每手 30 秒": [
+    "一手30秒",
+    "30 seconds per move"
+  ],
+  "人机与同机对局打开菜单时暂停计时。悔棋不返还已用时间。": [
+    "コンピューター・同端末対局ではメニュー中は時計が止まります。待ったで時間は戻りません。",
+    "Local games pause while menus are open. Undo does not restore time."
+  ],
+  "开局前会保存当前棋谱。": [
+    "新しい対局の前に現在の棋譜を保存します。",
+    "The current game will be archived before starting."
+  ],
+  "开始": [
+    "開始",
+    "Start"
+  ],
+  "未启动": [
+    "未起動",
+    "Not running"
+  ],
+  "难度通过搜索深度、局面数和思考时间调整，不代表段位评级。": [
+    "強さは探索の深さ・局面数・時間で調整されます。段級位を表すものではありません。",
+    "Difficulty adjusts search depth, nodes and time; it is not a rank rating."
+  ],
+  "重新启动引擎": [
+    "エンジンを再起動",
+    "Restart engine"
+  ],
+  "YaneuraOu：GPL-3.0-or-later；源码和许可证随引擎提供。": [
+    "YaneuraOu：GPL-3.0-or-later。ソースコードとライセンスを同梱しています。",
+    "YaneuraOu: GPL-3.0-or-later. Source and license are included."
+  ],
+  "结束当前对局？": [
+    "現在の対局を終了しますか？",
+    "Resign this game?"
+  ],
+  "确认认输": [
+    "投了する",
+    "Confirm resignation"
+  ],
+  "继续下棋": [
+    "対局を続ける",
+    "Keep playing"
+  ],
+  "本游戏采用 CSA 27 点宣言法。飞、角各计 5 点，其他子计 1 点，玉不计点；升变前后点值不变。只计敌阵内的己方子与持驹。": [
+    "CSA 27点法を採用。飛・角は5点、他の駒は1点、玉は0点。成駒も同じ点数です。敵陣内の自駒と持駒を数えます。",
+    "CSA 27-point rule: rooks and bishops count 5, other pieces 1, kings 0. Promotion does not change points. Only pieces in the enemy camp and in hand count."
+  ],
+  "轮到自己：%s\n玉已入敌阵：%s\n玉未被将军：%s\n敌阵内除玉：%d / 10 枚\n得点：%d / %d": [
+    "自分の手番：%s\n玉が敵陣内：%s\n王手なし：%s\n敵陣の駒（玉以外）：%d / 10枚\n点数：%d / %d",
+    "Your turn: %s\nKing in enemy camp: %s\nKing safe: %s\nCamp pieces, excluding king: %d / 10\nPoints: %d / %d"
+  ],
+  "是": [
+    "はい",
+    "Yes"
+  ],
+  "否": [
+    "いいえ",
+    "No"
+  ],
+  "宣言获胜": [
+    "勝ちを宣言",
+    "Declare win"
+  ],
+  "棋谱": [
+    "棋譜",
+    "Record"
+  ],
+  "初始局面": [
+    "開始局面",
+    "Initial position"
+  ],
+  "%d / %d 手  %s": [
+    "%d / %d 手  %s",
+    "Move %d / %d  %s"
+  ],
+  "上一手": [
+    "前の手",
+    "Previous"
+  ],
+  "下一手": [
+    "次の手",
+    "Next"
+  ],
+  "分析此局面": [
+    "この局面を解析",
+    "Analyze position"
+  ],
+  "复制 USI 棋谱": [
+    "USI棋譜をコピー",
+    "Copy USI record"
+  ],
+  "局面分析": [
+    "局面解析",
+    "Position analysis"
+  ],
+  "引擎准备中…": [
+    "エンジン準備中…",
+    "Preparing engine…"
+  ],
+  "重新分析": [
+    "再解析",
+    "Analyze again"
+  ],
+  "请先退出联机，再打开其他棋谱。本局棋谱可在菜单中直接回看。": [
+    "他の棋譜を開くには接続を終了してください。現在の棋譜はメニューから見られます。",
+    "Leave the network game before opening other records. The current record is available in the menu."
+  ],
+  "尚无已存棋谱。": [
+    "保存された棋譜はありません。",
+    "No saved records yet."
+  ],
+  "这份棋谱无法读取。": [
+    "この棋譜は読み込めません。",
+    "This record cannot be read."
+  ],
+  "创建对局": [
+    "対局を作成",
+    "Host game"
+  ],
+  "加入对局": [
+    "対局に参加",
+    "Join game"
+  ],
+  "同一网络可直接输入对方地址。跨网络连接需要可达的公网地址和开放的对局端口。": [
+    "同じネットワークでは相手のアドレスで接続できます。外部からは到達可能なアドレスと開放されたポートが必要です。",
+    "On the same network, enter the host address. Across networks, the host needs a reachable public address and open port."
+  ],
+  "端口": [
+    "ポート",
+    "Port"
+  ],
+  "联机打开菜单仍计时。掉线与协商请求期间暂停，悔棋不返还已用时间。": [
+    "ネット対局ではメニュー中も時計が進みます。切断・相談中は停止します。待ったで時間は戻りません。",
+    "Online clocks run in menus and pause during disconnects and offers. Undo does not restore time."
+  ],
+  "创建": [
+    "作成",
+    "Create"
+  ],
+  "端口应为 1024 至 65535": [
+    "ポートは1024～65535です",
+    "Use a port from 1024 to 65535"
+  ],
+  "对方地址": [
+    "相手のアドレス",
+    "Host address"
+  ],
+  "六位房间码": [
+    "6桁の接続コード",
+    "Six-digit connection code"
+  ],
+  "连接": [
+    "接続",
+    "Connect"
+  ],
+  "请输入对方地址": [
+    "相手のアドレスを入力してください",
+    "Enter the host address"
+  ],
+  "请输入六位房间码": [
+    "6桁の接続コードを入力してください",
+    "Enter the six-digit connection code"
+  ],
+  "返回对局": [
+    "対局に戻る",
+    "Return to game"
+  ],
+  "重新连接": [
+    "再接続",
+    "Reconnect"
+  ],
+  "允许蓝牙权限": [
+    "Bluetoothを許可",
+    "Allow Bluetooth"
+  ],
+  "开启蓝牙": [
+    "Bluetoothをオン",
+    "Turn on Bluetooth"
+  ],
+  "让对方发现本机": [
+    "この端末を検出可能にする",
+    "Make device discoverable"
+  ],
+  "请求悔一手": [
+    "待ったを依頼",
+    "Request undo"
+  ],
+  "当前不能请求悔棋": [
+    "今は待ったを依頼できません",
+    "Undo cannot be requested now"
+  ],
+  "提议和棋": [
+    "引き分けを提案",
+    "Offer draw"
+  ],
+  "当前不能提议和棋": [
+    "今は引き分けを提案できません",
+    "A draw cannot be offered now"
+  ],
+  "再战并交换先后手": [
+    "先後を交代して再戦",
+    "Rematch, swap sides"
+  ],
+  "结束本局后可以请求再战": [
+    "対局終了後に再戦できます",
+    "Request a rematch after the game ends"
+  ],
+  "查看对局请求": [
+    "対局の依頼を確認",
+    "View offer"
+  ],
+  "退出联机": [
+    "接続を終了",
+    "Leave network game"
+  ],
+  "我的执方：": [
+    "自分の手番：",
+    "Your side: "
+  ],
+  "用时：": [
+    "持ち時間：",
+    "Time control: "
+  ],
+  "房间码：%s    端口：%d": [
+    "接続コード：%s    ポート：%d",
+    "Code: %s    Port: %d"
+  ],
+  "本机地址：": [
+    "この端末のアドレス：",
+    "Host addresses: "
+  ],
+  "未连接网络": [
+    "ネットワーク未接続",
+    "No network connection"
+  ],
+  "对方地址：": [
+    "相手のアドレス：",
+    "Host address: "
+  ],
+  "悔一手": [
+    "待った",
+    "Undo one move"
+  ],
+  "和棋": [
+    "引き分け",
+    "Draw"
+  ],
+  "对局请求": [
+    "対局の依頼",
+    "Game offer"
+  ],
+  "已请求": [
+    "依頼済み：",
+    "Requested: "
+  ],
+  "对手请求": [
+    "相手の依頼：",
+    "Opponent requests: "
+  ],
+  "等待对方回应；30 秒后自动取消。": [
+    "相手の返答を待っています。30秒後に自動取消します。",
+    "Waiting for a reply; the offer expires after 30 seconds."
+  ],
+  "同意": [
+    "同意",
+    "Accept"
+  ],
+  "不同意": [
+    "拒否",
+    "Decline"
+  ],
+  "退出后会断开连接并保存棋谱；对手可看到掉线状态。": [
+    "接続を終了して棋譜を保存します。相手には切断状態が表示されます。",
+    "The record will be saved and the opponent will see you disconnect."
+  ],
+  "保存棋谱并退出": [
+    "棋譜を保存して終了",
+    "Save and leave"
+  ],
+  "继续联机": [
+    "接続を続ける",
+    "Stay connected"
+  ],
+  "蓝牙对战支持装有本游戏的两台安卓设备。当前设备请使用网络对战。": [
+    "Bluetooth対局は本アプリのあるAndroid端末2台に対応します。この端末ではネット対局をご利用ください。",
+    "Bluetooth play supports two Android devices running this game. Use network play on this device."
+  ],
+  "先允许附近设备权限并打开蓝牙，再创建或加入对局。": [
+    "付近のデバイスを許可し、Bluetoothをオンにしてから対局してください。",
+    "Allow nearby devices and turn on Bluetooth before hosting or joining."
+  ],
+  "创建对局时我的先后手": [
+    "対局作成時の手番",
+    "Host plays as"
+  ],
+  "创建蓝牙对局": [
+    "Bluetooth対局を作成",
+    "Host Bluetooth game"
+  ],
+  "搜索附近设备": [
+    "付近のデバイスを検索",
+    "Find nearby devices"
+  ],
+  "停止搜索": [
+    "検索を停止",
+    "Stop scanning"
+  ],
+  "点击设备加入；未配对时会弹出系统配对提示。": [
+    "端末を選んで参加します。未ペアリングの場合は確認画面が表示されます。",
+    "Select a device to join. The system will ask to pair if needed."
+  ],
+  "未命名设备": [
+    "名称未設定",
+    "Unnamed device"
+  ],
+  "升变": [
+    "成る",
+    "Promote"
+  ],
+  "不变": [
+    "不成",
+    "Keep"
+  ],
+  "再来一局": [
+    "もう一局",
+    "Play again"
+  ],
+  "先手胜": [
+    "先手の勝ち",
+    "Sente wins"
+  ],
+  "后手胜": [
+    "後手の勝ち",
+    "Gote wins"
+  ],
+  "超时": [
+    "時間切れ",
+    "Time expired"
+  ],
+  "双方同意": [
+    "双方合意",
+    "By agreement"
+  ],
+  "将死": [
+    "詰み",
+    "Checkmate"
+  ],
+  "无合法着手": [
+    "合法手なし",
+    "No legal moves"
+  ],
+  "连续王手千日手": [
+    "連続王手の千日手",
+    "Perpetual check"
+  ],
+  "千日手": [
+    "千日手",
+    "Repetition"
+  ],
+  "投了": [
+    "投了",
+    "Resignation"
+  ],
+  "终局": [
+    "終局",
+    "Game over"
+  ],
+  "王手": [
+    "王手",
+    "Check"
+  ],
+  "未能保存本局": [
+    "対局を保存できませんでした",
+    "Could not save the game"
+  ],
+  "正在分析…": [
+    "解析中…",
+    "Analyzing…"
+  ],
+  "评分": [
+    "評価値",
+    "Score"
+  ],
+  "评分以当前行棋方为准": [
+    "評価値は手番側から見た値です",
+    "Scores are from the side to move"
+  ],
+  "引擎已停止，请打开菜单检查局面": [
+    "エンジンが停止しました。メニューから局面を確認してください",
+    "Engine stopped. Open the menu to check the position"
+  ],
+  "无法建立棋谱目录": [
+    "棋譜フォルダーを作成できません",
+    "Could not create the record folder"
+  ],
+  "保存棋谱失败": [
+    "棋譜を保存できません",
+    "Could not save the record"
+  ],
+  "轮到你": [
+    "あなたの手番",
+    "Your turn"
+  ],
+  "等待对手": [
+    "相手の手番",
+    "Opponent’s turn"
+  ],
+  "联机未连接": [
+    "対局は未接続です",
+    "Game disconnected"
+  ],
+  "联机存档写入失败": [
+    "ネット対局を保存できません",
+    "Could not save the network game"
+  ],
+  "已恢复联机棋局，点击重新连接继续": [
+    "対局を復元しました。再接続してください",
+    "Game restored. Reconnect to continue"
+  ],
+  "无法创建对局，请换一个端口": [
+    "対局を作成できません。別のポートをお試しください",
+    "Could not host. Try another port"
+  ],
+  "无法连接此地址": [
+    "このアドレスに接続できません",
+    "Could not connect to this address"
+  ],
+  "此版本尚未提供该设备的蓝牙连接组件": [
+    "この端末にはBluetooth接続機能がありません",
+    "Bluetooth is unavailable on this device"
+  ],
+  "对局消息超出大小限制": [
+    "対局メッセージが大きすぎます",
+    "Game message is too large"
+  ],
+  "网络发送积压，请重新连接": [
+    "送信が滞っています。再接続してください",
+    "Network send queue full. Reconnect"
+  ],
+  "连接已断开": [
+    "接続が切れました",
+    "Disconnected"
+  ],
+  "连接读取失败": [
+    "接続の読み取りに失敗しました",
+    "Connection read failed"
+  ],
+  "收到异常大小的消息": [
+    "異常なサイズのメッセージを受信しました",
+    "Received an oversized message"
+  ],
+  "连接失败或超时": [
+    "接続失敗または時間切れ",
+    "Connection failed or timed out"
+  ],
+  "对局消息格式无效": [
+    "対局メッセージの形式が不正です",
+    "Invalid game message"
+  ],
+  "连接已断开，棋局保留，可重新连接": [
+    "切断されました。局面は保存されています。再接続できます",
+    "Disconnected. The position is kept; you can reconnect"
+  ],
+  "等待对手加入，房间码 ": [
+    "相手の参加待ち。接続コード ",
+    "Waiting for opponent. Code "
+  ],
+  "正在连接对手…": [
+    "相手に接続中…",
+    "Connecting to opponent…"
+  ],
+  "房间码不正确，或这局已有另一位对手": [
+    "コードが違うか、既に別の相手が参加しています",
+    "Incorrect code or the game already has an opponent"
+  ],
+  "对手已连接": [
+    "相手が接続しました",
+    "Opponent connected"
+  ],
+  "对手拒绝连接": [
+    "相手が接続を拒否しました",
+    "Opponent declined the connection"
+  ],
+  "局面已更新，已重新同步": [
+    "局面が更新され、同期しました",
+    "Position updated and synchronized"
+  ],
+  "非法着手": [
+    "不正な着手",
+    "Illegal move"
+  ],
+  "当前不满足入玉宣言条件": [
+    "入玉宣言の条件を満たしていません",
+    "Declaration conditions are not met"
+  ],
+  "着手未被接受": [
+    "着手が受理されませんでした",
+    "Move was not accepted"
+  ],
+  "请求结束": [
+    "依頼が終了しました",
+    "Offer closed"
+  ],
+  "对手提供的棋谱无效": [
+    "相手の棋譜が不正です",
+    "Opponent supplied an invalid record"
+  ],
+  "局面校验失败": [
+    "局面の検証に失敗しました",
+    "Position verification failed"
+  ],
+  "对局已同步": [
+    "対局を同期しました",
+    "Game synchronized"
+  ],
+  "对手已同意": [
+    "相手が同意しました",
+    "Opponent accepted"
+  ],
+  "对手未同意": [
+    "相手が拒否しました",
+    "Opponent declined"
+  ],
+  "请求已取消": [
+    "依頼を取り消しました",
+    "Offer canceled"
+  ],
+  "着手校验失败，正在重新同步": [
+    "着手の検証に失敗しました。再同期中です",
+    "Move verification failed. Resynchronizing"
+  ],
+  "对局握手超时": [
+    "対局の接続確認が時間切れになりました",
+    "Game handshake timed out"
+  ],
+  "对手未及时回应，请求已取消": [
+    "返答がなく、依頼を取り消しました",
+    "No reply; offer canceled"
+  ],
+  "对手连接超时，可重新连接": [
+    "相手の接続が時間切れです。再接続できます",
+    "Opponent timed out. You can reconnect"
+  ],
+  "无法准备引擎评估文件": [
+    "評価ファイルを準備できません",
+    "Could not prepare engine evaluation"
+  ],
+  "引擎评估文件写入失败": [
+    "評価ファイルを書き込めません",
+    "Could not write engine evaluation"
+  ],
+  "未找到 YaneuraOu 引擎或评估文件": [
+    "YaneuraOuまたは評価ファイルが見つかりません",
+    "YaneuraOu or its evaluation file is missing"
+  ],
+  "未找到引擎启动组件": [
+    "エンジン起動機能が見つかりません",
+    "Engine launcher is missing"
+  ],
+  "无法启动 YaneuraOu 引擎": [
+    "YaneuraOuを起動できません",
+    "Could not start YaneuraOu"
+  ],
+  "引擎通信中断": [
+    "エンジン通信が切れました",
+    "Engine communication interrupted"
+  ],
+  "引擎响应超出限制": [
+    "エンジンの応答が大きすぎます",
+    "Engine response exceeded the limit"
+  ],
+  "YaneuraOu 已退出，请重新启动引擎": [
+    "YaneuraOuが終了しました。再起動してください",
+    "YaneuraOu exited. Restart the engine"
+  ],
+  "YaneuraOu 响应超时，请重试": [
+    "YaneuraOuの応答が時間切れです。再試行してください",
+    "YaneuraOu timed out. Please retry"
+  ],
+  "引擎返回了非法着手": [
+    "エンジンが不正な着手を返しました",
+    "Engine returned an illegal move"
+  ],
+  "外观": [
+    "盤の表示",
+    "Appearance"
+  ],
+  "极简": [
+    "シンプル",
+    "Minimal"
+  ],
+  "木制": [
+    "木の盤",
+    "Wooden"
+  ],
+  "明暗": [
+    "配色",
+    "Color mode"
+  ],
+  "跟随系统": [
+    "システムに合わせる",
+    "Follow system"
+  ],
+  "浅色": [
+    "ライト",
+    "Light"
+  ],
+  "深色": [
+    "ダーク",
+    "Dark"
+  ],
+  "界面语言": [
+    "表示言語",
+    "Language"
+  ],
+  "棋字": [
+    "駒の文字",
+    "Piece lettering"
+  ],
+  "菱湖书法": [
+    "菱湖書体",
+    "Ryoko calligraphy"
+  ],
+  "日文明朝体": [
+    "明朝体",
+    "Japanese Mincho"
+  ],
+  "落子节奏": [
+    "着手の速さ",
+    "Move pace"
+  ],
+  "快": [
+    "速い",
+    "Fast"
+  ],
+  "标准": [
+    "標準",
+    "Standard"
+  ],
+  "慢": [
+    "ゆっくり",
+    "Slow"
+  ],
+  "落子声音": [
+    "駒音",
+    "Move sound"
+  ],
+  "音量": [
+    "音量",
+    "Volume"
+  ],
+  "试听": [
+    "試聴",
+    "Preview"
+  ],
+  "落点提示": [
+    "合法手の表示",
+    "Legal move hints"
+  ],
+  "上一步标记": [
+    "直前の着手",
+    "Last move markers"
+  ],
+  "棋盘坐标": [
+    "盤の座標",
+    "Board coordinates"
+  ],
+  "同机自动转向": [
+    "同端末対局で自動反転",
+    "Auto-flip in local play"
+  ],
+  "引擎与署名": [
+    "エンジン・クレジット",
+    "Engine & credits"
+  ],
+  "重新保存": [
+    "保存を再試行",
+    "Retry save"
+  ],
+  "导入棋谱": [
+    "棋譜を読み込む",
+    "Import record"
+  ],
+  "导出棋谱": [
+    "棋譜を書き出す",
+    "Export record"
+  ],
+  "重命名": [
+    "名前を変更",
+    "Rename"
+  ],
+  "删除": [
+    "削除",
+    "Delete"
+  ],
+  "确定": [
+    "確定",
+    "Confirm"
+  ],
+  "取消": [
+    "キャンセル",
+    "Cancel"
+  ],
+  "完成": [
+    "完了",
+    "Done"
+  ],
+  "棋谱名称": [
+    "棋譜名",
+    "Record name"
+  ],
+  "请输入棋谱名称": [
+    "棋譜名を入力してください",
+    "Enter a record name"
+  ],
+  "删除失败，请重试": [
+    "削除できません。再試行してください",
+    "Delete failed. Please retry"
+  ],
+  "删除这份棋谱？": [
+    "この棋譜を削除しますか？",
+    "Delete this record?"
+  ],
+  "继续此局": [
+    "この対局を続ける",
+    "Continue this game"
+  ],
+  "这将归档当前对局，并从查看的局面继续。": [
+    "現在の対局を保存し、表示中の局面から続けます。",
+    "The current game will be archived before continuing from this position."
+  ],
+  "已导出棋谱": [
+    "棋譜を書き出しました",
+    "Record exported"
+  ],
+  "已复制": [
+    "コピーしました",
+    "Copied"
+  ],
+  "保存设置失败，请重试": [
+    "設定を保存できません。再試行してください",
+    "Could not save settings. Please retry"
+  ],
+  "对局操作": [
+    "対局操作",
+    "Game actions"
+  ],
+  "查看与分析": [
+    "棋譜・解析",
+    "Review & analysis"
+  ],
+  "连接与偏好": [
+    "接続・設定",
+    "Connection & preferences"
+  ],
+  "安静地下一局。": [
+    "静かに、一局。",
+    "A quiet game of shogi."
+  ],
+  "选择外观不会改变当前棋局。": [
+    "盤の表示を変えても対局は続きます。",
+    "Changing appearance keeps your game."
+  ],
+  "秒": [
+    "秒",
+    "s"
+  ],
+  "思考中…": [
+    "思考中…",
+    "Thinking…"
+  ],
+  "蓝牙权限已就绪": [
+    "Bluetooth権限が許可されています",
+    "Bluetooth permission ready"
+  ],
+  "请在系统设置中允许附近设备权限后重试": [
+    "システム設定で付近のデバイスを許可してください",
+    "Allow nearby devices in system settings, then retry"
+  ],
+  "此设备没有蓝牙适配器": [
+    "この端末はBluetooth非対応です",
+    "This device has no Bluetooth adapter"
+  ],
+  "请先允许附近设备权限": [
+    "付近のデバイスを許可してください",
+    "Allow nearby devices first"
+  ],
+  "请先开启蓝牙": [
+    "Bluetoothをオンにしてください",
+    "Turn on Bluetooth first"
+  ],
+  "无法打开系统蓝牙设置": [
+    "Bluetooth設定を開けません",
+    "Could not open Bluetooth settings"
+  ],
+  "无法打开蓝牙可发现设置": [
+    "検出可能設定を開けません",
+    "Could not open discoverability settings"
+  ],
+  "蓝牙已开启": [
+    "Bluetoothはオンです",
+    "Bluetooth is on"
+  ],
+  "尚未开启蓝牙": [
+    "Bluetoothはオフです",
+    "Bluetooth is off"
+  ],
+  "附近设备现在可以找到你": [
+    "付近のデバイスから検出できます",
+    "Nearby devices can now find you"
+  ],
+  "未开启可发现模式": [
+    "検出可能モードはオフです",
+    "Discoverability is off"
+  ],
+  "无法读取已配对设备": [
+    "ペアリング済み端末を取得できません",
+    "Could not read paired devices"
+  ],
+  "搜索完成": [
+    "検索完了",
+    "Scan complete"
+  ],
+  "正在搜索附近设备": [
+    "付近のデバイスを検索中",
+    "Scanning nearby devices"
+  ],
+  "蓝牙搜索失败，请检查系统权限": [
+    "検索に失敗しました。権限を確認してください",
+    "Bluetooth scan failed. Check permissions"
+  ],
+  "等待对手连接": [
+    "相手の接続待ち",
+    "Waiting for opponent to connect"
+  ],
+  "无法等待蓝牙连接，请重试": [
+    "Bluetooth接続を待機できません。再試行してください",
+    "Could not host Bluetooth. Please retry"
+  ],
+  "蓝牙地址无效": [
+    "Bluetoothアドレスが不正です",
+    "Invalid Bluetooth address"
+  ],
+  "正在连接；如系统提示，请确认配对": [
+    "接続中。確認画面が出たらペアリングを許可してください",
+    "Connecting; confirm pairing if prompted"
+  ],
+  "蓝牙连接失败或超时，请让对手先创建对局": [
+    "接続失敗・時間切れ。相手に対局を作成してもらってください",
+    "Bluetooth failed or timed out. Ask the opponent to host first"
+  ],
+  "蓝牙已连接": [
+    "Bluetooth接続済み",
+    "Bluetooth connected"
+  ],
+  "蓝牙已断开，可以重新连接": [
+    "Bluetoothが切断されました。再接続できます",
+    "Bluetooth disconnected. You can reconnect"
+  ],
+  "蓝牙发送失败，请重新连接": [
+    "Bluetooth送信に失敗しました。再接続してください",
+    "Bluetooth send failed. Reconnect"
+  ],
+  "素材署名": [
+    "素材のクレジット",
+    "Artwork credits"
+  ],
+  "菱湖字面：LuffyKudo · CC BY-SA 4.0。字体：Noto Sans SC / JP、Noto Serif JP · SIL OFL 1.1。": [
+    "菱湖書体：LuffyKudo · CC BY-SA 4.0。フォント：Noto Sans SC / JP、Noto Serif JP · SIL OFL 1.1。",
+    "Ryoko glyphs: LuffyKudo · CC BY-SA 4.0. Fonts: Noto Sans SC / JP, Noto Serif JP · SIL OFL 1.1."
+  ],
+  "查看源码与许可证": [
+    "ソース・ライセンス",
+    "Source & licenses"
+  ],
+  "联机中只能查看当前棋谱，退出联机后可继续其他棋局。": [
+    "接続中は現在の棋譜を確認できます。他の対局を続けるには接続を終了してください。",
+    "Review the current game while connected. Leave the connection before continuing another game."
+  ],
+  "对局结束": [
+    "対局終了",
+    "Game over"
+  ],
+  "保存并再来一局": [
+    "保存してもう一局",
+    "Save & play again"
+  ],
+  "引擎尚未就绪，可重试或选择基础电脑。": [
+    "エンジン準備未完了。再試行するか基本エンジンを選べます。",
+    "Engine unavailable. Retry or choose the basic engine."
+  ],
+  "棋谱文件 (*.json)": [
+    "棋譜ファイル (*.json)",
+    "Record files (*.json)"
+  ],
+  "复制 JSON": [
+    "JSONをコピー",
+    "Copy JSON"
+  ],
+  "粘贴 JSON 导入": [
+    "JSONを貼り付けて読み込む",
+    "Import pasted JSON"
+  ],
+  "导入": [
+    "読み込む",
+    "Import"
+  ],
+  "查看": [
+    "表示",
+    "View"
+  ],
+  "存档错误": [
+    "保存エラー",
+    "Save error"
+  ],
+  "将军": [
+    "王手",
+    "Check"
+  ],
+  "首页": [
+    "ホーム",
+    "Home"
+  ],
+  "学习": [
+    "学ぶ",
+    "Learn"
+  ],
+  "更多": [
+    "その他",
+    "More"
+  ],
+  "来下一局吧": [
+    "一局、指そう",
+    "Let’s play"
+  ],
+  "一起进步吧": [
+    "一緒に上達しよう",
+    "Let’s learn"
+  ],
+  "每一步，都是新的可能。": [
+    "一手ごとに、新しい可能性。",
+    "Every move, a new possibility."
+  ],
+  "开始对弈": [
+    "対局する",
+    "Play"
+  ],
+  "选择一位对手": [
+    "対戦相手を選ぶ",
+    "Choose an opponent"
+  ],
+  "从容练习，或与朋友切磋。": [
+    "自分のペースで、友達と一緒に。",
+    "Practice or play with a friend."
+  ],
+  "按自己的节奏练习": [
+    "自分のペースで練習",
+    "Practice at your own pace"
+  ],
+  "和身边的朋友共用棋盘": [
+    "一つの盤で友達と対局",
+    "Share a board with a friend"
+  ],
+  "创建房间或加入朋友的对局": [
+    "部屋を作成・参加",
+    "Create or join a room"
+  ],
+  "与附近的安卓设备连接": [
+    "近くのAndroid端末と接続",
+    "Connect to a nearby Android device"
+  ],
+  "清晰木纹": [
+    "木目（2D）",
+    "Clear wood"
+  ],
+  "经典平面": [
+    "クラシック",
+    "Classic flat"
+  ],
+  "立体木制": [
+    "木製（3D）",
+    "3D wood"
+  ],
+  "落子前确认": [
+    "着手を確認",
+    "Confirm each move"
+  ],
+  "你的棋局": [
+    "あなたの対局",
+    "Your game"
+  ],
+  "第 %d 手": [
+    "第%d手",
+    "Move %d"
+  ],
+  "每日一点进步": [
+    "毎日、少しずつ上達",
+    "A little progress every day"
+  ],
+  "已掌握 %d 个练习": [
+    "%d問を習得",
+    "%d exercises mastered"
+  ],
+  "开始学习": [
+    "学習を始める",
+    "Start learning"
+  ],
+  "最近棋谱": [
+    "最近の棋譜",
+    "Recent games"
+  ],
+  "全部棋谱": [
+    "すべての棋譜",
+    "All games"
+  ],
+  "下完一局，在这里回顾你的每一步。": [
+    "対局後、ここで一手ずつ振り返れます。",
+    "Review your moves here after a game."
+  ],
+  "选择升变": [
+    "成りを選ぶ",
+    "Promote your piece"
+  ],
+  "进入敌阵，可以让棋子更强。": [
+    "敵陣に入ると、駒を成れます。",
+    "Promote when entering enemy territory."
+  ],
+  "确认这一步": [
+    "この一手を確認",
+    "Confirm this move"
+  ],
+  "确认后落子；取消可重新选择。": [
+    "確認で着手、取消で選び直します。",
+    "Confirm to play, or cancel to choose again."
+  ],
+  "确认落子": [
+    "着手を確定",
+    "Confirm move"
+  ],
+  "查看对局结果": [
+    "結果を見る",
+    "View result"
+  ],
+  "共 %d 手": [
+    "全%d手",
+    "%d moves"
+  ],
+  "复盘这局": [
+    "この対局を振り返る",
+    "Review game"
+  ],
+  "回到首页": [
+    "ホームに戻る",
+    "Back home"
+  ],
+  "开始新的对局？": [
+    "新しい対局を始めますか？",
+    "Start a new game?"
+  ],
+  "当前棋谱将保存；联机对局会断开连接。": [
+    "現在の棋譜を保存し、接続を切断します。",
+    "Your game will be saved and the connection closed."
+  ],
+  "保存并开始": [
+    "保存して開始",
+    "Save and start"
+  ],
+  "行棋中": [
+    "手番",
+    "To move"
+  ],
+  "棋友": [
+    "対局相手",
+    "Player"
+  ],
+  "友": [
+    "友",
+    "P"
+  ],
+  "你": [
+    "あなた",
+    "You"
+  ],
+  "对手": [
+    "相手",
+    "Opponent"
+  ],
+  "返回": [
+    "戻る",
+    "Back"
+  ],
+  "对局": [
+    "対局",
+    "Game"
+  ]
+}

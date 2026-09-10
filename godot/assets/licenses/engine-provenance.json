@@ -1,0 +1,15 @@
+{
+  "engine": {
+    "release": "V9.00",
+    "license": "GPL-3.0-or-later",
+    "official_release_archive_sha256": "6517997dd05ba049a2244a828216967a0ad351d975ec52a0f358e2883197dec6"
+  },
+  "model": {
+    "name": "Suisho5",
+    "author": "Tayayan",
+    "url": "https://github.com/yaneurao/YaneuraOu/releases/tag/suisho5",
+    "sha256": "768068f0d534a0603a5d38bcd143de6bbca820d5f1c95a14d40863e5b7892d76",
+    "license_file_in_upstream_archive": false
+  },
+  "source_package_sha256": "3a25ed4e55097d4906a6d91ee3434138f88b4062b1cde37537402629b15ca97e"
+}

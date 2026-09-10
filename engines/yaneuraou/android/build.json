@@ -1,0 +1,8 @@
+{
+  "source_release": "V9.00",
+  "architecture": "aarch64",
+  "android_api": 24,
+  "sha256": "8a52c32a4da3e7dae4c16feaa9e8a7dd7e11727ab68654e300aded61d3b66500",
+  "bytes": 8420544,
+  "device_tested": false
+}

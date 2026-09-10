@@ -1,0 +1,101 @@
+{
+  "name": "Ryoko style shogi face glyphs",
+  "author": "LuffyKudo",
+  "license": "CC-BY-SA-4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "source": "https://github.com/LuffyKudo/Shogi-Themes/tree/af44470b85b160fa01e23b2a63d8a91232cf34c3/Ryoko",
+  "source_commit": "af44470b85b160fa01e23b2a63d8a91232cf34c3",
+  "modifications": "Removed illustrated wooden body and edge inscription; retained original black glyph outlines; fitted to project piece geometry and composited onto original wood.",
+  "files": [
+    {
+      "file": "source\\Fu.svg",
+      "sha256": "856f995e9b35bd55a9828cb7304af122c17396e32abd2c58f4c52a88f1042ef0",
+      "glyph": "glyphs\\Fu.svg",
+      "glyph_sha256": "2a0a2f76f65e7d4fa38e313d9f619716fda106d363b6a6d3f80485f7f2c04764"
+    },
+    {
+      "file": "source\\Ginsho.svg",
+      "sha256": "23d33aea647d3ae9b2c20e79d25082b3b6d705f151eadc1ec166c2ffd8bb0194",
+      "glyph": "glyphs\\Ginsho.svg",
+      "glyph_sha256": "f77a7ead1ebb668bd2cf2520a40cec54856e2b807492c4387bdd9231ba44a141"
+    },
+    {
+      "file": "source\\Gyokusho.svg",
+      "sha256": "b5a1afec14fd1d9dcc0a932b4510c88f9bd7c66a563113c8e6baf905d4b0542a",
+      "glyph": "glyphs\\Gyokusho.svg",
+      "glyph_sha256": "3d5ea5c5b4ea093280d46fdea57aa2a2dbda0275f2e7d5d579eadc31d023799a"
+    },
+    {
+      "file": "source\\Hisha.svg",
+      "sha256": "c3de5efeea00051cbac19e6758bde0c4b379364a14ee6ced281c8bb85e34bd71",
+      "glyph": "glyphs\\Hisha.svg",
+      "glyph_sha256": "0072d97e86f1448f6354d026c653032f3abfbd41a64805a74beee0c35417ed76"
+    },
+    {
+      "file": "source\\Kakugyo.svg",
+      "sha256": "7da8a2041485344f7d46f32cfd6a884795fc87408eea90294b5d1de32b86ab07",
+      "glyph": "glyphs\\Kakugyo.svg",
+      "glyph_sha256": "783b16e2ffb908f40d9a5430915653cff289792419b4f8e8151958f38721634c"
+    },
+    {
+      "file": "source\\Keima.svg",
+      "sha256": "5435a0895bc0f3a0b65a5dce2ec1151127604bc99b83ecde1261cc244fb2c568",
+      "glyph": "glyphs\\Keima.svg",
+      "glyph_sha256": "01e312e5025ee446cf19c27cd7ab51333cfec74e8bceb6a94e58b5b82c686b73"
+    },
+    {
+      "file": "source\\Kinsho.svg",
+      "sha256": "e3166d10556a1b78264156caa62236724a21bbca4a5962722525e73b546efcaf",
+      "glyph": "glyphs\\Kinsho.svg",
+      "glyph_sha256": "28d1447c2bacef4941999348105bc5614c6182ab54c37493dbdcd982d1e7328a"
+    },
+    {
+      "file": "source\\Kyosha.svg",
+      "sha256": "9dd091f5027c3e0e193d2f932d01c15a3a58b5129c2e1cfc6daa744ae9843c90",
+      "glyph": "glyphs\\Kyosha.svg",
+      "glyph_sha256": "5b88e988764cf8df025e642743d1a320425f24c8649995b202d3ec9c500c8997"
+    },
+    {
+      "file": "source\\Narigin.svg",
+      "sha256": "6d7bb561e08073cac0853cabcb581035c558a8da5db013d6493a05bdf26c11e4",
+      "glyph": "glyphs\\Narigin.svg",
+      "glyph_sha256": "65b8d96f3c1d317be8fa323238a68ca532576791c137345a7168415a1e2418a2"
+    },
+    {
+      "file": "source\\Narikei.svg",
+      "sha256": "32a9a81b49d5d68cd395c4dd43e8454d42a2f73fca5f49a6be0f654363efebcf",
+      "glyph": "glyphs\\Narikei.svg",
+      "glyph_sha256": "40e5d325c0a4d621677d2517c82a300a99e498fea579a134432de1f3b4a1c860"
+    },
+    {
+      "file": "source\\Narikyo.svg",
+      "sha256": "dd8f6b7490369e056c0044a8bddf11340fb56bc90a6a3b039a6cd2fd48e9987e",
+      "glyph": "glyphs\\Narikyo.svg",
+      "glyph_sha256": "3c6dc49c0534f02a79cd05010399e75530594f59767783da5cca6a466028c744"
+    },
+    {
+      "file": "source\\Ousho.svg",
+      "sha256": "6d02687fbe8f69e4fcda413f5ae89ade901432ecda4ea73e1b245cb2f15a1aa3",
+      "glyph": "glyphs\\Ousho.svg",
+      "glyph_sha256": "aa6b2a07420e97c7288b470fefdac5b594dd46b4c9fd213befc07d77ddf2d869"
+    },
+    {
+      "file": "source\\Ryu.svg",
+      "sha256": "f9d649aa95cc57a5d218c53b30360efbf64abdb1e5ff7088a285e5e71b77c9e6",
+      "glyph": "glyphs\\Ryu.svg",
+      "glyph_sha256": "6acc7c1e52513f52759d3fcd140f77202124284bd5c8e6a7fb778c6937b805a4"
+    },
+    {
+      "file": "source\\Tokin.svg",
+      "sha256": "91f648027a5ae9b7cde5fdadea6a75907ac78a4b2870a21abf01a81dbedda527",
+      "glyph": "glyphs\\Tokin.svg",
+      "glyph_sha256": "1802bd799cef120cc8e19b6894d3bc9c5c8199adf958ac84f92444323053e991"
+    },
+    {
+      "file": "source\\Uma.svg",
+      "sha256": "bbebb85c06af77f76324dfe9e1118b09c336b893b066c2b5d37dc00193202943",
+      "glyph": "glyphs\\Uma.svg",
+      "glyph_sha256": "207c402ac74006e59ebb0149a7843df80ba561d107aa83745a247b7a9065e3df"
+    }
+  ]
+}

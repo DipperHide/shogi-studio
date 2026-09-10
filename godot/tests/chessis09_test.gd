@@ -1,0 +1,78 @@
+extends "res://tests/unified_test.gd"
+
+func run(instance) -> void:
+	app = instance
+	output = ProjectSettings.globalize_path("res://../review/app/chessis09/ui")
+	DirAccess.make_dir_recursive_absolute(output)
+	app.records.root = output.path_join("records")
+	app.get_tree().create_timer(120).timeout.connect(func(): app.get_tree().quit(2))
+	app._start_match("local", 1, 2, "basic")
+	app.ui.close()
+	for value in ["7g7f", "3c3d", "8h2b+", "3a2b", "B*4e"]: await play(value)
+	var original = app.game
+	var original_key: String = original.position.key()
+	await resize(Vector2i(393, 852))
+	app.ui.set_extra("analysis_lines", 3)
+	app.ui.show_analysis()
+	check(await until(func(): return app.ui.pv_rows.size() == 3, 20), "three real USI PV rows")
+	await capture("analysis-three-lines")
+	for index in app.ui.pv_rows:
+		var row = app.ui.pv_rows[index]
+		check(row.move_label.autowrap_mode == TextServer.AUTOWRAP_OFF, "independent horizontal candidate " + str(index))
+		check(not row.play_button.disabled, "candidate can preview " + str(index))
+		check(app.ui.live_panel.get_global_rect().encloses(row.get_global_rect()), "candidate fits panel " + str(index))
+		check(app.ui.analysis_scroll.get_global_rect().encloses(row.get_global_rect()), "candidate is visible without clipping " + str(index))
+	app.ui.pv_rows[2].eye_button.button_pressed = false
+	check(app.ui.arrows.size() == 2, "per-line arrow visibility")
+	app.ui.preview_pv(1)
+	check(not app.ui.pv_context.is_empty() and app.review_game != null, "PV opens isolated preview")
+	await settle(0.8)
+	check(app.game == original and app.game.position.key() == original_key, "PV preview preserves current match")
+	await capture("candidate-preview")
+	app.ui.stop_pv()
+	check(app.review_game == null and app.replay_index == -1 and app.game == original, "return restores exact original context")
+	app.ui.preview_pv(1)
+	app.ui.show_menu()
+	check(app.ui.pv_context.is_empty() and app.review_game == null and app.game == original, "navigation exits temporary line before opening another task")
+	app.ui.close()
+	app.ui.set_report_option("quick_mode", "time")
+	app.ui.set_report_option("quick_time", 0.3)
+	app.ui.start_report(false)
+	check(app.ui.page == null, "quick report stays with board")
+	await capture("inline-report-running")
+	check(await until(func(): return not app.ui.report.running, 30), "quick report completes")
+	check(app.ui.report.error.is_empty() and app.ui.report.rows.size() == 5, "report evaluates all moves")
+	await capture("inline-report-finished")
+	app.ui.show_report()
+	await capture("report-summary")
+	app.ui.historic_recent = false
+	app.ui.show_historic_games()
+	check(app.ui.historic_count.text.begins_with("195"), "full historical collection visible")
+	await capture("historic-archive")
+	app.ui.historic_query = "藤井聪太"
+	app.ui.historic_event = "棋圣战"
+	app.ui.historic_year = "2020"
+	app.ui.refresh_historic_list()
+	var matches = app.ui.Historic.search("藤井聪太", "棋圣战", "2020")
+	check(matches.size() == 5, "player / event / year filters")
+	await capture("historic-filtered")
+	var entry = matches.filter(func(e): return e.id == "kisei202007160101")[0]
+	app.ui.open_historic(entry)
+	check(app.review_game.moves.size() == 110 and app.replay_index == 0, "official 2020 title match opens in full")
+	check(app.review_game.winner == -1, "official result preserved")
+	check(app.game == original, "historic replay does not replace active match")
+	check(not app.ui.report_inline.visible, "unrelated match report is hidden")
+	app.ui.show_history(58)
+	await settle(0.3)
+	await capture("historic-replay")
+	app.set_appearance("wood")
+	for dimensions in [Vector2i(393, 852), Vector2i(360, 760), Vector2i(852, 393), Vector2i(1100, 800)]:
+		await resize(dimensions)
+		await capture("wood-%dx%d" % [dimensions.x, dimensions.y])
+		check(app.ui.live_panel.get_global_rect().end.y <= app.ui.toolbar.position.y + 1, "panel fits " + str(dimensions))
+	await resize(Vector2i(393, 852))
+	app.ui.show_historic_games()
+	await capture("historic-wood")
+	FileAccess.open(output.path_join("results.json"), FileAccess.WRITE).store_string(JSON.stringify({"checks": checks, "failures": failures, "screenshots": screenshots}, "  "))
+	print("CHESSIS 09 UI: ", checks, " checks; ", failures)
+	app.get_tree().quit(0 if failures.is_empty() else 1)

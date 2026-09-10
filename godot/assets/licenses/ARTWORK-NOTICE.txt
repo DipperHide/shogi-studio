@@ -1,0 +1,32 @@
+Ryoko style shogi face artwork by LuffyKudo
+License: Creative Commons Attribution-ShareAlike 4.0 International
+https://creativecommons.org/licenses/by-sa/4.0/
+Source: https://github.com/LuffyKudo/Shogi-Themes/tree/af44470b85b160fa01e23b2a63d8a91232cf34c3/Ryoko
+
+Modified for this app: removed the illustrated wooden body and edge inscription;
+retained the original face outlines, fitted them to the original 3D pieces, and
+composited them with reference-guided generated wood textures. Derived glyph SVGs, masks and
+piece-face atlases are distributed under CC BY-SA 4.0.
+Source and derivative files: assets/calligraphy/ryoko and assets/textures/pieces.jpg.
+The full license is included as CC-BY-SA-4.0-Ryoko.txt.
+
+Yuji Syuku remains used for board coordinates under SIL OFL 1.1.
+Noto Sans SC is used for the interface under SIL OFL 1.1.
+Noto Sans JP and Noto Serif JP are bundled under SIL OFL 1.1 for Japanese
+interface text and selectable Mincho piece lettering. See the adjacent OFL files.
+Sources: https://github.com/google/fonts/tree/main/ofl/notosansjp
+         https://github.com/google/fonts/tree/main/ofl/notoserifjp
+
+Version 0.6.0 adds white-tinted, cropped Ryoko SVG outlines for the minimal
+renderer. Original outlines remain unchanged; viewBox and fill were adjusted
+for legibility in both themes. These derivatives remain CC BY-SA 4.0.
+Transformation and hashes: scripts/prepare_minimal_glyphs.py and
+godot/assets/glyphs/provenance.json.
+
+Wood textures in classic 0.4.2 were generated using image_gen from user-provided
+photographic references, then color-calibrated and cropped for each wooden part.
+Source assets and prompts: assets/materials/photographic-v042.
+
+Classic 0.4.3 adds a dedicated fine tsuge wood texture, lossless 4096 x 4096
+piece-face and ink atlases, and finer rounded piece bevels.
+Texture and generation prompt: assets/materials/piece-v043.

@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "generated_utc": "2026-09-10T19:11:42.361630+00:00",
+  "books": [
+    {
+      "id": "hanyu-intro",
+      "file": "hanyu-intro.json",
+      "sha256": "0c0c671fef7e60bd3142ee88f502c845eafd2be2dff49c8ee892fa147ec5be53",
+      "source_sha256": "c59a26c1c85b51a282ab328f39c1068de0d5a7171c57a2195f2fd932fe285c1b",
+      "source_pages": 227,
+      "lessons": 127,
+      "steps": 717,
+      "interactive_steps": 507,
+      "coverage": {
+        "noninstructional_verified": 5,
+        "authored_verified": 222
+      },
+      "complete": true
+    },
+    {
+      "id": "hanyu-opening",
+      "file": "hanyu-opening.json",
+      "sha256": "c148cf8337b58f5ce5694804c0d41e267ab7020bfef1e9e11686d5e8507226a5",
+      "source_sha256": "e5586c3a3eed42d8fe5c008f7c7291dcb59f3ab2795ce956a4abbd4f70f02577",
+      "source_pages": 227,
+      "lessons": 105,
+      "steps": 640,
+      "interactive_steps": 503,
+      "coverage": {
+        "noninstructional_verified": 10,
+        "authored_verified": 217
+      },
+      "complete": true
+    }
+  ]
+}

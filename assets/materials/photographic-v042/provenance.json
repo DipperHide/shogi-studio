@@ -1,0 +1,16 @@
+{
+  "tool": "image_gen.imagegen",
+  "user_authorized_reference_generation_and_cropping": true,
+  "assets": [
+    {
+      "file": "assets\\materials\\photographic-v042\\kaya-end-grain.png",
+      "sha256": "349e63fa142785d82a70ca39454bb744f311b7b044f06fc1a4768c338235e050"
+    },
+    {
+      "file": "assets\\materials\\photographic-v042\\kaya-long-grain.png",
+      "sha256": "86bdfa04faaca5c1c905e45df86798788fb39a9073a2234eb0eb0d3566d0e19d"
+    }
+  ],
+  "prompts": "prompts.md",
+  "preparation": "scripts/photo_wood.py"
+}
