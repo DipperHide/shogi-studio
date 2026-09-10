@@ -24,11 +24,11 @@ var report_story
 var report_story_expanded: bool = false
 var report_story_source
 var report_selected_ply: int = -1
-var report_move_list: VBoxContainer
 var report_moves_expanded: bool = false
 var report_category: String = ""
 var report_category_side: int = 0
-var report_insight: Label
+var report_statistics
+var report_statistics_source
 var live_enabled: bool = false
 var live_key: String = ""
 var live_details: Dictionary = {}
@@ -1175,7 +1175,7 @@ func update_inline_report() -> void:
 		counts_scroll.name = "InlineClassificationCounts"
 		counts_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 		counts_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
-		counts_scroll.custom_minimum_size.y = 36
+		counts_scroll.custom_minimum_size.y = 44
 		report_inline.add_child(counts_scroll)
 		var counts = HBoxContainer.new()
 		counts.add_theme_constant_override("separation", 9)
@@ -1184,10 +1184,12 @@ func update_inline_report() -> void:
 			var total = 0
 			for result in report.rows:
 				if (report_side == 0 or report_side == result.side) and result.category == category: total += 1
-			var item = label(str(total) + "\n" + category, 11)
-			item.autowrap_mode = TextServer.AUTOWRAP_OFF
+			var item = compact_button(str(total) + "\n" + category, func(): select_report_category(report_side, category), 36)
+			item.name = "InlineCategory_" + category
+			item.disabled = total == 0
+			item.add_theme_font_size_override("font_size", 11)
 			item.custom_minimum_size.x = 35 if category != "错失胜机" else 52
-			item.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			item.alignment = HORIZONTAL_ALIGNMENT_CENTER
 			item.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			counts.add_child(item)
 		var viewed_ply: int = app._view_game().moves.size() if app.replay_index < 0 else app.replay_index
@@ -1220,6 +1222,7 @@ func seek_mistake(direction: int) -> void:
 	update_inline_report()
 
 func show_report() -> void:
+	if report_statistics_source != report.game: report_statistics_source = report.game; report_moves_expanded = false
 	var column = report_dialog("整局分析报告", "report", "快速报告" if not report.deep_report else "深度报告")
 	if report_story_source != report.game: report_story_source = report.game; report_story_expanded = false
 	report_story = preload("res://scripts/shogi_report_story_view.gd").new()
@@ -1266,51 +1269,9 @@ func show_report() -> void:
 		if report.game == null: report_changed(); return
 		if report.can_resume(): column.add_child(button("继续分析", func(): report.resume(); show_report()))
 		var statistics = report_panel(column, Color("1f252ce6"), Color("58a6ff66"), 8)
-		var help = compact_button("着手分类 ⓘ", show_classifications, 32)
-		help.name = "ClassificationHelp"
-		statistics.add_child(help)
-		var table = GridContainer.new()
-		table.columns = 3
-		table.add_theme_constant_override("v_separation", 7)
-		statistics.add_child(table)
-		for value in [report.player_name(1), "着手分类", report.player_name(-1)]:
-			var heading = label(value, 14); heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL; heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER; heading.autowrap_mode = TextServer.AUTOWRAP_OFF; heading.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS; heading.tooltip_text = value; table.add_child(heading)
-		for category in report.CATEGORIES:
-			for side in [1, 0, -1]:
-				if side == 0:
-					var row = HBoxContainer.new()
-					row.alignment = BoxContainer.ALIGNMENT_CENTER
-					row.add_child(classification_icon(category, 22))
-					var name_label = label(category, 14)
-					name_label.name = "ClassificationName"
-					name_label.autowrap_mode = TextServer.AUTOWRAP_OFF
-					row.add_child(name_label)
-					table.add_child(row)
-				else:
-					var player: int = side
-					var selected_category: String = category
-					var item = compact_button(str(report.summary(side).counts.get(category, 0)), func(): select_report_category(player, selected_category), 28)
-					item.name = "ClassificationCount%d_%s" % [side, category]
-					item.add_theme_color_override("font_color", report.category_color(category))
-					table.add_child(item)
-		var pies = HBoxContainer.new()
-		statistics.add_child(pies)
-		for side in [1, -1]:
-			var player: int = side
-			var pie = preload("res://scripts/shogi_report_pie.gd").new()
-			pie.name = "SentePie" if side == 1 else "GotePie"
-			pie.counts = report.summary(side).counts
-			pie.text_color = Color("f8f1e6")
-			pie.selected.connect(func(category): select_report_category(player, category))
-			pies.add_child(pie)
-		report_insight = label("点击饼图查看该类着手及占比。", 13)
-		statistics.add_child(report_insight)
-		var expand = button("收起着手列表" if report_moves_expanded else "展开着手列表", func(): report_moves_expanded = not report_moves_expanded; show_report())
-		expand.name = "ExpandReportMoves"
-		statistics.add_child(expand)
-		report_move_list = VBoxContainer.new()
-		statistics.add_child(report_move_list)
-		refresh_report_moves()
+		report_statistics = preload("res://scripts/shogi_report_statistics.gd").new()
+		statistics.add_child(report_statistics)
+		report_statistics.setup(self)
 		column.add_child(label("准确率与阶段划分为将棋分析估计。点击评分查看依据。正分有利先手，负分有利后手。", 12))
 		column.add_child(button("复习失误", review_mistake))
 		column.add_child(button("保存分析报告", func(): save_text(JSON.stringify({"game": report.game.to_data(), "settings": report.settings, "deep": report.deep_report, "samples": report.samples, "moves": report.rows, "phases": report.phases(), "sente": report.summary(1), "gote": report.summary(-1), "metrics_model": "shogi-report-12-estimate", "classification_model": report.Classification.MODEL, "story": report.story(), "verification_searches": report.verification_searches}, "  "), "shogi-analysis.json")))
@@ -1442,7 +1403,7 @@ func report_panel(parent: Control, fill: Color, border: Color, margin: int) -> V
 
 func style_report_buttons() -> void:
 	for item in page.find_children("*", "Button", true, false):
-		if str(item.name).begins_with("ClassificationCount") or item.has_meta("phase_ribbon_control"): continue
+		if str(item.name).begins_with("ClassificationCount") or item.has_meta("phase_ribbon_control") or item.has_meta("report_statistics_control"): continue
 		if item.name in ["ToggleStoryMoments","StoryMomentsHelp"]: continue
 		item.add_theme_color_override("font_color", Color("f8f1e6"))
 		item.add_theme_color_override("icon_normal_color", Color("f8f1e6"))
@@ -1584,28 +1545,18 @@ func preview_report_line(ply: int, details: Dictionary, return_details: bool = f
 		return_line.text = "↶ 返回分析报告"
 
 func select_report_category(side: int, category: String) -> void:
-	report_category_side = side
+	if report.game == null: return
+	var current: int = app.replay_index if app.review_game == report.game else -1
+	var target: int = preload("res://scripts/shogi_report_quality.gd").next_ply(report.rows, category, side, current)
+	if target < 0: return
 	report_category = category
-	report_moves_expanded = true
-	refresh_report_moves()
-	var expand = page.find_child("ExpandReportMoves", true, false)
-	if expand != null: expand.text = "收起着手列表"
-	style_report_buttons()
-
-func refresh_report_moves() -> void:
-	for child in report_move_list.get_children(): report_move_list.remove_child(child); child.queue_free()
-	report_move_list.visible = report_moves_expanded
-	if not report_category.is_empty():
-		var stats: Dictionary = report.summary(report_category_side)
-		var count: int = stats.counts.get(report_category, 0)
-		report_insight.text = ("先手" if report_category_side == 1 else "后手") + " · %s %d / %d 手，%.0f%%" % [report_category, count, stats.count, count * 100.0 / maxf(1, stats.count)]
-		report_insight.modulate = report.category_color(report_category)
-		report_move_list.add_child(compact_button("显示全部着手", func(): report_category = ""; report_category_side = 0; report_insight.text = "双方全部着手"; report_insight.modulate = Color.WHITE; refresh_report_moves()))
-	if not report_moves_expanded: return
-	for result in report.rows:
-		if not report_category.is_empty() and (result.category != report_category or result.side != report_category_side): continue
-		var ply: int = result.ply
-		report_move_list.add_child(compact_button("%d. %s   %s   −%d" % [ply, result.label, result.category, result.loss], func(): select_report_move(ply), 38))
+	report_category_side = side
+	report_side = side
+	report_expanded = true
+	app.review_game = report.game
+	app.review_path = ""
+	show_history(target)
+	update_inline_report()
 
 func report_changed() -> void:
 	update_inline_report()

@@ -58,7 +58,7 @@ func run(instance) -> void:
 	app.ui.back()
 	check(app.ui.page_name == "report" and app.ui.report_selected_ply == 3, "legend returns to selected move")
 	await press("ClassificationCount1_锐利")
-	check(app.ui.report_category == "锐利" and app.ui.report_category_side == 1 and app.ui.report_move_list.get_child_count() == 2, "clicking category count filters to actual sharp move")
+	check(app.ui.report_category == "锐利" and app.ui.report_category_side == 0 and app.review_game == report.game and app.replay_index == 3 and app.ui.page == null, "clicking category count returns board to actual sharp move")
 	await capture("sharp-filter")
 	app.ui.show_report()
 	app.ui.select_report_move(3)

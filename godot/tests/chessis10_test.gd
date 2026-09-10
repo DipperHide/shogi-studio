@@ -75,14 +75,17 @@ func run(instance) -> void:
 	app.ui.stop_pv()
 	await settle()
 	check(app.ui.page_name == "report" and app.ui.report_selected_ply == 3, "preview returns to selected report move")
+	app.ui.report_moves_expanded = true
+	app.ui.report_statistics.refresh_visibility()
 	var pie = app.ui.page.find_child("SentePie", true, false)
+	await settle(0.9)
 	app.ui.page_scroll.ensure_control_visible(pie)
 	await capture("report-pies")
 	var segment: Dictionary = pie.ranges[0]
-	var angle: float = (segment.start + segment.end) / 2
-	await tap(pie.global_position + pie.size / 2 + Vector2.from_angle(angle) * 25)
-	check(app.ui.report_category == segment.category and app.ui.report_category_side == 1, "pie selection filters player and category")
-	check(app.ui.report_moves_expanded and app.ui.report_insight.text.contains("%"), "pie insight displays actual percentage")
+	var angle: float = segment.start + segment.sweep / 2
+	await tap(pie.global_position + pie.geometry().center + Vector2.from_angle(angle) * pie.geometry().radius * 0.8)
+	check(pie.active == segment.group and app.ui.page_name == "report", "pie opens quality insight inside report")
+	check(app.ui.report_statistics.insight.visible and app.ui.report_statistics.insight_percent.text.contains("%"), "pie insight displays weighted percentage")
 	await capture("report-category")
 	app.ui.report_selected_ply = -1
 	app.ui.show_report_settings()

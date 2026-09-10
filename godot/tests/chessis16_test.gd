@@ -7,6 +7,7 @@ func matching_cache(ply: int) -> bool:
 func run(instance) -> void:
 	app=instance
 	output=ProjectSettings.globalize_path("res://../review/app/chessis16/ui")
+	if "--chessis23-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis23/chessis16_test")
 	if "--chessis22-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis22/chessis16_test")
 	if "--chessis21-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis21/chessis16_test")
 	if "--chessis17-regression" in OS.get_cmdline_user_args(): output=ProjectSettings.globalize_path("res://../review/app/chessis17/selection-ui")

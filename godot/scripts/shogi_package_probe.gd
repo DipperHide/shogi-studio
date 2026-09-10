@@ -192,6 +192,20 @@ func probe_classification_verification() -> void:
 	app.ui.show_report()
 	app.ui.select_report_move(3)
 	verify(app.ui.page.find_children("ClassificationCount*", "Button", true, false).size() == 20, "packaged report displays all ten categories for both players")
+	var statistics = app.ui.report_statistics
+	verify(not statistics.pies[0].visible and statistics.expand.visible, "packaged statistics initially collapse secondary categories and pies")
+	statistics.expand.pressed.emit()
+	await app.get_tree().create_timer(0.95).timeout
+	verify(statistics.pies[0].visible and statistics.pies[0].reveal == 1 and not statistics.expand.visible, "packaged statistics expand with a completed pie reveal")
+	var quality = preload("res://scripts/shogi_report_quality.gd")
+	var weights = quality.weights(app.ui.report.summary(1).counts)
+	verify(statistics.pies[0].counts == app.ui.report.summary(1).counts and weights.size() == 3, "packaged quality chart uses real analyzed side counts")
+	var group: int = statistics.pies[0].ranges[0].group
+	statistics.pies[0].choose(group)
+	verify(statistics.insight.visible and statistics.insight_percent.text == "%.1f%%" % quality.percentage(weights, group), "packaged pie selection opens matching weighted percentage")
+	verify(statistics.pies[0].hit_group(statistics.pies[0].geometry().center) == -1, "packaged donut hole does not select a slice")
+	app.ui.page_scroll.ensure_control_visible(statistics.pies[0])
+	await capture("report-quality")
 	var story: Dictionary = app.ui.report.story()
 	verify(story.complete and not story.closed and not story.summary.is_empty(), "packaged narrative distinguishes unfinished game from completed analysis")
 	verify(story.model=="shogi-story-19-reference-adapted" and story.phase_context.sample_count==app.ui.report.samples.size(), "packaged narrative contains phase context from actual analyzed samples")

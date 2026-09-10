@@ -20,6 +20,7 @@ func touch_target(side: int, kind: String) -> void:
 func run(instance) -> void:
 	app = instance
 	output = ProjectSettings.globalize_path("res://../review/app/chessis21/ui")
+	if "--chessis23-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis23/chessis21_test")
 	if "--chessis22-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis22/chessis21_test")
 	DirAccess.make_dir_recursive_absolute(output)
 	app.records.root = output.path_join("records")

@@ -19,6 +19,7 @@ func show_chart() -> void:
 func run(instance) -> void:
 	app = instance
 	output = ProjectSettings.globalize_path("res://../review/app/chessis22/ui")
+	if "--chessis23-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis23/chessis22_test")
 	DirAccess.make_dir_recursive_absolute(output)
 	app.records.root = output.path_join("records")
 	app.save_path = output.path_join("active-test.json")
