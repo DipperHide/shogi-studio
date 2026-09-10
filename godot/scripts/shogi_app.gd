@@ -160,7 +160,7 @@ func _ready() -> void:
 		test_runner = load("res://scripts/shogi_package_probe.gd").new()
 		test_runner.run.call_deferred(self)
 	elif "--unified-test" in args or "--unified-peer" in args:
-		test_runner = load("res://tests/chessis25_test.gd" if "--chessis25" in args else "res://tests/chessis24_test.gd" if "--chessis24" in args else "res://tests/chessis23_test.gd" if "--chessis23" in args else "res://tests/chessis22_test.gd" if "--chessis22" in args else "res://tests/chessis21_test.gd" if "--chessis21" in args else "res://tests/chessis20_test.gd" if "--chessis20" in args else "res://tests/chessis19_test.gd" if "--chessis19" in args else "res://tests/chessis18_test.gd" if "--chessis18" in args else "res://tests/chessis17_test.gd" if "--chessis17" in args else "res://tests/chessis16_test.gd" if "--chessis16" in args else "res://tests/chessis15_test.gd" if "--chessis15" in args else "res://tests/chessis14_test.gd" if "--chessis14" in args else "res://tests/chessis13_test.gd" if "--chessis13" in args else "res://tests/chessis12_test.gd" if "--chessis12" in args else "res://tests/chessis11_test.gd" if "--chessis11" in args else "res://tests/chessis_motion_test.gd" if "--motion-probe" in args else "res://tests/chessis10_test.gd" if "--chessis10" in args else "res://tests/chessis09_test.gd" if "--chessis09" in args else "res://tests/chessis_ui_test.gd" if "--chessis" in args else "res://tests/ui08_test.gd" if "--ui08" in args else "res://tests/ui07_test.gd" if "--ui07" in args else "res://tests/unified_peer_test.gd" if "--unified-peer" in args else "res://tests/unified_test.gd").new()
+		test_runner = load("res://tests/chessis26_test.gd" if "--chessis26" in args else "res://tests/chessis25_test.gd" if "--chessis25" in args else "res://tests/chessis24_test.gd" if "--chessis24" in args else "res://tests/chessis23_test.gd" if "--chessis23" in args else "res://tests/chessis22_test.gd" if "--chessis22" in args else "res://tests/chessis21_test.gd" if "--chessis21" in args else "res://tests/chessis20_test.gd" if "--chessis20" in args else "res://tests/chessis19_test.gd" if "--chessis19" in args else "res://tests/chessis18_test.gd" if "--chessis18" in args else "res://tests/chessis17_test.gd" if "--chessis17" in args else "res://tests/chessis16_test.gd" if "--chessis16" in args else "res://tests/chessis15_test.gd" if "--chessis15" in args else "res://tests/chessis14_test.gd" if "--chessis14" in args else "res://tests/chessis13_test.gd" if "--chessis13" in args else "res://tests/chessis12_test.gd" if "--chessis12" in args else "res://tests/chessis11_test.gd" if "--chessis11" in args else "res://tests/chessis_motion_test.gd" if "--motion-probe" in args else "res://tests/chessis10_test.gd" if "--chessis10" in args else "res://tests/chessis09_test.gd" if "--chessis09" in args else "res://tests/chessis_ui_test.gd" if "--chessis" in args else "res://tests/ui08_test.gd" if "--ui08" in args else "res://tests/ui07_test.gd" if "--ui07" in args else "res://tests/unified_peer_test.gd" if "--unified-peer" in args else "res://tests/unified_test.gd").new()
 		test_runner.run.call_deferred(self)
 	elif testing:
 		test_runner = load("res://tests/network_ui_test.gd" if "--network-ui-test" in args else "res://tests/complete_ui_test.gd" if "--complete-test" in args else "res://tests/minimal_test.gd").new()
@@ -203,16 +203,19 @@ func _layout() -> void:
 	# Keep the board-first workbench's move ribbon and analysis controls visible.
 	if ui != null and ui.has_method("receive_info"):
 		var variation_margin = 30 if _study_active() else 0
+		var side_eval = ui.evaluation_bar != null and ui.evaluation_bar.reserve(safe_rect())
+		var gutter = 28 if side_eval else 0
+		var credit = 16 if side_eval else 0
 		if not wide_layout:
-			edge = maxf(108, minf(usable.size.x - 14, usable.size.y - 433 - variation_margin))
+			edge = maxf(108, minf(usable.size.x - 14 - gutter, usable.size.y - 433 - variation_margin + credit))
 			cell = edge / 9.0
-			board_rect = Rect2(Vector2(usable.get_center().x - edge / 2, usable.position.y + 126 + variation_margin), Vector2.ONE * edge)
+			board_rect = Rect2(Vector2(usable.get_center().x - edge / 2 + gutter / 2.0, usable.position.y + 126 + variation_margin), Vector2.ONE * edge)
 			top_player_rect = Rect2(board_rect.position - Vector2(0, 88), Vector2(edge, 42))
 			bottom_player_rect = Rect2(Vector2(board_rect.position.x, board_rect.end.y + 50), Vector2(edge, 42))
 		else:
-			edge = maxf(108, minf(usable.size.x - 300, usable.size.y - 150 - variation_margin))
+			edge = maxf(108, minf(usable.size.x - 300 - gutter, usable.size.y - 150 - variation_margin + credit))
 			cell = edge / 9.0
-			board_rect = Rect2(Vector2(usable.position.x + 10, usable.position.y + 40 + variation_margin), Vector2.ONE * edge)
+			board_rect = Rect2(Vector2(usable.position.x + 10 + gutter, usable.position.y + 40 + variation_margin), Vector2.ONE * edge)
 			var panel_x = board_rect.end.x + 16
 			var panel_width = maxf(160, usable.end.x - panel_x - 10)
 			top_player_rect = Rect2(panel_x, usable.position.y + 40, panel_width, 42)

@@ -9,6 +9,7 @@ func capture(name: String) -> void:
 func run(instance) -> void:
 	app = instance
 	output = ProjectSettings.globalize_path("res://../review/app/chessis11/ui")
+	if "--chessis26-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis26/chessis11_test")
 	if "--chessis24-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis24/chessis11_test")
 	if "--chessis25-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis25/chessis11_test")
 	if "--chessis12-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis12/coach-replay-ui")

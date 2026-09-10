@@ -9,6 +9,10 @@ var move_scroll: ScrollContainer
 var live_panel: VBoxContainer
 var live_text: Label
 var eval_label: Label
+var evaluation_bar
+var eval_row: HBoxContainer
+var score_slot: Control
+var win_row: HBoxContainer
 var report
 var report_progress: Label
 var report_chart
@@ -137,7 +141,12 @@ func initialize(owner_node) -> void:
 	live_panel.add_theme_constant_override("separation", 4)
 	root.add_child(live_panel)
 	var row = HBoxContainer.new()
+	eval_row = row
 	live_panel.add_child(row)
+	score_slot = Control.new()
+	score_slot.custom_minimum_size = Vector2(60, 34)
+	score_slot.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(score_slot)
 	study_bar = HBoxContainer.new()
 	study_bar.name = "VariationControls"
 	study_bar.add_theme_constant_override("separation", 4)
@@ -146,7 +155,11 @@ func initialize(owner_node) -> void:
 	win_rate_label = label("胜率估计 · 计算中…", 12)
 	win_rate_label.name = "WinRate"
 	win_rate_label.tooltip_text = "根据当前引擎评分换算的局面胜率估计，不是实际获胜保证。分数 s 按 1 / (1 + exp(-s/600)) 换算；先后手固定，翻转棋盘不会交换名称。"
-	live_panel.add_child(win_rate_label)
+	win_row = HBoxContainer.new()
+	live_panel.add_child(win_row)
+	win_row.add_child(win_rate_label)
+	win_rate_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	win_rate_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	coach_notice = compact_button("", review_coach, 30)
 	coach_notice.name = "BadMoveNotice"
 	coach_notice.add_theme_color_override("font_color", Color("ee984f"))
@@ -219,6 +232,9 @@ func initialize(owner_node) -> void:
 	practice_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	practice_panel.add_theme_constant_override("separation", 5)
 	practice_scroll.add_child(practice_panel)
+	evaluation_bar = preload("res://scripts/shogi_evaluation_bar.gd").new()
+	root.add_child(evaluation_bar)
+	evaluation_bar.setup(self)
 	menu_button.hide()
 	navigation.hide()
 	apply_theme()
@@ -323,6 +339,7 @@ func layout() -> void:
 		page.size = dialog_size
 		page.position = available.position + (available.size - dialog_size) / 2
 		backdrop.color = Color(0, 0, 0, 0.6)
+	if evaluation_bar != null: evaluation_bar.layout_bar()
 
 func apply_theme() -> void:
 	var report_colors: Dictionary = {}
@@ -337,7 +354,10 @@ func apply_theme() -> void:
 	if live_text != null: live_text.add_theme_color_override("font_color", app.palette().ink)
 
 func handles_point(point: Vector2) -> bool:
-	return super.handles_point(point) or (top_bar != null and top_bar.visible and (top_bar.get_global_rect().has_point(point) or move_scroll.get_global_rect().has_point(point) or live_panel.get_global_rect().has_point(point)))
+	if super.handles_point(point): return true
+	for control in [top_bar, move_scroll, live_panel, evaluation_bar, engine_toggle, evaluation_bar.options_button if evaluation_bar != null else null]:
+		if control != null and control.is_visible_in_tree() and control.get_global_rect().has_point(point): return true
+	return false
 
 func _process(delta: float) -> void:
 	super._process(delta)
@@ -370,6 +390,7 @@ func _process(delta: float) -> void:
 				autoplay_elapsed = 0
 				if app.replay_index >= app._view_game().moves.size(): autoplay_on = false
 				else: seek(1)
+	if evaluation_bar != null: evaluation_bar.synchronize(delta)
 
 func update_ribbon() -> void:
 	if practice_active(): return
@@ -460,7 +481,7 @@ func evaluation() -> Dictionary:
 		if not cached.is_empty(): return cached
 	if report != null and report.game == viewed and ply < report.samples.size():
 		var sample: Dictionary = report.samples[ply]
-		return {"score": int(sample.score) * viewed.positions[ply].turn, "score_type": "mate" if sample.mate else "cp"}
+		return {"score": int(sample.get("mate_distance", 0)) if sample.mate else int(sample.score) * viewed.positions[ply].turn, "score_type": "mate" if sample.mate else "cp", "depth": int(sample.get("depth", 0))}
 	return {}
 
 func update_coach_display() -> void:
@@ -635,6 +656,7 @@ func show_menu() -> void:
 	if app.session != null: column.add_child(button("当前联机", show_connection))
 
 func back() -> void:
+	if page_name == "evaluation-options": _board_keep(); return
 	if page_name in ["variations", "variation-move", "variation-policy"]: _board_keep(); return
 	if page == null and study_active(): finish_study(); return
 	if page_name == "report-move":
@@ -1721,7 +1743,25 @@ func set_extra(key: String, value: Variant) -> void:
 	app.preferences.studio[key] = value
 	if not app.testing and app.preferences.save_to() != OK: show_message("设置保存失败。")
 	if app.usi != null: app.usi.analysis_count = app.preferences.studio.analysis_lines
+	if key in ["eval_bar", "eval_position"]: app._layout()
 	app._redraw()
+
+func evaluation_position_choice(column: VBoxContainer) -> void:
+	var modes = ["smart", "left", "bottom", "left_on_game_report"]
+	var option = choice(column, "评价条位置", ["智能", "左侧", "底部", "仅报告回放时在左侧"], modes.find(app.preferences.studio.eval_position))
+	option.name = "EvaluationPosition"
+	option.tooltip_text = "智能模式在报告回放空间不足时移到左侧。正分表示先手优势；评价条使用线性评分刻度，胜率另行显示。"
+	option.item_selected.connect(func(index): set_extra("eval_position", modes[index]))
+
+func show_evaluation_options() -> void:
+	var column = _page("引擎与评价条", "evaluation-options")
+	evaluation_position_choice(column)
+	extra_toggle(column, "显示评价条", "eval_bar")
+	column.add_child(button("暂停分析" if live_enabled else "开始分析", func(): _board_keep(); toggle_live()))
+	for entry in [["增加候选着手", 1], ["减少候选着手", -1]]:
+		var delta: int = entry[1]
+		column.add_child(button(entry[0], func(): change_lines(delta); _board_keep()))
+	column.add_child(button("引擎设置", show_engine_settings))
 
 func extra_toggle(column: VBoxContainer, title: String, key: String) -> void:
 	var item = CheckButton.new()
@@ -1760,6 +1800,7 @@ func show_board_settings() -> void:
 	for entry in [["棋盘坐标", "coordinates"], ["上一步标记", "last_move"]]: preference_toggle(column, entry[0], entry[1])
 	extra_toggle(column, "显示引擎箭头", "arrows")
 	extra_toggle(column, "显示评价条", "eval_bar")
+	evaluation_position_choice(column)
 	extra_toggle(column, "显示受攻击的棋子", "threats")
 	var speed = choice(column, "棋子动画", ["关闭", "快速", "标准", "慢速"], 2)
 	speed.item_selected.connect(func(index): set_extra("animation", [0.0, 0.12, 0.22, 0.5][index]))

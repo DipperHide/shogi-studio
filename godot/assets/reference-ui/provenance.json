@@ -122,6 +122,11 @@
       "decoded_sha256": "bc14cff10f8f989675e6cec4afb822c3774c7f9cf0aceaf34475e26df272a3cb"
     },
     {
+      "asset": "ic_engine_options_subtle.svg",
+      "source": "res/drawable/ic_engine_options_subtle.xml",
+      "decoded_sha256": "ede8bf85492103bf69b2350bf003f0eddd44942e1506d96959adec091075c7df"
+    },
+    {
       "asset": "ic_book_move.svg",
       "source": "res/drawable/ic_book_move.xml",
       "decoded_sha256": "4788af013333c29b77d392ea45adae58e999f5e749e3e5d67f6dc55a383b6a44"

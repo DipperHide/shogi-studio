@@ -280,11 +280,3 @@ func workbench_overlays(position, viewed, ply: int, p: Dictionary) -> void:
 			var to: Vector2 = app.square_rect(int(mark[1])).get_center()
 			if from == to: draw_arc(from, app.cell * 0.4, 0, TAU, 40, Color("72be4d"), 3, true)
 			else: arrow(from, to, Color(0.4, 0.75, 0.25, 0.78), app.cell * 0.11)
-	var detail: Dictionary = app.ui.evaluation()
-	if app.preferences.studio.eval_bar and detail.has("score"):
-		var fraction = app.ui.Coach.sente_chance(detail, position.turn)
-		if app.flipped: fraction = 1.0 - fraction
-		var area = Rect2(app.board_rect.position + Vector2(0, -4), Vector2(app.board_rect.size.x, 3))
-		draw_rect(area, Color("211910"))
-		area.size.x *= fraction
-		draw_rect(area, Color("f7efdf"))
