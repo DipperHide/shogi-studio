@@ -7,6 +7,7 @@ func matching_cache(ply: int) -> bool:
 func run(instance) -> void:
 	app=instance
 	output=ProjectSettings.globalize_path("res://../review/app/chessis16/ui")
+	if "--chessis24-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis24/chessis16_test")
 	if "--chessis23-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis23/chessis16_test")
 	if "--chessis22-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis22/chessis16_test")
 	if "--chessis21-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis21/chessis16_test")
@@ -74,8 +75,8 @@ func run(instance) -> void:
 	check(matching_cache(2),"candidate root follows animated history change")
 	app.ui.show_history(1)
 	app.ui.show_history(4)
-	check(await until(func(): return app.replay_index==4 and app.motion_progress>=1 and app.ui.queued_history<0),"rapid navigation finishes at most recent requested ply")
-	check(matching_cache(4),"queued history never leaves stale candidate lines")
+	check(await until(func(): return app.replay_index==4 and app.motion_progress>=1),"rapid navigation finishes at most recent requested ply")
+	check(matching_cache(4),"rapid history navigation never leaves stale candidate lines")
 	await press("ReportMoveDetails")
 	check(app.ui.page_name=="report-move" and app.ui.page.find_child("ReportMoveExplanation",true,false)!=null,"board details retains classification explanation")
 	await capture("move-details")

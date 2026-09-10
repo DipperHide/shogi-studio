@@ -120,13 +120,11 @@ func _draw() -> void:
 			for track in app.transition:
 				var before: Dictionary = track.before
 				var after: Dictionary = track.after
-				if before.square < 0 and after.square < 0:
+				var resting_hand: bool = before.square < 0 and after.square < 0 and motion_rect(track).is_equal_approx(token_rect(after))
+				if resting_hand:
 					if shown_hands.has(after.value): continue
 					shown_hands[after.value] = true
-				var a = token_rect(before)
-				var b = token_rect(after)
-				var rect = Rect2(a.position.lerp(b.position, app.motion_progress), a.size.lerp(b.size, app.motion_progress))
-				glyph(before.value if app.motion_progress < 0.5 else after.value, rect, p.ink)
+				glyph(motion_value(track), motion_rect(track), p.ink)
 		else:
 			for square in range(81):
 				if position.board[square] != 0:
@@ -239,6 +237,14 @@ func arrow(from: Vector2, to: Vector2, color: Color, width: float) -> void:
 	var normal = Vector2(-direction.y, direction.x)
 	draw_line(from, to - direction * width * 1.2, color, width, true)
 	draw_colored_polygon(PackedVector2Array([to, to - direction * width * 2.5 + normal * width * 1.4, to - direction * width * 2.5 - normal * width * 1.4]), color)
+
+func motion_rect(track: Dictionary) -> Rect2:
+	var a: Rect2 = track.get("visual_rect", token_rect(track.before))
+	var b: Rect2 = token_rect(track.after)
+	return Rect2(a.position.lerp(b.position, app.motion_progress), a.size.lerp(b.size, app.motion_progress))
+
+func motion_value(track: Dictionary) -> int:
+	return track.get("visual_value", track.before.value) if app.motion_progress < 0.5 else track.after.value
 
 func workbench_overlays(position, viewed, ply: int, p: Dictionary) -> void:
 	if app.ui.page != null and not app.ui.sheet: return

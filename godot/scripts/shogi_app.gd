@@ -160,7 +160,7 @@ func _ready() -> void:
 		test_runner = load("res://scripts/shogi_package_probe.gd").new()
 		test_runner.run.call_deferred(self)
 	elif "--unified-test" in args or "--unified-peer" in args:
-		test_runner = load("res://tests/chessis23_test.gd" if "--chessis23" in args else "res://tests/chessis22_test.gd" if "--chessis22" in args else "res://tests/chessis21_test.gd" if "--chessis21" in args else "res://tests/chessis20_test.gd" if "--chessis20" in args else "res://tests/chessis19_test.gd" if "--chessis19" in args else "res://tests/chessis18_test.gd" if "--chessis18" in args else "res://tests/chessis17_test.gd" if "--chessis17" in args else "res://tests/chessis16_test.gd" if "--chessis16" in args else "res://tests/chessis15_test.gd" if "--chessis15" in args else "res://tests/chessis14_test.gd" if "--chessis14" in args else "res://tests/chessis13_test.gd" if "--chessis13" in args else "res://tests/chessis12_test.gd" if "--chessis12" in args else "res://tests/chessis11_test.gd" if "--chessis11" in args else "res://tests/chessis_motion_test.gd" if "--motion-probe" in args else "res://tests/chessis10_test.gd" if "--chessis10" in args else "res://tests/chessis09_test.gd" if "--chessis09" in args else "res://tests/chessis_ui_test.gd" if "--chessis" in args else "res://tests/ui08_test.gd" if "--ui08" in args else "res://tests/ui07_test.gd" if "--ui07" in args else "res://tests/unified_peer_test.gd" if "--unified-peer" in args else "res://tests/unified_test.gd").new()
+		test_runner = load("res://tests/chessis24_test.gd" if "--chessis24" in args else "res://tests/chessis23_test.gd" if "--chessis23" in args else "res://tests/chessis22_test.gd" if "--chessis22" in args else "res://tests/chessis21_test.gd" if "--chessis21" in args else "res://tests/chessis20_test.gd" if "--chessis20" in args else "res://tests/chessis19_test.gd" if "--chessis19" in args else "res://tests/chessis18_test.gd" if "--chessis18" in args else "res://tests/chessis17_test.gd" if "--chessis17" in args else "res://tests/chessis16_test.gd" if "--chessis16" in args else "res://tests/chessis15_test.gd" if "--chessis15" in args else "res://tests/chessis14_test.gd" if "--chessis14" in args else "res://tests/chessis13_test.gd" if "--chessis13" in args else "res://tests/chessis12_test.gd" if "--chessis12" in args else "res://tests/chessis11_test.gd" if "--chessis11" in args else "res://tests/chessis_motion_test.gd" if "--motion-probe" in args else "res://tests/chessis10_test.gd" if "--chessis10" in args else "res://tests/chessis09_test.gd" if "--chessis09" in args else "res://tests/chessis_ui_test.gd" if "--chessis" in args else "res://tests/ui08_test.gd" if "--ui08" in args else "res://tests/ui07_test.gd" if "--ui07" in args else "res://tests/unified_peer_test.gd" if "--unified-peer" in args else "res://tests/unified_test.gd").new()
 		test_runner.run.call_deferred(self)
 	elif testing:
 		test_runner = load("res://tests/network_ui_test.gd" if "--network-ui-test" in args else "res://tests/complete_ui_test.gd" if "--complete-test" in args else "res://tests/minimal_test.gd").new()
@@ -1025,12 +1025,22 @@ func _cancel_motion() -> void:
 	transition.clear()
 
 func _present_transition(before: Array, sound: bool = true, visual_start: Dictionary = {}) -> void:
+	# A replay tap may interrupt a capture, promotion or drop. Rebase every
+	# physical piece on the pose on screen, before killing the previous tween.
+	var rendered = {}
+	if motion_progress < 1.0 and before == visual_tokens:
+		for track in transition:
+			var pose = {"visual_rect": board_view.motion_rect(track), "visual_value": board_view.motion_value(track)}
+			if wood_view != null and wood_view.animated_nodes.has(track.id):
+				pose["visual_pose"] = wood_view.motion_pose(track.id)
+			rendered[track.id] = pose
 	_cancel_motion()
 	var after = _view_tokens()
 	visual_tokens = after.duplicate(true)
-	if before.size() != after.size() or before == after: return
+	if before.size() != after.size() or (before == after and rendered.is_empty()): return
 	transition = Motion.tracks(before, after)
 	for track in transition:
+		if rendered.has(track.id): track.merge(rendered[track.id])
 		if visual_start.has(track.id): track["visual_start"] = visual_start[track.id]
 	motion_progress = 0.0
 	# Install the start pose in the same input event that commits the move.

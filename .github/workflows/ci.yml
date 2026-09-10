@@ -34,6 +34,11 @@ jobs:
             Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script "res://tests/$test.gd" -- --chessis20-regression
           done
           python scripts/check_rules_oracle.py --report review/app/chessis20/rules-oracle.json
+      - name: Replay interruption regression on a virtual display
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb libgl1-mesa-dri
+          xvfb-run -a Godot_v4.7.2-stable_linux.x86_64 --path godot --audio-driver Dummy -- --unified-test --chessis24 --interrupt-only
       - name: Keep test evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -43,3 +48,4 @@ jobs:
             review/app/chessis20
             review/app/chessis22
             review/app/chessis23
+            review/app/chessis24

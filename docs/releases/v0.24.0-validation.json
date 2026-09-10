@@ -1,0 +1,500 @@
+{
+  "version": "0.24.0",
+  "functional_checks": {
+    "candidate/ui-tests.json": 5864,
+    "chessis16_test/results.json": 92,
+    "chessis13_test/results.json": 101,
+    "chessis11_test/ui-tests.json": 95,
+    "package/windows-package-probe.json": 101,
+    "package/verification.json": 59
+  },
+  "functional_total": 6312,
+  "failures": [],
+  "collector_tests": 8,
+  "interruption_scenarios": [
+    {
+      "appearance": "minimal",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 2
+    },
+    {
+      "appearance": "minimal",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 3
+    },
+    {
+      "appearance": "minimal",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 4
+    },
+    {
+      "appearance": "minimal",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "minimal",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 0
+    },
+    {
+      "appearance": "minimal",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "minimal",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "minimal",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 3
+    },
+    {
+      "appearance": "minimal",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 2
+    },
+    {
+      "appearance": "minimal",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 2
+    },
+    {
+      "appearance": "minimal",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 3
+    },
+    {
+      "appearance": "minimal",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 4
+    },
+    {
+      "appearance": "minimal",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "minimal",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 0
+    },
+    {
+      "appearance": "minimal",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "minimal",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "minimal",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 3
+    },
+    {
+      "appearance": "minimal",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 2
+    },
+    {
+      "appearance": "wood",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 2
+    },
+    {
+      "appearance": "wood",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 3
+    },
+    {
+      "appearance": "wood",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 4
+    },
+    {
+      "appearance": "wood",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "wood",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 0
+    },
+    {
+      "appearance": "wood",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "wood",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "wood",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 3
+    },
+    {
+      "appearance": "wood",
+      "flipped": false,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 2
+    },
+    {
+      "appearance": "wood",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 2
+    },
+    {
+      "appearance": "wood",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 3
+    },
+    {
+      "appearance": "wood",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 4
+    },
+    {
+      "appearance": "wood",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "wood",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 0
+    },
+    {
+      "appearance": "wood",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "wood",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 5
+    },
+    {
+      "appearance": "wood",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 3
+    },
+    {
+      "appearance": "wood",
+      "flipped": true,
+      "max_rect_jump_px": 0.0,
+      "max_world_jump": 0.0,
+      "piece_count": 40,
+      "target": 2
+    }
+  ],
+  "timing": [
+    {
+      "scenario": "minimal-report-reverse-0",
+      "input_ms": 20.183,
+      "max_gap_ms": 490.09,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "minimal-report-capture-0",
+      "input_ms": 11.162,
+      "max_gap_ms": 474.787,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "minimal-report-reverse-1",
+      "input_ms": 8.148,
+      "max_gap_ms": 474.922,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "minimal-report-capture-1",
+      "input_ms": 8.039,
+      "max_gap_ms": 18.29,
+      "within_50_ms_budget": true
+    },
+    {
+      "scenario": "minimal-report-reverse-2",
+      "input_ms": 8.538,
+      "max_gap_ms": 455.989,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "minimal-report-capture-2",
+      "input_ms": 7.925,
+      "max_gap_ms": 458.275,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "minimal-play-7g7f",
+      "input_ms": 6.682,
+      "max_gap_ms": 470.736,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "minimal-play-3c3d",
+      "input_ms": 5.248,
+      "max_gap_ms": 17.925,
+      "within_50_ms_budget": true
+    },
+    {
+      "scenario": "minimal-play-8h2b+",
+      "input_ms": 9.444,
+      "max_gap_ms": 477.892,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "minimal-play-3a2b",
+      "input_ms": 7.163,
+      "max_gap_ms": 474.867,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "minimal-play-B*4e",
+      "input_ms": 9.209,
+      "max_gap_ms": 474.693,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "wood-report-reverse-0",
+      "input_ms": 17.695,
+      "max_gap_ms": 478.016,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "wood-report-capture-0",
+      "input_ms": 15.678,
+      "max_gap_ms": 19.767,
+      "within_50_ms_budget": true
+    },
+    {
+      "scenario": "wood-report-reverse-1",
+      "input_ms": 15.696,
+      "max_gap_ms": 455.943,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "wood-report-capture-1",
+      "input_ms": 14.995,
+      "max_gap_ms": 20.982,
+      "within_50_ms_budget": true
+    },
+    {
+      "scenario": "wood-report-reverse-2",
+      "input_ms": 15.798,
+      "max_gap_ms": 476.315,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "wood-report-capture-2",
+      "input_ms": 15.997,
+      "max_gap_ms": 452.111,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "wood-play-7g7f",
+      "input_ms": 10.035,
+      "max_gap_ms": 473.713,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "wood-play-3c3d",
+      "input_ms": 13.374,
+      "max_gap_ms": 21.447,
+      "within_50_ms_budget": true
+    },
+    {
+      "scenario": "wood-play-8h2b+",
+      "input_ms": 13.515,
+      "max_gap_ms": 479.314,
+      "within_50_ms_budget": false
+    },
+    {
+      "scenario": "wood-play-3a2b",
+      "input_ms": 12.539,
+      "max_gap_ms": 21.063,
+      "within_50_ms_budget": true
+    },
+    {
+      "scenario": "wood-play-B*4e",
+      "input_ms": 14.452,
+      "max_gap_ms": 472.153,
+      "within_50_ms_budget": false
+    }
+  ],
+  "missed_frame_budget_scenarios": [
+    "minimal-report-reverse-0",
+    "minimal-report-capture-0",
+    "minimal-report-reverse-1",
+    "minimal-report-reverse-2",
+    "minimal-report-capture-2",
+    "minimal-play-7g7f",
+    "minimal-play-8h2b+",
+    "minimal-play-3a2b",
+    "minimal-play-B*4e",
+    "wood-report-reverse-0",
+    "wood-report-reverse-1",
+    "wood-report-reverse-2",
+    "wood-report-capture-2",
+    "wood-play-7g7f",
+    "wood-play-8h2b+",
+    "wood-play-B*4e"
+  ],
+  "empty_window_controls": {
+    "opengl3": {
+      "frames": 328,
+      "max_gap_ms": 474.41,
+      "max_render_ms": 458.142
+    },
+    "angle": {
+      "frames": 297,
+      "max_gap_ms": 492.621,
+      "max_render_ms": 476.216
+    },
+    "vulkan": {
+      "frames": 318,
+      "max_gap_ms": 448.72,
+      "max_render_ms": 432.146
+    }
+  },
+  "render_stall_resolved": false,
+  "android_device_tested": false,
+  "github_ci_executed_locally": false,
+  "recent_games": 26,
+  "catalog_facts_unchanged": true,
+  "catalog_checked_utc": "2026-09-10T21:02:22.752084+00:00",
+  "artifacts": [
+    {
+      "path": "builds/Shogi-0.24.0-windows-x64.zip",
+      "bytes": 150179469,
+      "sha256": "fd11d0d712465f3251af7ff24c9cce7b507e10515686097a57367ea3a81bfb6c"
+    },
+    {
+      "path": "builds/Shogi-0.24.0-android-arm64.apk",
+      "bytes": 136141986,
+      "sha256": "88a72244cf60a231756dc038bc38f936419f8fd8e7c0d4b0c3c0ee6cac205395"
+    }
+  ],
+  "compiled_android_scripts": {
+    "shogi_app": "14cf4aa2f93c1ca47181a4714627aed28c9eb893317563bda3fe697233851910",
+    "shogi_board_view": "5d6fe2a8ef50a72ac0ebf3d095551b36cb8597ce60a4d91e17fe9fe374ffe8e3",
+    "shogi_wood_view": "3abb87d4745dbfcad071b2ea3805d0bd306aae86110f9bbaa9977b9a4d769f6a",
+    "shogi_chessis_menu": "00a52c40cbac0a5afddac98114a27da0ccf6172ced996deb8c9665202e08b4f9",
+    "shogi_history_motion": "b3b4509d497f16578951530dbcc9f1009cfee4d198140cc9d17a62bac99df4ed"
+  },
+  "runtime_sources_match_release_receipt": true,
+  "windows_zip_matches_tested_executable": true
+}

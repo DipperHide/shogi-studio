@@ -170,29 +170,35 @@ func hand_rect(side: int, kind: int) -> Rect2:
 	var center = tray_position(Hand.center(side, kind), side)
 	return projected_rect(center - Vector3(0.52, 0, 0.55), center + Vector3(0.52, 0, 0.55)).grow(3)
 
+func motion_pose(id: int) -> Dictionary:
+	var node: Node3D = animated_nodes[id]
+	return {"position": node.position, "rotation": node.rotation.y, "scale": node.scale,
+		"face_rotation": node.get_child(0).rotation.z, "face_height": node.get_child(0).position.y}
+
 func animate_tracks(tracks: Array, progress: float) -> void:
 	if tracks.is_empty(): return
-	if animated_nodes.is_empty():
-		piece_layer.visible = false
-		hand_models.visible = false
-		for track in tracks:
-			# Captured pieces are represented by the shared 2D hand strip.
-			if track.before.square < 0 and track.after.square < 0: continue
+	piece_layer.visible = false
+	hand_models.visible = false
+	for track in tracks:
+		# A piece interrupted on its way to the hand still needs a model;
+		# a subsequent drop may introduce an ID absent from the previous tween.
+		if not animated_nodes.has(track.id) and (track.before.square >= 0 or track.after.square >= 0 or track.has("visual_pose")):
 			var node = _piece(track.before.value)
 			animated_layer.add_child(node)
 			animated_nodes[track.id] = node
-	for track in tracks:
 		if not animated_nodes.has(track.id): continue
 		var node: Node3D = animated_nodes[track.id]
-		var start: Vector3 = track.get("visual_start", _motion_position(track.before, track.start))
+		var pose: Dictionary = track.get("visual_pose", {})
+		var start: Vector3 = pose.get("position", track.get("visual_start", _motion_position(track.before, track.start)))
 		var finish: Vector3 = _motion_position(track.after, track.end)
 		var moving: bool = start != finish or track.before.value != track.after.value
-		node.position = start.lerp(finish, progress) + Vector3(0, sin(progress * PI) * 0.38 if moving and not track.has("visual_start") else 0.0, 0)
-		node.rotation.y = lerp_angle(track.start_pose.rotation, track.end_pose.rotation, progress)
+		node.position = start.lerp(finish, progress) + Vector3(0, sin(progress * PI) * 0.38 if moving and not track.has("visual_start") and pose.is_empty() else 0.0, 0)
+		node.rotation.y = lerp_angle(pose.get("rotation", track.start_pose.rotation), track.end_pose.rotation, progress)
 		var promoted: bool = absi(track.after.value) > 8
-		node.get_child(0).rotation.z = lerp(PI if absi(track.before.value) > 8 else 0.0, PI if promoted else 0.0, progress)
-		node.get_child(0).position.y = lerp(HEIGHTS[Rules.base(track.before.value)] if absi(track.before.value) > 8 else 0.0, HEIGHTS[Rules.base(track.after.value)] if promoted else 0.0, progress)
-		node.scale = Vector3.ONE * lerpf(0.001 if track.before.square < 0 else 1.0, 0.001 if track.after.square < 0 else 1.0, progress)
+		node.get_child(0).rotation.z = lerp(pose.get("face_rotation", PI if absi(track.before.value) > 8 else 0.0), PI if promoted else 0.0, progress)
+		node.get_child(0).position.y = lerp(pose.get("face_height", HEIGHTS[Rules.base(track.before.value)] if absi(track.before.value) > 8 else 0.0), HEIGHTS[Rules.base(track.after.value)] if promoted else 0.0, progress)
+		var start_scale: Vector3 = pose.get("scale", Vector3.ONE * (0.001 if track.before.square < 0 else 1.0))
+		node.scale = start_scale.lerp(Vector3.ONE * (0.001 if track.after.square < 0 else 1.0), progress)
 		node.get_node("PieceContact").sync_pose()
 
 func _motion_position(token: Dictionary, board_position: Vector3) -> Vector3:

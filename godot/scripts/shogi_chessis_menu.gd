@@ -69,7 +69,6 @@ var continue_button: Button
 var win_rate_label: Label
 var coach_notice: Button
 const Coach = preload("res://scripts/shogi_coach.gd")
-var queued_history: int = -1
 var practice
 var practice_scroll: ScrollContainer
 var practice_panel: VBoxContainer
@@ -245,7 +244,6 @@ func close() -> void:
 		app.review_game = practice_view
 		app.replay_index = practice_ply
 		app._refresh()
-	queued_history = -1
 	autoplay_on = false
 	drawing = false
 	if top_bar != null: top_bar.show(); move_scroll.show(); live_panel.show()
@@ -336,10 +334,6 @@ func _process(delta: float) -> void:
 	if continue_button != null: continue_button.visible = app.replay_index >= 0 and pv_context.is_empty() and app.session == null and not practice_active()
 	update_coach_display()
 	if page == null:
-		if queued_history >= 0 and app.motion_progress >= 1:
-			var requested = queued_history
-			queued_history = -1
-			show_history(requested)
 		update_ribbon()
 		refresh_report_board()
 		if live_enabled and pv_context.is_empty() and not app._ai_allowed() and not report.running:
@@ -352,7 +346,7 @@ func _process(delta: float) -> void:
 				app._request_analysis()
 		if autoplay_on:
 			autoplay_elapsed += delta
-			if autoplay_elapsed >= app.preferences.studio.autoplay and app.motion_progress >= 1 and queued_history < 0:
+			if autoplay_elapsed >= app.preferences.studio.autoplay and app.motion_progress >= 1:
 				autoplay_elapsed = 0
 				if app.replay_index >= app._view_game().moves.size(): autoplay_on = false
 				else: seek(1)
@@ -385,9 +379,7 @@ func show_history(ply: int) -> void:
 		return
 	# Closing a dialog cancels motion. Close first, then start the replay transition.
 	if page != null: _board_keep()
-	if app.motion_progress < 1:
-		queued_history = clampi(ply, 0, app._view_game().moves.size())
-		return
+	# Retarget the visible animation immediately; the board preserves its pose.
 	app._set_replay(ply)
 	update_inline_report()
 
@@ -400,7 +392,6 @@ func undo_from_board() -> void:
 func seek(delta: int) -> void:
 	if practice_active(): practice.seek(delta); return
 	var ply: int = app._view_game().moves.size() if app.replay_index < 0 else app.replay_index
-	if queued_history >= 0: ply = queued_history
 	show_history(clampi(ply + delta, 0, app._view_game().moves.size()))
 
 func toggle_autoplay() -> void:
@@ -578,7 +569,6 @@ func preview_pv(index: int) -> void:
 
 func stop_pv(return_report: bool = true) -> void:
 	if pv_context.is_empty(): return
-	queued_history = -1
 	var from_report: bool = pv_context.get("report", false)
 	var from_details: bool = pv_context.get("details", false)
 	app._cancel_motion()

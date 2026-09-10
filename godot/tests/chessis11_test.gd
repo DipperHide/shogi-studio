@@ -9,6 +9,7 @@ func capture(name: String) -> void:
 func run(instance) -> void:
 	app = instance
 	output = ProjectSettings.globalize_path("res://../review/app/chessis11/ui")
+	if "--chessis24-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis24/chessis11_test")
 	if "--chessis12-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis12/coach-replay-ui")
 	if "--chessis13-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis13/coach-replay-ui")
 	if "--chessis14-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis14/coach-replay-ui")
@@ -54,11 +55,10 @@ func run(instance) -> void:
 		await settle(0.5)
 		app.ui.show_history(1)
 		await settle(0.08)
-		var progress: float = app.motion_progress
 		app.ui.seek(1)
 		app.ui.seek(1)
-		check(app.motion_progress >= progress and app.ui.queued_history == 3, style + " repeated seeks queue without resetting animation")
-		check(await until(func(): return app.replay_index == 3 and app.motion_progress == 1, 3), style + " queued seek reaches selected position")
+		check(app.replay_index == 3 and app.motion_progress < 1, style + " repeated seeks immediately retarget the visible animation")
+		check(await until(func(): return app.replay_index == 3 and app.motion_progress == 1, 3), style + " retargeted seek reaches selected position")
 	app.set_appearance("anime2d")
 	app.ui.close()
 	app.active = true

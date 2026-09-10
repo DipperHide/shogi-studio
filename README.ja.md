@@ -2,15 +2,15 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
 
-Android・Windows 向けの無料将棋アプリです。Godot 4.7.2 と、やねうら王のローカル解析エンジンを使用します。現在のバージョンは **0.23.0**。**既存の機能はすべて無料で、会員制度・購入画面・有料解除はありません。**
+Android・Windows 向けの無料将棋アプリです。Godot 4.7.2 と、やねうら王のローカル解析エンジンを使用します。現在のバージョンは **0.24.0**。**既存の機能はすべて無料で、会員制度・購入画面・有料解除はありません。**
 
 ![木製の将棋盤](docs/images/board-0.20.png)
 
 ## インストール
 
-[Releases](https://github.com/DipperHide/shogi-studio/releases) から `Shogi-0.23.0-android-arm64.apk` をダウンロードしてください。ARM64 対応 Android 端末向けの完全な APK です。Windows は `Shogi-0.23.0-windows-x64.zip` を展開し、`Shogi.exe` を実行します。`engines` フォルダーは同じ場所に置いてください。
+[Releases](https://github.com/DipperHide/shogi-studio/releases) から `Shogi-0.24.0-android-arm64.apk` をダウンロードしてください。ARM64 対応 Android 端末向けの完全な APK です。Windows は `Shogi-0.24.0-windows-x64.zip` を展開し、`Shogi.exe` を実行します。`engines` フォルダーは同じ場所に置いてください。
 
-Android のパッケージ名は `org.shogistudio.artpreview`、versionCode は 41 です。release テンプレートで書き出し、上書き更新のため従来の開発用署名を継続しています。秘密鍵は含めません。異なる署名のビルドを入れる前に棋譜をバックアップしてください。
+Android のパッケージ名は `org.shogistudio.artpreview`、versionCode は 42 です。release テンプレートで書き出し、上書き更新のため従来の開発用署名を継続しています。秘密鍵は含めません。異なる署名のビルドを入れる前に棋譜をバックアップしてください。
 
 ## 主な機能
 
@@ -22,6 +22,7 @@ Android のパッケージ名は `org.shogistudio.artpreview`、versionCode は 
 - JSON・KIF・CSA・USI・SFEN の入出力、局面編集、対話型レッスン、棋譜保存、バックアップと復元。アイコンは龍王の「龍」です。
 - 0.22 の評価グラフは先後の優勢領域と重要な着手のアイコンを表示します。アイコン選択、キーボード・ドラッグ操作、段階境界の位置合わせに対応します。
 - 0.23 では分類統計を折りたたみ表示にし、品質グラフに重み付き割合を明記しました。説明表示、回転、キーボード選択、分類から棋譜への移動に対応します。
+- 0.24 では再生位置を素早く変更しても、表示中の駒の位置・大きさ・成りの裏返しを引き継ぎます。駒取り、駒打ち、逆再生、盤の反転に対応します。
 
 高度な画面とレッスン本文は主に中国語です。基本ナビゲーションは中・英・日文に対応しますが、三言語 README はアプリ全体の翻訳完了を意味しません。
 
@@ -43,15 +44,18 @@ Windows、Python 3.11 以降、Godot **4.7.2** と対応テンプレート、JDK
 python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -r requirements-dev.txt
 ./scripts/build_android.ps1
-./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.23.0
+./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.24.0
 ./scripts/test_chessis20.ps1
 ./scripts/test_chessis20.ps1 -CoreOnly -Network
 ./scripts/test_chessis23.ps1
+./scripts/test_chessis24.ps1
 ```
 
 開発時は Godot で `godot/project.godot` を開きます。実行用素材、エンジン、NNUE は同梱し、対応するエンジンソースはビルド時に同梱アーカイブから展開します。release APK にはローカルで `GODOT_ANDROID_KEYSTORE_RELEASE_PATH`、`GODOT_ANDROID_KEYSTORE_RELEASE_USER`、`GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD` を設定し、`./scripts/build_android.ps1 -Release` を実行します。署名情報をコミットしないでください。
 
 [CI](.github/workflows/ci.yml) は push・PR 時にコアテストを実行します。ローカルでは 4 種類の画面サイズ、先後反転、明暗、駒取り・成り・駒打ち、連続フレームの動き、実エンジンも確認します。[0.23 分類統計の検証](docs/TESTING-0.23.md) と [0.20 盤・大会更新の検証](docs/TESTING-0.20.md) を参照してください。バグが完全になくなる保証はできません。今回は Android 実機未接続のため、Bluetooth 二台接続やバックグラウンド復帰は実機確認が必要です。
+
+検証用 Windows PC では、空のウィンドウでも約 450 ミリ秒の描画停止が発生し、未解決です。すべての端末で常に滑らかな動作を保証するものではありません。[0.24 アニメーション検証](docs/TESTING-0.24.md) を参照してください。
 
 ## データ・クレジット
 
