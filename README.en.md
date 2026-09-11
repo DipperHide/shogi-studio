@@ -8,7 +8,7 @@ A free shogi app for Android and Windows, built with Godot 4.7.2 and a local Yan
 
 ## Install
 
-Local packages are built. The GitHub repository and Release are not published yet; the maintainer must restore local GitHub authentication first.
+Source and packages are public: [0.31.0 Release](https://github.com/DipperHide/shogi-studio/releases/tag/v0.31.0). Daily tournament updates are enabled, and the first cloud refresh completed successfully.
 
 Download `Shogi-0.31.0-android-arm64.apk` from [Releases](https://github.com/DipperHide/shogi-studio/releases) for ARM64 Android devices. On Windows, extract `Shogi-0.31.0-windows-x64.zip`, run `Shogi.exe` and keep the `engines` folder beside it.
 

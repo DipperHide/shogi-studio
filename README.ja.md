@@ -8,7 +8,7 @@ Android・Windows 向けの無料将棋アプリです。Godot 4.7.2 と、や�
 
 ## インストール
 
-ローカルの配布ファイルは作成済みです。GitHub リポジトリと Release は未公開で、管理者のローカル GitHub 認証の復旧が必要です。
+ソースと配布ファイルを公開しました：[0.31.0 Release](https://github.com/DipperHide/shogi-studio/releases/tag/v0.31.0)。棋譜一覧の毎日更新が有効になり、クラウドでの初回更新も成功しました。
 
 [Releases](https://github.com/DipperHide/shogi-studio/releases) から `Shogi-0.31.0-android-arm64.apk` をダウンロードしてください。ARM64 対応 Android 端末向けの完全な APK です。Windows は `Shogi-0.31.0-windows-x64.zip` を展開し、`Shogi.exe` を実行します。`engines` フォルダーは同じ場所に置いてください。
 

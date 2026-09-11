@@ -1,0 +1,87 @@
+{
+  "version": "0.31.0",
+  "checked_utc": "2026-09-11T01:55:24.131316+00:00",
+  "published": true,
+  "repository": {
+    "defaultBranchRef": {
+      "name": "main"
+    },
+    "nameWithOwner": "DipperHide/shogi-studio",
+    "url": "https://github.com/DipperHide/shogi-studio",
+    "visibility": "PUBLIC"
+  },
+  "release_url": "https://github.com/DipperHide/shogi-studio/releases/tag/v0.31.0",
+  "release_published_utc": "2026-09-11T01:52:33Z",
+  "release_source_commit": "8b882e0675404e0fe2ca9e6fa57d93820f2eafa2",
+  "artifacts": [
+    {
+      "name": "Shogi-0.31.0-windows-x64.zip",
+      "bytes": 150298229,
+      "sha256": "b2a03063804377f6fa63d4987806aff427106299edc71527a54286e5c2ff2875",
+      "github_digest": "sha256:b2a03063804377f6fa63d4987806aff427106299edc71527a54286e5c2ff2875",
+      "url": "https://github.com/DipperHide/shogi-studio/releases/download/v0.31.0/Shogi-0.31.0-windows-x64.zip"
+    },
+    {
+      "name": "Shogi-0.31.0-android-arm64.apk",
+      "bytes": 136280517,
+      "sha256": "4e471ff58b22a6c2ebafb0dab74da08d18769b061c0ce0b07a9805d852c86f4f",
+      "github_digest": "sha256:4e471ff58b22a6c2ebafb0dab74da08d18769b061c0ce0b07a9805d852c86f4f",
+      "url": "https://github.com/DipperHide/shogi-studio/releases/download/v0.31.0/Shogi-0.31.0-android-arm64.apk"
+    },
+    {
+      "name": "SHA256SUMS-0.31.0.txt",
+      "bytes": 194,
+      "sha256": "872ea1855361699333c4a7a0799ef3a512fe4ba0823252524f7cd835a82cac68",
+      "github_digest": "sha256:872ea1855361699333c4a7a0799ef3a512fe4ba0823252524f7cd835a82cac68",
+      "url": "https://github.com/DipperHide/shogi-studio/releases/download/v0.31.0/SHA256SUMS-0.31.0.txt"
+    }
+  ],
+  "workflows": [
+    {
+      "name": "Tests",
+      "path": ".github/workflows/ci.yml",
+      "state": "active",
+      "html_url": "https://github.com/DipperHide/shogi-studio/blob/main/.github/workflows/ci.yml"
+    },
+    {
+      "name": "Update tournament catalog",
+      "path": ".github/workflows/update-tournaments.yml",
+      "state": "active",
+      "html_url": "https://github.com/DipperHide/shogi-studio/blob/main/.github/workflows/update-tournaments.yml"
+    }
+  ],
+  "runs": [
+    {
+      "conclusion": "success",
+      "databaseId": 34552426456,
+      "headSha": "8b882e0675404e0fe2ca9e6fa57d93820f2eafa2",
+      "status": "completed",
+      "url": "https://github.com/DipperHide/shogi-studio/actions/runs/34552426456",
+      "workflowName": "Update tournament catalog"
+    },
+    {
+      "conclusion": "",
+      "databaseId": 34552392479,
+      "headSha": "8b882e0675404e0fe2ca9e6fa57d93820f2eafa2",
+      "status": "in_progress",
+      "url": "https://github.com/DipperHide/shogi-studio/actions/runs/34552392479",
+      "workflowName": "Tests"
+    },
+    {
+      "conclusion": "",
+      "databaseId": 34552392087,
+      "headSha": "8b882e0675404e0fe2ca9e6fa57d93820f2eafa2",
+      "status": "in_progress",
+      "url": "https://github.com/DipperHide/shogi-studio/actions/runs/34552392087",
+      "workflowName": "Tests"
+    }
+  ],
+  "catalog": {
+    "url": "https://raw.githubusercontent.com/DipperHide/shogi-studio/main/godot/assets/data/tournament-index.json",
+    "anonymous_https_read": true,
+    "games": 26,
+    "updated_utc": "2026-09-11T01:53:12.933615+00:00",
+    "sha256": "457e90052f67b95568d22d0ee7dea4c562de34f2bc7a5fbaa59f5ee59c6b481e",
+    "same_games_as_release": true
+  }
+}

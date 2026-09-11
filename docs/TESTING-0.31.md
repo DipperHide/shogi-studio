@@ -29,6 +29,6 @@
 
 本轮没有全量重跑 195 局／23,115 手以及完整规则基准，相关规则、解析器和数据哈希与前版一致，保留历史证据且不计入本轮总数。Windows 原有绘制停顿未做新的性能基准，不能据功能断言声称完全消除抖动。Android 设备列表仍为空，真机、系统选择器与后台恢复未实测。
 
-运行 `./scripts/test_chessis31.ps1 -CoreOnly`、`./scripts/test_chessis31.ps1 -Network`、`./scripts/test_chessis31.ps1 -Probes chessis20,chessis30`。CI 增加核心和虚拟显示器入口，但 GitHub 凭据仍失效，仓库、Release、远程 CI 和每日更新工作流未发布／启用。
+运行 `./scripts/test_chessis31.ps1 -CoreOnly`、`./scripts/test_chessis31.ps1 -Network`、`./scripts/test_chessis31.ps1 -Probes chessis20,chessis30`。CI 包含核心和虚拟显示器入口。GitHub 发布、远端文件哈希、每日更新和云端测试的实际结果另见 [发布记录](releases/v0.31.0-publication.json)；上表仅统计本地构建验证。
 
 详见 [使用说明](TOURNAMENT-ARCHIVE.md)、[机器可读记录](releases/v0.31.0-validation.json) 与 [完整差距](CHESSIS-PARITY.md)。

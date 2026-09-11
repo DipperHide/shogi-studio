@@ -76,6 +76,8 @@ paths = ['res/layout/dialog_recent_games.xml','res/layout/view_gm_games_archive_
 references = [{'path':name,'sha256':sha(ROOT / '.work/chessis-reference' / name)} for name in paths]
 intermittent = (OUT / 'ui-second-attempt/chessis31.err').read_text('utf-8-sig')
 assert 'filter closes back to archive' in intermittent
+publication_path = ROOT / 'docs/releases/v0.31.0-publication.json'
+publication = read(publication_path) if publication_path.exists() else {}
 validation = {'version':'0.31.0','functional_checks':counts,'functional_total':sum(counts.values()),'failures':[],
               'reference_evidence':references,'source_apk_sha256':'14df01b58e777a130aee977c51a9b7823c8c8ada31479843b2f01b765b49f111',
               'initial_core_attempt':read(OUT / 'core-first-attempt/tournament-core.json'),
@@ -85,7 +87,9 @@ validation = {'version':'0.31.0','functional_checks':counts,'functional_total':s
               'tournaments':{'checked_utc':fresh['updated_utc'],'games':len(fresh['games']),'same_games_as_bundled':True},
               'prior_evidence':{'release':'0.30.0','source_commit':'af9a688','full_rules_and_history_rerun':False,'unchanged_sources':unchanged,
                                 'report':'docs/releases/v0.30.0-validation.json','report_sha256':sha(ROOT / 'docs/releases/v0.30.0-validation.json')},
-              'android_device_tested':False,'github_published':False,'remote_ci_executed':False,'rendering_stalls_resolved':False,
+              'android_device_tested':False,'github_published':publication.get('published',False),
+              'remote_ci_executed':any(run['workflowName']=='Tests' and run['status']!='queued' for run in publication.get('runs',[])),
+              'publication_report':'docs/releases/v0.31.0-publication.json' if publication else None,'rendering_stalls_resolved':False,
               'artifacts':release['artifacts'],'packaged_tournament_modules':compiled,'first_board_frame_ms':probe['first_board_frame_ms']}
 encoded = json.dumps(validation,ensure_ascii=False,indent=2)+'\n'
 (OUT / 'artifact-checks.json').write_text(encoded,encoding='utf-8')
@@ -115,7 +119,7 @@ text = f'''# 0.31 大赛棋谱库验证
 
 本轮没有全量重跑 195 局／23,115 手以及完整规则基准，相关规则、解析器和数据哈希与前版一致，保留历史证据且不计入本轮总数。Windows 原有绘制停顿未做新的性能基准，不能据功能断言声称完全消除抖动。Android 设备列表仍为空，真机、系统选择器与后台恢复未实测。
 
-运行 `./scripts/test_chessis31.ps1 -CoreOnly`、`./scripts/test_chessis31.ps1 -Network`、`./scripts/test_chessis31.ps1 -Probes chessis20,chessis30`。CI 增加核心和虚拟显示器入口，但 GitHub 凭据仍失效，仓库、Release、远程 CI 和每日更新工作流未发布／启用。
+运行 `./scripts/test_chessis31.ps1 -CoreOnly`、`./scripts/test_chessis31.ps1 -Network`、`./scripts/test_chessis31.ps1 -Probes chessis20,chessis30`。CI 包含核心和虚拟显示器入口。GitHub 发布、远端文件哈希、每日更新和云端测试的实际结果另见 [发布记录](releases/v0.31.0-publication.json)；上表仅统计本地构建验证。
 
 详见 [使用说明](TOURNAMENT-ARCHIVE.md)、[机器可读记录](releases/v0.31.0-validation.json) 与 [完整差距](CHESSIS-PARITY.md)。
 '''

@@ -1049,8 +1049,9 @@
     "report_sha256": "598b028d204be9b8604684b784c5145859e59c6f02ed85f621469596fd60121d"
   },
   "android_device_tested": false,
-  "github_published": false,
-  "remote_ci_executed": false,
+  "github_published": true,
+  "remote_ci_executed": true,
+  "publication_report": "docs/releases/v0.31.0-publication.json",
   "rendering_stalls_resolved": false,
   "artifacts": [
     {

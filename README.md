@@ -8,7 +8,7 @@
 
 ## 安装
 
-本地安装包已生成；GitHub 仓库与 Release 尚未发布，需要先恢复维护者本机的 GitHub 登录。
+源码和安装包已公开：[0.31.0 Release](https://github.com/DipperHide/shogi-studio/releases/tag/v0.31.0)。每日棋谱更新已启用，并已完成首次云端更新。
 
 从 [Releases](https://github.com/DipperHide/shogi-studio/releases) 下载 `Shogi-0.31.0-android-arm64.apk`，适用于 ARM64 Android 设备。Windows 下载 `Shogi-0.31.0-windows-x64.zip`，解压后运行 `Shogi.exe`，保留同目录的 `engines` 文件夹。
 
