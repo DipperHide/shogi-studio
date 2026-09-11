@@ -12,6 +12,8 @@
 
 Android 设备列表为空，未进行本次真机交互验证。既有 Windows 绘制停顿和大赛筛选关闭偶发失败仍未确认解决。批量棋谱操作、已分析筛选和跨棋谱练习尚缺。
 
-运行 `./scripts/test_chessis33.ps1`；完整 CI 包含核心档案和虚拟显示器测试。云端运行结果将在发布记录中单独记录。 云端检查不并入本地总数。
+运行 `./scripts/test_chessis33.ps1`；完整 CI 包含核心档案和虚拟显示器测试。本版源码的 [云端完整回归](https://github.com/DipperHide/shogi-studio/actions/runs/34568993147) 已通过，另行验证 195 局／23,115 手历史棋谱和完整规则基准。 云端检查不并入本地总数。
 
 [用法](PERSONAL-ARCHIVE.md) · [机器可读验证](releases/v0.33.0-validation.json) · [发布记录](releases/v0.33.0-publication.json) · [复刻差距](CHESSIS-PARITY.md)
+
+发布后用户连接手机，已开始补充实机验证。上述“未连接设备”描述的是构建验收时的状态；当前进度和性能采样见 [Android 实机基线](ANDROID-DEVICE-BASELINE.md)，尚未完成全部交互验收。

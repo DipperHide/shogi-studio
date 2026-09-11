@@ -155,7 +155,7 @@
   "android_device_tested": false,
   "rendering_stalls_resolved": false,
   "intermittent_filter_close_resolved": false,
-  "github_published": false,
-  "remote_ci_passed": false,
+  "github_published": true,
+  "remote_ci_passed": true,
   "publication_report": "docs/releases/v0.33.0-publication.json"
 }
