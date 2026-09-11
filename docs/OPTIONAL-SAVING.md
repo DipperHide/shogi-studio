@@ -23,6 +23,8 @@
 
 这些改动减少确定存在的重复工作，尚未将手机上的帧时间变化归因于其中某一项。量测与后续方向见 [Android 实机记录](ANDROID-DEVICE-BASELINE.md)。
 
+启动后的菜单无需先走棋即可使用；点击菜单外侧空白关闭菜单。保存修改的确认框仍需明确选择保存、不保存或继续编辑。
+
 ## English
 
 Unchanged replay and navigation create no archive and do not rewrite existing files. Edited variations offer Save, Discard and Keep Editing; undoing back to saved content clears the unsaved state. Failed writes preserve edits. New matches, continuation and edited positions can proceed without saving the previous match. Folder imports can load for analysis only. A deferred save decision preserves the requested destination and orientation.

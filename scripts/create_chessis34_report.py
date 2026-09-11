@@ -27,7 +27,7 @@ for name in ['variation-core', 'import-core', 'hint-core', 'archive-core']:
     assert not data['failures'], path
     counts[name] = data['checks']
     evidence.append({'path': str(path.relative_to(OUT)), 'sha256': sha(path)})
-for name in ['chessis34', 'board-hud', 'chessis25', 'chessis33', 'chessis30', 'chessis29', 'chessis32', 'chessis31']:
+for name in ['chessis34', 'board-hud', 'startup-menu', 'chessis25', 'chessis33', 'chessis30', 'chessis29', 'chessis32', 'chessis31']:
     path = OUT / (name + '.log')
     log = path.read_text('utf-8-sig')
     data = json.loads(log.rsplit('UNIFIED_TESTS: ', 1)[1].splitlines()[0])
@@ -64,7 +64,7 @@ if phone is not None:
     assert phone['apk_sha256'] == apk['sha256'] and not phone['failures']
     for item in phone['evidence']:
         assert sha(OUT / 'android-device' / item['file']) == item['sha256']
-phone_summary = ('已在 Android 14 实机安装本次 APK 并检查英文、日文界面；准确范围和截图摘要见 [实机报告](ANDROID-DEVICE-BASELINE.md)。实际手机检查独立于上面的断言计数。'
+phone_summary = ('已在 Android 14 实机验证本次 APK 的冷启动菜单、更多选项与点击遮罩关闭菜单；准确范围见 [实机报告](ANDROID-DEVICE-BASELINE.md)。实际手机检查独立于上面的断言计数，不代表完整实机验收。'
                  if phone is not None else
                  '本机保留了 Android 安装日志和界面截图，但上次任务中断前未完成本版实机验证汇总；本报告不将其计为已通过的实机验收。此前 0.33 的实测见 [实机报告](ANDROID-DEVICE-BASELINE.md)。')
 for source, target in [('en-wood-360.png', 'board34-english.png'), ('ja-wood-852.png', 'board34-japanese-landscape.png'), ('en-save-choice.png', 'save34-english.png')]:
@@ -82,10 +82,11 @@ encoded = json.dumps(validation, ensure_ascii=False, indent=2) + '\n'
 (ROOT / 'builds/SHA256SUMS-0.34.0.txt').write_text(''.join(item['sha256'] + '  ' + Path(item['path']).name + '\n' for item in release['artifacts']), encoding='utf-8')
 text = f'''# 0.34 棋盘、多语言与保存流程验证
 
-本地最终记录共 **{sum(counts.values())} 项检查**，无失败。核心规则周边 {sum(counts[n] for n in ['variation-core', 'import-core', 'hint-core', 'archive-core'])} 项；保存流程 {counts['chessis34']}、棋盘与多语言 {counts['board-hud']}；变化 {counts['chessis25']}、档案 {counts['chessis33']}、导入 {counts['chessis30']}、开局 {counts['chessis29']}、提示 {counts['chessis32']}、大赛 {counts['chessis31']}；Windows 成品 {counts['windows-package-probe']}、APK {counts['verification']}。这些是断言次数，不代表独立功能数量，不能保证没有 bug。
+本地最终记录共 **{sum(counts.values())} 项检查**，无失败。核心规则周边 {sum(counts[n] for n in ['variation-core', 'import-core', 'hint-core', 'archive-core'])} 项；保存流程 {counts['chessis34']}、棋盘与多语言 {counts['board-hud']}、竖屏冷启动菜单 {counts['startup-menu']}；变化 {counts['chessis25']}、档案 {counts['chessis33']}、导入 {counts['chessis30']}、开局 {counts['chessis29']}、提示 {counts['chessis32']}、大赛 {counts['chessis31']}；Windows 成品 {counts['windows-package-probe']}、APK {counts['verification']}。这些是断言次数，不代表独立功能数量，不能保证没有 bug。
 
 - 棋盘画面覆盖中、英、日三种语言，2D / 3D、360×760 / 393×852 / 852×393，另检查浅色棋盘及保存界面。持驹宽高比例固定；姓名、计时和头像互不覆盖；菜单覆盖棋盘时保持棋盘尺寸。英文、日文设置与常驻控件会随语言刷新。
 - 保存测试通过实际触摸事件验证继续编辑、放弃、保存及写入失败重试。纯回放不新增棋谱；旧棋谱的未保存注释不会覆盖原文件；文件导入可以只载入；续下保留手数、升变状态；异步等待保存选择后继续操作一次。
+- 首次进入不走棋即可打开菜单和更多选项。分析区域随文字最小尺寸变化重新布局，避免透明滚动区域遮挡底部按钮。菜单外侧点击可关闭，内部点击及取消触摸保持打开；点击保存确认框外侧不会丢弃修改。触摸回归覆盖首次布局及横竖屏，验证没有新增着手或遗留棋盘手势。
 - 升变和不升变提示、合法打入、变化持久化、档案预览、导入错误恢复及官方大赛缓存仍通过对应回归。
 - 成品再次验证保存选择、实际引擎与预览动画。Windows 首张棋盘 {probe['first_board_frame_ms']} 毫秒。APK 验证延续签名、ARM64、16 KiB 对齐及新增模块，未包含测试夹具或付费模块。
 - {phone_summary}

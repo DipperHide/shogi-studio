@@ -18,6 +18,10 @@ func run(instance) -> void:
 	app.save_path = output.path_join("active.json")
 	app.ui.tutorial.progress_path = output.path_join("learning.json")
 	app.get_tree().create_timer(180).timeout.connect(func(): app.get_tree().quit(2))
+	await startup_menu()
+	if "--startup-menu" in OS.get_cmdline_user_args():
+		await finish()
+		return
 	app._start_match("local", 1, 2, "basic"); app.ui.close()
 	for width in [108, 160, 209, 210, 360, 600]:
 		var area = Rect2(20, 30, width, 42)
@@ -82,3 +86,50 @@ func run(instance) -> void:
 	app.set_preference("language", "zh")
 	app.ui.live_enabled = false; app._pause_search()
 	await finish()
+
+func startup_menu() -> void:
+	await settle(0.5)
+	app.ui.toolbar.get_child(0).name = "StartupMenu"
+	var original = app.game.to_data().duplicate(true)
+	original.erase("clock")
+	check(not app.ui.live_panel.get_global_rect().intersects(app.ui.toolbar.get_global_rect()), "initial analysis area leaves toolbar unobstructed")
+	await press("StartupMenu")
+	check(app.ui.page_name == "drawer", "menu opens on untouched startup layout")
+	app.ui.close()
+	app.ui.toolbar.get_child(7).name = "StartupMore"
+	await press("StartupMore")
+	check(app.ui.page_name == "menu", "more opens without making a move")
+	await touch_at(app.safe_rect().position + Vector2(10, 10))
+	check(app.ui.page == null, "tapping outside more closes it")
+	for dimensions in [Vector2i(360, 760), Vector2i(393, 852), Vector2i(852, 393)]:
+		await resize(dimensions)
+		for appearance in ["anime2d", "wood"]:
+			app.set_appearance(appearance)
+			app.ui.show_home()
+			await settle(0.3)
+			var menu = app.ui.toolbar.get_child(0)
+			menu.name = "StartupMenu"
+			check(not app.ui.live_panel.get_global_rect().intersects(app.ui.toolbar.get_global_rect()), "analysis area leaves toolbar unobstructed at " + str(dimensions))
+			check(app.game.moves.is_empty(), "startup has no moves")
+			await press("StartupMenu")
+			check(app.ui.page_name == "drawer", "menu opens before any move at " + str(dimensions) + " " + appearance)
+			if app.ui.page != null:
+				await touch_at(app.ui.page.position + Vector2(app.ui.page.size.x * 0.6, 12))
+				check(app.ui.page_name == "drawer", "tapping inside menu keeps it open")
+				var outside = Vector2(app.safe_rect().end.x - 10, app.safe_rect().get_center().y)
+				await touch_at(outside, true)
+				check(app.ui.page_name == "drawer", "canceled outside touch keeps menu open")
+				await touch_at(outside)
+				check(app.ui.page == null and app.pointer_id == -2, "outside tap closes menu without starting a board gesture")
+	var after = app.game.to_data().duplicate(true)
+	after.erase("clock")
+	check(after == original, "startup navigation leaves the game unchanged")
+
+func touch_at(point: Vector2, canceled: bool = false) -> void:
+	for down in [true, false]:
+		var event = InputEventScreenTouch.new()
+		event.index = 0; event.pressed = down; event.position = point
+		event.canceled = canceled and not down
+		Input.parse_input_event(event); Input.flush_buffered_events()
+		await RenderingServer.frame_post_draw
+		await app.get_tree().process_frame

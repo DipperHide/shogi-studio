@@ -5,8 +5,9 @@
     "import-core": 28,
     "hint-core": 242,
     "archive-core": 48,
-    "chessis34": 75,
-    "board-hud": 703,
+    "chessis34": 76,
+    "board-hud": 755,
+    "startup-menu": 52,
     "chessis25": 110,
     "chessis33": 169,
     "chessis30": 132,
@@ -16,7 +17,7 @@
     "windows-package-probe": 148,
     "verification": 61
   },
-  "functional_total": 2400,
+  "functional_total": 2505,
   "failures": [],
   "evidence": [
     {
@@ -37,11 +38,15 @@
     },
     {
       "path": "regression\\chessis34.json",
-      "sha256": "de6e7ab043ff9bc30237ccf85693f84214bcc8b18466026be2639764b27c0593"
+      "sha256": "e455f7169ee16e20e468fa5a8f8cb35e94303df81c63d32a6e78b4a1f2a83aba"
     },
     {
       "path": "regression\\board-hud.json",
-      "sha256": "b6d318b2a8c851de53407c37517fc23ebed6c9f527adfa6b97c29cd08041b9af"
+      "sha256": "446de3b96f01b76e62d90a47f2b0a084f1b214b26e3b6090c1d3ca42d6b33a64"
+    },
+    {
+      "path": "regression\\startup-menu.json",
+      "sha256": "b89879895d45d264492d352cce456e74dd24c2b75b2a10ebe0b6fafaa282a051"
     },
     {
       "path": "regression\\chessis25.json",
@@ -69,11 +74,11 @@
     },
     {
       "path": "package\\windows-package-probe.json",
-      "sha256": "036b1ff32163f188be4b0b3420d6fe0d102a3b700df0bc57c7f7f6c46eea4be2"
+      "sha256": "ace46eef7a1379ce7e5f970cd31ed6cb39313947846e2d7e51d5b0a9c828279c"
     },
     {
       "path": "package\\verification.json",
-      "sha256": "f6bc35102a5a3bfa5dd39c4e676f80042e46706568f25bf8dd8fb89427115bd9"
+      "sha256": "fb11223efdc61ed6c7305093a2ad2e008056dabae995fc0f54f06222d6e96a74"
     }
   ],
   "packaged_modules": {
@@ -83,23 +88,60 @@
     "shogi_variation_view": "32be99aa6f59c4021819e28da6652427b918d4da466879d1222cffd40a070938",
     "shogi_i18n": "f0d3b8bca816fe50ebd4045bc5821c719378bc32d51a993cad57248d06e6ba41",
     "shogi_board_view": "a7218df74b97121ed52db85e97e22380142caf86f2c6f1132af0fbf952f29ff8",
-    "shogi_chessis_menu": "19c2b5c845329630e314da9fdb33a8f02a25b36f2ccd7204dcb20c9d04d41050"
+    "shogi_chessis_menu": "003cbed94aa52f21b414a21be26016ff67ecf818cc2da80e2cffc3d6f30a9ec0"
   },
-  "first_board_frame_ms": 2238,
+  "first_board_frame_ms": 1916,
   "artifacts": [
     {
       "path": "builds/Shogi-0.34.0-windows-x64.zip",
-      "bytes": 150388446,
-      "sha256": "aecb12c18ad30f21ceacbc4548d7bd07ac19b723d96a6451e9f9a4c7dad92850"
+      "bytes": 150388472,
+      "sha256": "e58e18062db7d2b57691eed11a87e402e1ded1eec342469de424e54ddd899ff0"
     },
     {
       "path": "builds/Shogi-0.34.0-android-arm64.apk",
-      "bytes": 136298092,
-      "sha256": "adab823e82ffb8c9afe66f4c5e573a6cb9aecd6d14620f969a7fb1857a267f74"
+      "bytes": 136298236,
+      "sha256": "059544cdd2efb01b814ac42c9956cdf42a0ab67da85b8da7984e2eeec1087c90"
     }
   ],
-  "android_device_tested": false,
-  "android_validation": null,
+  "android_device_tested": true,
+  "android_validation": {
+    "checked_utc": "2026-09-11T08:10:44.665560+00:00",
+    "version": "0.34.0",
+    "version_code": 52,
+    "device": "V2203A",
+    "android": "14",
+    "apk_sha256": "059544cdd2efb01b814ac42c9956cdf42a0ab67da85b8da7984e2eeec1087c90",
+    "scope": [
+      "Cold launch restores the existing position and opens the drawer without a move",
+      "Tapping the right backdrop dismisses the drawer",
+      "The board and hand area remain pixel-identical after dismissal",
+      "More options open without making a move"
+    ],
+    "full_device_acceptance": false,
+    "failures": [],
+    "evidence": [
+      {
+        "file": "final-startup-board.png",
+        "sha256": "26e6173976e6aa110ce0fec8339d103b9594d8eaf5287c1a9df88a5190ae5abc"
+      },
+      {
+        "file": "final-startup-menu.png",
+        "sha256": "fc36a98476b6cc1489b83cf795af9f092ce716876d38f29f80a0ccd375897335"
+      },
+      {
+        "file": "final-menu-dismissed.png",
+        "sha256": "cfc6f007bc4189df02d5563de56bb4c8eadf6cf4a435ded74dfc1572741b5df5"
+      },
+      {
+        "file": "final-more.png",
+        "sha256": "2d6d2189114a4efecda2231ea9140f8962f1777d6a4d3d962f9e7c60f5ef4713"
+      },
+      {
+        "file": "final-more-dismissed.png",
+        "sha256": "cfc6f007bc4189df02d5563de56bb4c8eadf6cf4a435ded74dfc1572741b5df5"
+      }
+    ]
+  },
   "rendering_stalls_resolved": false,
   "all_ui_translated": false,
   "full_chessis_parity": false,

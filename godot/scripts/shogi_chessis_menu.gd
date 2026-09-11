@@ -88,6 +88,7 @@ var display_language = ""
 
 func initialize(owner_node) -> void:
 	super.initialize(owner_node)
+	backdrop.gui_input.connect(_menu_backdrop_input)
 	study = preload("res://scripts/shogi_variation_study.gd").new()
 	study.app = app
 	variation_ui = preload("res://scripts/shogi_variation_view.gd").new()
@@ -148,6 +149,9 @@ func initialize(owner_node) -> void:
 	live_panel = VBoxContainer.new()
 	live_panel.add_theme_constant_override("separation", 4)
 	root.add_child(live_panel)
+	# Initial text shaping can temporarily inflate this container. Refit when
+	# its minimum settles so its invisible scroll area cannot cover the toolbar.
+	live_panel.minimum_size_changed.connect(layout, CONNECT_DEFERRED)
 	var row = HBoxContainer.new()
 	eval_row = row
 	live_panel.add_child(row)
@@ -276,6 +280,12 @@ func fit_decision() -> void:
 
 func show_home() -> void:
 	close()
+
+func _menu_backdrop_input(event: InputEvent) -> void:
+	if page_name not in ["drawer", "menu"]: return
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed and not event.canceled:
+		backdrop.accept_event()
+		close()
 
 func label(value: String, font_size: int = 18) -> Label:
 	var item = super.label(value, font_size)

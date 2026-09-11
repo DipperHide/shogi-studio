@@ -46,6 +46,8 @@ func run(instance) -> void:
 	await edited()
 	check(not app.ui.finish_study() and app.ui.page_name == "save-study", "edited analysis asks how to leave")
 	await capture("save-study-portrait")
+	await tap(app.safe_rect().position + Vector2(8, 8))
+	check(app.ui.page_name == "save-study" and study.dirty, "outside tap does not dismiss the save decision or discard edits")
 	await press("CancelStudyExit")
 	check(study.active and study.dirty and app.ui.page == null, "continue editing keeps unsaved changes")
 	app.ui.live_key = study.current.position.key()
