@@ -2,17 +2,17 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
 
-A free shogi app for Android and Windows, built with Godot 4.7.2 and a local YaneuraOu engine. Current version: **0.33.0**. **All existing features are free: no membership, purchase screen or paid unlock.**
+A free shogi app for Android and Windows, built with Godot 4.7.2 and a local YaneuraOu engine. Current version: **0.34.0**. **All existing features are free: no membership, purchase screen or paid unlock.**
 
 ![Wooden board](docs/images/board-0.20.png)
 
 ## Install
 
-Source and packages are public: [0.33.0 Release](https://github.com/DipperHide/shogi-studio/releases/tag/v0.33.0). Daily tournament updates are enabled, and the first cloud refresh completed successfully.
+Source and packages are public: [0.34.0 Release](https://github.com/DipperHide/shogi-studio/releases/tag/v0.34.0). Daily tournament updates are enabled, and the first cloud refresh completed successfully.
 
-Download `Shogi-0.33.0-android-arm64.apk` from [Releases](https://github.com/DipperHide/shogi-studio/releases) for ARM64 Android devices. On Windows, extract `Shogi-0.33.0-windows-x64.zip`, run `Shogi.exe` and keep the `engines` folder beside it.
+Download `Shogi-0.34.0-android-arm64.apk` from [Releases](https://github.com/DipperHide/shogi-studio/releases) for ARM64 Android devices. On Windows, extract `Shogi-0.34.0-windows-x64.zip`, run `Shogi.exe` and keep the `engines` folder beside it.
 
-Android package: `org.shogistudio.artpreview`, versionCode 51. This build uses the release template with the previous development signing key for upgrade compatibility. Private keys are excluded. Back up your games before installing a build with a different signer.
+Android package: `org.shogistudio.artpreview`, versionCode 52. This build uses the release template with the previous development signing key for upgrade compatibility. Private keys are excluded. Back up your games before installing a build with a different signer.
 
 ## Features
 
@@ -35,7 +35,9 @@ Android package: `org.shogistudio.artpreview`, versionCode 51. This build uses t
 - Version 0.32 hints explicitly show Promote / Do not promote, with matching numbered badges on 2D and 3D boards. Alternatives to the same square stay distinct; continuations and full practice hints identify declined promotion. See [promotion hints](docs/PROMOTION-HINTS.md).
 - Version 0.33 unifies personal and master records with favorites, tags, metadata editing, SFEN filtering and independent animated previews. Loading preserves the chosen ply; backups retain favorites and tags. See [Personal records](docs/PERSONAL-ARCHIVE.md).
 
-[Variation guide](docs/VARIATIONS.md) · [0.33 test results](docs/TESTING-0.33.md) (Chinese) · [Evaluation bar / 評価バー / 评价条](docs/EVALUATION-BAR.md) · [Position editor / 局面編集 / 局面编辑](docs/POSITION-EDITOR.md) · [Opening preview / 戦法プレビュー / 开局预览](docs/OPENING-PREVIEW.md) · [Analysis import / 棋譜入力 / 分析导入](docs/ANALYSIS-IMPORT.md) · [Tournament archive / 大会棋譜 / 大赛棋谱](docs/TOURNAMENT-ARCHIVE.md)
+- Version 0.34 adds light wooden hand trays and fixes player / clock overlap. Menus preserve board size; English and Japanese board and settings displays were checked. Replay writes nothing; edited analysis offers Save, Discard and Keep Editing. Imports can load only, and the Dragon King icon has a light wood background. See [saving and mobile checks](docs/OPTIONAL-SAVING.md).
+
+[Variation guide](docs/VARIATIONS.md) · [0.34 test results](docs/TESTING-0.34.md) (Chinese) · [Evaluation bar / 評価バー / 评价条](docs/EVALUATION-BAR.md) · [Position editor / 局面編集 / 局面编辑](docs/POSITION-EDITOR.md) · [Opening preview / 戦法プレビュー / 开局预览](docs/OPENING-PREVIEW.md) · [Analysis import / 棋譜入力 / 分析导入](docs/ANALYSIS-IMPORT.md) · [Tournament archive / 大会棋譜 / 大赛棋谱](docs/TOURNAMENT-ARCHIVE.md)
 
 Advanced screens and lessons are mainly in Chinese. Basic navigation supports Chinese, English and Japanese; these READMEs do not imply a fully translated UI.
 
@@ -57,7 +59,7 @@ Use Windows, Python 3.11+, Godot **4.7.2** with matching export templates, JDK 1
 python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -r requirements-dev.txt
 ./scripts/build_android.ps1
-./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.33.0
+./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.34.0
 ./scripts/test_chessis20.ps1
 ./scripts/test_chessis20.ps1 -CoreOnly -Network
 ./scripts/test_chessis23.ps1
@@ -70,7 +72,7 @@ python -m venv .venv
 
 Open `godot/project.godot` in Godot for desktop development. Runtime assets, engines and NNUE are included; builds restore engine source from its packaged archive. For a release APK, set `GODOT_ANDROID_KEYSTORE_RELEASE_PATH`, `GODOT_ANDROID_KEYSTORE_RELEASE_USER` and `GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD` locally, then run `./scripts/build_android.ps1 -Release`. Never commit signing credentials.
 
-[CI](.github/workflows/ci.yml) runs core tests on pushes and pull requests. Local tests also cover four screen sizes, both orientations, themes, captures, promotion, drops, continuous animation and the actual engine. See [0.23 statistics validation](docs/TESTING-0.23.md) and [0.20 board/tournament validation](docs/TESTING-0.20.md). Tests cannot guarantee zero bugs. No physical Android device was connected for this release; Bluetooth pairing and background recovery still need device validation.
+[CI](.github/workflows/ci.yml) runs core tests on pushes and pull requests. Local tests also cover four screen sizes, both orientations, themes, captures, promotion, drops, continuous animation and the actual engine. See [0.23 statistics validation](docs/TESTING-0.23.md) and [0.20 board/tournament validation](docs/TESTING-0.20.md). Tests cannot guarantee zero bugs. An Android 14 phone was used for startup, catalog and 2D/3D replay checks; see the [device report](docs/ANDROID-DEVICE-BASELINE.md). Two-device Bluetooth remains unverified.
 
 An approximately 450 ms rendering stall also occurs in an empty Windows window on the test machine and remains unresolved. This release does not claim consistently smooth animation on every device. See [0.24 animation validation](docs/TESTING-0.24.md).
 

@@ -4,6 +4,11 @@ func _init() -> void:
 	var source = FileAccess.get_file_as_string("res://assets/brand/studio-icon.svg")
 	if image.load_svg_from_string(source) != OK: quit(1); return
 	image.save_png("res://assets/brand/studio-icon.png")
+	var foreground = Image.new()
+	var transparent_source = source.replace('<rect width="512" height="512" rx="112" fill="url(#wood)" />', '')
+	transparent_source = transparent_source.replace('</defs>', '</defs><g transform="translate(51.2 51.2) scale(0.8)">').replace('</svg>', '</g></svg>')
+	if foreground.load_svg_from_string(transparent_source) != OK: quit(1); return
+	foreground.save_png("res://assets/brand/studio-foreground.png")
 	var images: Array[PackedByteArray] = []
 	var sizes = [16, 24, 32, 48, 64, 128, 256]
 	for edge in sizes:

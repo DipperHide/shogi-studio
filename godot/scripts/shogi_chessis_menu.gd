@@ -84,6 +84,7 @@ var analysis_import
 var tournament_view
 var archive_view
 var study_bar: HBoxContainer
+var display_language = ""
 
 func initialize(owner_node) -> void:
 	super.initialize(owner_node)
@@ -255,10 +256,23 @@ func _page(title: String, name: String, use_sheet: bool = false) -> VBoxContaine
 	if practice_active() and name not in ["promotion", "confirm-move"]: practice.stop(false)
 	if not pv_context.is_empty(): stop_pv(false)
 	var column = super._page(title, name, use_sheet)
+	if name in ["save-study", "replace-game", "analysis-import-choice"]:
+		# Wrapped headings can temporarily increase the minimum while shaping.
+		# Refit after that minimum settles, including a language change.
+		page.minimum_size_changed.connect(func(): fit_decision.call_deferred())
+	if use_sheet:
+		backdrop.color = Color(0, 0, 0, 0.5)
+		backdrop.show()
 	navigation.hide()
 	if top_bar != null: top_bar.hide(); move_scroll.hide(); live_panel.hide()
 	layout()
 	return column
+
+func fit_decision() -> void:
+	if page == null or page_name not in ["save-study", "replace-game", "analysis-import-choice"]: return
+	var safe: Rect2 = app.safe_rect()
+	page.size = Vector2(minf(440, safe.size.x - 24), minf(440, safe.size.y - 24))
+	page.position = safe.position + (safe.size - page.size) / 2
 
 func show_home() -> void:
 	close()
@@ -342,6 +356,9 @@ func layout() -> void:
 		page.size = Vector2(minf(320, safe.size.x - 36), safe.size.y)
 		backdrop.color = Color(0, 0, 0, 0.6)
 		backdrop.show()
+	if page != null and page_name in ["save-study", "replace-game", "analysis-import-choice"]:
+		fit_decision()
+		backdrop.color = Color(0, 0, 0, 0.6)
 	if page != null and page_name == "report":
 		page.position = safe.position
 		page.size = safe.size
@@ -374,6 +391,12 @@ func apply_theme() -> void:
 	if page != null and page_name in WOOD_REPORT_PAGES:
 		for item in page.find_children("*", "Label", true, false): report_colors[item] = item.get_theme_color("font_color")
 	super.apply_theme()
+	if display_language != app.preferences.language:
+		display_language = app.preferences.language
+		ribbon_key = ""
+		if variation_ui != null: variation_ui.bar_key = ""
+		if toolbar != null and toolbar.get_child_count() == 8:
+			for i in range(8): toolbar.get_child(i).tooltip_text = app.t(["菜单", "翻转棋盘", "提示与分析", "上一手", "自动回放", "下一手", "悔棋", "更多"][i])
 	for item in report_colors: item.add_theme_color_override("font_color", report_colors[item])
 	if page_name == "editor" and is_instance_valid(editor): editor.apply_theme()
 	if page_name in ["openings", "opening-info"] and opening_view != null: opening_view.apply_theme()
@@ -430,7 +453,9 @@ func update_ribbon() -> void:
 	if study_active(): variation_ui.update_ribbon(); return
 	var viewed = app._view_game()
 	var ply: int = viewed.moves.size() if app.replay_index < 0 else app.replay_index
-	var key = str([viewed.get_instance_id(), viewed.moves.size(), ply, viewed.comments])
+	# Comment editing explicitly invalidates this key. Do not serialize the entire
+	# annotated record every frame while the board is idle.
+	var key = str([viewed.get_instance_id(), viewed.moves.size(), ply, viewed.comments.size()])
 	if key == ribbon_key: return
 	ribbon_key = key
 	for child in move_strip.get_children(): move_strip.remove_child(child); child.queue_free()
@@ -444,9 +469,13 @@ func update_ribbon() -> void:
 		item.add_theme_stylebox_override("normal", Design.box(app.palette().accent if i == ply else Color.TRANSPARENT, 5, 5))
 		if i == ply: item.add_theme_color_override("font_color", Color.WHITE)
 		move_strip.add_child(item)
-		if i == ply: move_scroll.ensure_control_visible.call_deferred(item)
+		if i == ply: reveal_ribbon.call_deferred(item.get_instance_id())
 	if not live_enabled:
-		live_text.text = str(viewed.comments.get(str(ply), "点击「分析」查看候选着手。"))
+		live_text.text = str(viewed.comments.get(str(ply), app.t("点击「分析」查看候选着手。")))
+
+func reveal_ribbon(instance_id: int) -> void:
+	var control = instance_from_id(instance_id)
+	if is_instance_valid(control) and move_scroll.is_ancestor_of(control): move_scroll.ensure_control_visible(control)
 
 func show_history(ply: int) -> void:
 	if practice_active():
@@ -485,7 +514,7 @@ func toggle_live() -> void:
 	if not live_enabled:
 		app._pause_search()
 		arrows.clear()
-		live_text.text = "分析已暂停"
+		live_text.text = app.t("分析已暂停")
 		app._redraw()
 	engine_toggle.text = "Ⅱ" if live_enabled else "▷"
 
@@ -500,7 +529,7 @@ func show_good_line() -> void:
 	if page != null: _board_keep()
 	live_enabled = true
 	live_key = ""
-	live_text.text = "正在寻找好棋线路… 点击候选着手右侧播放按钮，可逐手查看。"
+	live_text.text = app.t("正在寻找好棋线路… 点击候选着手右侧播放按钮，可逐手查看。")
 	live_text.show()
 
 func evaluation() -> Dictionary:
@@ -524,14 +553,14 @@ func update_coach_display() -> void:
 	var details = evaluation()
 	if details.has("score"):
 		var chance = Coach.sente_chance(details, app._display_position().turn)
-		win_rate_label.text = "胜率估计  先手 %.0f%%  ·  后手 %.0f%%" % [chance * 100, (1 - chance) * 100]
+		win_rate_label.text = app.t("胜率估计  先手 %.0f%%  ·  后手 %.0f%%") % [chance * 100, (1 - chance) * 100]
 	else:
-		win_rate_label.text = "胜率估计 · 计算中…" if app.coach.error.is_empty() else "胜率估计 · 引擎暂不可用"
+		win_rate_label.text = app.t("胜率估计 · 计算中…" if app.coach.error.is_empty() else "胜率估计 · 引擎暂不可用")
 	var warning: Dictionary = app.coach.warning
 	coach_notice.visible = not warning.is_empty() and app.replay_index < 0 and app.review_game == null and app.session == null
 	if coach_notice.visible:
-		coach_notice.text = "第 %d 手可能是失误 · 查看更好线路" % warning.ply
-		coach_notice.tooltip_text = warning.label + " · 引擎评价损失 %d" % warning.loss
+		coach_notice.text = app.t("第 %d 手可能是失误 · 查看更好线路") % warning.ply
+		coach_notice.tooltip_text = warning.label + app.t(" · 引擎评价损失 %d") % warning.loss
 
 func review_coach() -> void:
 	var warning: Dictionary = app.coach.warning
@@ -542,7 +571,7 @@ func review_coach() -> void:
 	live_details.clear()
 	clear_pv_rows()
 	receive_info(warning.best)
-	live_text.text = "这步的更好线路；可播放查看，或从这里重新下。"
+	live_text.text = app.t("这步的更好线路；可播放查看，或从这里重新下。")
 	live_text.show()
 
 func update_analysis(lines: String) -> void:
@@ -568,7 +597,7 @@ func receive_info(details: Dictionary, saved_report: bool = false) -> void:
 	live_text.hide()
 	update_pv_arrows()
 	if int(details.get("multipv", 1)) == 1:
-		eval_label.text = "YaneuraOu · 深度 %d" % int(details.get("depth", 0))
+		eval_label.text = app.t("YaneuraOu · 深度 %d") % int(details.get("depth", 0))
 	engine_toggle.text = "Ⅱ" if live_enabled else "▷"
 	app._redraw()
 
@@ -642,7 +671,7 @@ func preview_pv(index: int) -> void:
 	app._refresh()
 	autoplay_on = true
 	return_line.show()
-	eval_label.text = "候选线路预览"
+	eval_label.text = app.t("候选线路预览")
 	arrows.clear()
 
 func stop_pv(return_report: bool = true) -> void:
@@ -657,7 +686,7 @@ func stop_pv(return_report: bool = true) -> void:
 	pv_context.clear()
 	autoplay_on = false
 	return_line.hide()
-	return_line.text = "↶ 返回原局"
+	localize(return_line, "↶ 返回原局")
 	eval_label.text = "YaneuraOu"
 	live_key = ""
 	app._refresh()
@@ -681,7 +710,7 @@ func show_menu() -> void:
 	var column = _page("更多选项", "menu", true)
 	column.add_child(button("变化线路" if study_active() else "试下变化", show_variations if study_active() else start_variation_analysis))
 	for entry in [["返回棋盘", _board_keep], ["悔棋", func(): close(); app._undo_move()], ["新对局", show_play], ["从此处继续", branch_here], ["整局分析报告", func(): start_report(false)], ["添加注释", show_comment], ["编辑棋谱信息", show_tags], ["画箭头与圆圈", start_drawing], ["清除本步标记", clear_annotations], ["保存棋谱", func():
-		var saved: String = app.records.archive(record_game())
+		var saved: String = save_viewed_record()
 		if saved.is_empty(): show_message(app.records.error)
 		else: show_record_details(saved)
 	], ["导出棋谱 / SFEN", show_export], ["入玉宣言", show_declaration], ["认输", show_resign]]:
@@ -712,7 +741,7 @@ func back() -> void:
 			return
 		tournament_view.close_filter("cancel"); return
 	if page_name == "tournament-archive": archive_view.leave_archive(); return
-	if page_name in ["analysis-import", "analysis-help"]:
+	if page_name in ["analysis-import", "analysis-help", "analysis-import-choice"]:
 		if file_dialog != null and is_instance_valid(file_dialog) and file_dialog.visible:
 			file_dialog.hide()
 			if file_dialog.has_meta("analysis_import"): analysis_import.file_received(analysis_import.picker_ticket, "", "")
@@ -726,6 +755,7 @@ func back() -> void:
 	if page_name == "opening-info": opening_view.show_list(); return
 	if page_name == "editor" and is_instance_valid(editor) and editor.interaction.pointer_id != -2: editor.interaction.cancel(); return
 	if page_name == "evaluation-options": _board_keep(); return
+	if page_name in ["save-study", "replace-game"]: _board_keep(); return
 	if page_name in ["variations", "variation-move", "variation-policy"]: _board_keep(); return
 	if page == null and study_active(): finish_study(); return
 	if page_name == "report-move":
@@ -747,7 +777,7 @@ func back() -> void:
 	if page_name in ["drawer", "menu", "report", "editor", "openings", "comment", "tags", "export", "backup", "about", "analysis-import", "board-settings", "engine-settings", "sound-settings", "bot-picker"]:
 		_board_keep()
 		return
-	if page == null and drawing: drawing = false; live_text.text = "标记已保存"; return
+	if page == null and drawing: drawing = false; live_text.text = app.t("标记已保存"); return
 	if page == null and app.replay_index >= 0: close(); return
 	super.back()
 
@@ -776,7 +806,7 @@ func show_setup(initial_mode: int = 0) -> void:
 	var clocks: Array[String] = []
 	for entry in app.Game.Clock.PRESETS: clocks.append(entry.name)
 	var clock_option = choice(column, "用时", clocks, 0)
-	column.add_child(label("本地对局打开菜单时暂停计时。新对局会先保存当前棋谱。", 14))
+	column.add_child(label("本地对局打开菜单时暂停计时。开始前可选择是否保存当前棋谱。", 14))
 	column.add_child(button("开始", func():
 		var mode_index = mode.selected
 		var human = (1 if randi() % 2 == 0 else -1) if side.selected == 2 else (1 if side.selected == 0 else -1)
@@ -804,21 +834,23 @@ func show_editor() -> void:
 		if not next.set_initial(sfen): return
 		next.update_result()
 		next.mode = "local"
-		adopt_game(next)
-		if app.game == next: app.flipped = orientation; app._refresh()
+		adopt_game(next, orientation)
 	)
 
-func adopt_game(next) -> void:
-	if not finish_study(false): return
+func adopt_game(next, orientation: Variant = null) -> void:
+	replace_game(func(): _adopt_game(next, orientation))
+
+func _adopt_game(next, orientation: Variant = null) -> void:
 	if app.coach != null: app.coach.clear()
-	if not app._archive_game(): show_message(app.notice); return
 	if not app._leave_network(): return
 	app._pause_search()
 	app._leave_review()
 	app._cancel_motion()
 	app.game = next
+	app.archive_baseline = app.RecordChanges.game_signature(next)
 	app.engine_level = next.engine_level
 	app.engine_provider = next.engine_provider
+	if orientation is bool: app.flipped = orientation
 	app._save()
 	close()
 
@@ -854,12 +886,13 @@ func open_historic(entry: Dictionary) -> void:
 	tournament_view.open_entry(entry)
 
 func _open_tournament_game(next) -> void:
+	if not finish_study(true, func(): _open_tournament_game(next)): return
 	if not analysis_import.open_game(next): return
 	live_enabled = false
 	live_details.clear()
 	clear_pv_rows()
 	live_text.text = next.metadata["棋战"] + "\n" + next.metadata["先手"] + "  —  " + next.metadata["后手"]
-	eval_label.text = "历史大赛 · %d 手" % next.moves.size()
+	eval_label.text = app.t("历史大赛 · %d 手") % next.moves.size()
 	update_inline_report()
 
 func show_paste() -> void:
@@ -924,6 +957,7 @@ func save_text(value: String, filename: String) -> void:
 	file_dialog.current_file = filename
 
 func show_comment() -> void:
+	if not prepare_review_edit(): return
 	var viewed = app._view_game()
 	var ply: int = viewed.moves.size() if app.replay_index < 0 else app.replay_index
 	var column = _page("第 %d 手 · 注释" % ply, "comment")
@@ -939,36 +973,47 @@ func show_comment() -> void:
 	))
 
 func show_tags() -> void:
+	if not prepare_review_edit(): return
 	var viewed = app._view_game()
 	var column = _page("棋谱信息", "tags")
 	var fields: Dictionary = {}
 	for key in ["先手", "后手", "棋战", "开始日時", "场所"]: fields[key] = field(column, key, str(viewed.metadata.get(key, "")))
 	column.add_child(button("保存", func():
-		for key in fields: viewed.metadata[key] = fields[key].text.left(200)
+		for key in fields:
+			if viewed.metadata.has(key) or not fields[key].text.is_empty(): viewed.metadata[key] = fields[key].text.left(200)
 		persist_viewed()
 		_board_keep()
 	))
 
+func prepare_review_edit() -> bool:
+	if app.review_game != null and not study_active(): start_variation_analysis()
+	return app.review_game == null or study_active()
+
+func save_viewed_record() -> String:
+	if study_active(): return study.record_path if study.save() else ""
+	var viewed = record_game()
+	var path: String = app.records.archive(viewed)
+	if not path.is_empty() and viewed == app.game: app.archive_baseline = app.RecordChanges.game_signature(app.game)
+	return path
+
 func persist_viewed() -> void:
+	ribbon_key = ""
 	if study_active():
 		study.persist_view()
 		if not study.error.is_empty(): show_message(study.error)
 		return
 	if app.review_game == null: app._save()
-	elif not app.review_path.is_empty():
-		var title = app.review_path.get_file()
-		for record in app.records.list_all():
-			if record.path == app.review_path: title = record.title
-		if not app.records.write(app.review_path, app.review_game, title): show_message(app.records.error)
 
 func start_drawing() -> void:
+	if not prepare_review_edit(): return
 	_board_keep()
 	drawing = true
 	live_enabled = false
 	app._pause_search()
-	live_text.text = "拖动两个格子画箭头，点格子画圆。返回键结束。"
+	live_text.text = app.t("拖动两个格子画箭头，点格子画圆。返回键结束。")
 
 func clear_annotations() -> void:
+	if not prepare_review_edit(): return
 	var viewed = app._view_game()
 	var ply: int = viewed.moves.size() if app.replay_index < 0 else app.replay_index
 	viewed.annotations.erase(str(ply))
@@ -1433,11 +1478,11 @@ func refresh_report_board() -> void:
 		var limit = report_board_line_limit
 		for candidate in report.samples[ply].get("candidates", []):
 			if int(candidate.get("multipv", 1)) <= limit: receive_info(candidate, true)
-		eval_label.text = "报告快照 · 第 %d 手 · 深度 %d" % [ply, report.samples[ply].depth]
-		if live_details.is_empty(): live_text.text = "该局面没有保存的候选线路。"
+		eval_label.text = app.t("报告快照 · 第 %d 手 · 深度 %d") % [ply, report.samples[ply].depth]
+		if live_details.is_empty(): live_text.text = app.t("该局面没有保存的候选线路。")
 	else:
-		eval_label.text = "此局面尚未分析"
-		live_text.text = "点击播放分析可继续搜索。"
+		eval_label.text = app.t("此局面尚未分析")
+		live_text.text = app.t("点击播放分析可继续搜索。")
 	app._redraw()
 
 func show_report_move_details(ply: int, restore_context: bool = false) -> void:
@@ -1510,7 +1555,7 @@ func preview_report_line(ply: int, details: Dictionary, return_details: bool = f
 	if not pv_context.is_empty():
 		pv_context.report = true
 		pv_context.details = return_details
-		return_line.text = "↶ 返回分析报告"
+		return_line.text = app.t("↶ 返回分析报告")
 
 func select_report_category(side: int, category: String) -> void:
 	if report.game == null: return
@@ -1689,7 +1734,8 @@ func show_evaluation_options() -> void:
 
 func extra_toggle(column: VBoxContainer, title: String, key: String) -> void:
 	var item = CheckButton.new()
-	item.text = title
+	localize(item, title)
+	item.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	item.button_pressed = app.preferences.studio[key]
 	item.custom_minimum_size.y = 48
 	item.toggled.connect(func(value): set_extra(key, value))
@@ -1712,7 +1758,7 @@ func show_board_settings() -> void:
 	var themes = choice(column, "棋盘主题", theme_names, maxi(0, keys.find(app.preferences.studio.board_theme)))
 	themes.item_selected.connect(func(index): set_extra("board_theme", keys[index]); app._redraw())
 	var custom = ColorPickerButton.new()
-	custom.text = "自定义棋盘颜色"
+	custom.text = app.t("自定义棋盘颜色")
 	custom.color = Color(app.preferences.studio.get("custom_color", "ddbc8b"))
 	custom.custom_minimum_size.y = 48
 	custom.color_changed.connect(func(value): set_extra("custom_color", value.to_html(false)); set_extra("board_theme", "custom"))
@@ -1744,12 +1790,32 @@ func start_variation_analysis(source = null, ply: int = -2, path: String = "") -
 		source = app._view_game()
 		path = app.review_path
 	if ply == -2: ply = app.replay_index if app.replay_index >= 0 else source.moves.size()
+	if not finish_study(false, func(): start_variation_analysis(source, ply, path)): return
 	if not study.start(source, ply, path): show_message(study.error)
 
-func finish_study(restore: bool = true) -> bool:
+func finish_study(restore: bool = true, continuation: Callable = Callable()) -> bool:
 	if study == null or not study.active: return true
-	if not study.stop(restore): show_message(study.error); return false
-	return true
+	if not study.dirty: return study.stop(restore)
+	var column = _page("保存这次修改？", "save-study")
+	column.add_child(label("已修改走法、变化或注释。保存会写入棋谱库；不保存会放弃本次未保存的修改。", 15))
+	var problem = label(study.error, 14)
+	problem.visible = not study.error.is_empty()
+	problem.name = "StudySaveError"
+	column.add_child(problem)
+	var save = button("保存", func():
+		if not study.save(): problem.text = study.error; problem.show(); return
+		study.stop(restore)
+		if continuation.is_valid(): continuation.call()
+	)
+	save.name = "SaveStudyChanges"; column.add_child(save)
+	var discard = button("不保存", func():
+		study.stop(restore, true)
+		if continuation.is_valid(): continuation.call()
+	)
+	discard.name = "DiscardStudyChanges"; column.add_child(discard)
+	var cancel = button("继续编辑", func(): _board_keep())
+	cancel.name = "CancelStudyExit"; column.add_child(cancel)
+	return false
 
 func record_game():
 	return study.document() if study != null and study.active and app.review_game == study.view else app._view_game()
@@ -1871,6 +1937,7 @@ func show_result() -> void:
 	column.add_child(button("回放棋谱", func(): show_history(0)))
 	column.add_child(button("保存棋谱", func():
 		var saved: String = app.records.archive(app.game)
+		if not saved.is_empty(): app.archive_baseline = app.RecordChanges.game_signature(app.game)
 		if saved.is_empty(): show_message(app.records.error)
 		else: show_record_details(saved)
 	))

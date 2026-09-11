@@ -12,21 +12,20 @@ func update_bar() -> void:
 	if key == bar_key: return
 	bar_key = key
 	for child in ui.study_bar.get_children(): ui.study_bar.remove_child(child); child.queue_free()
-	var resume = ui.compact_button("变化 · %d" % maxi(0, segments().size() - 1) if study.effective() else "返回变化分析", ui.show_variations if study.effective() else study.resume, 28)
+	var resume = ui.compact_button(ui.app.t("变化 · %d") % maxi(0, segments().size() - 1) if study.effective() else "返回变化分析", ui.show_variations if study.effective() else study.resume, 28)
 	resume.name = "OpenVariations"
 	ui.study_bar.add_child(resume)
 	var main = ui.compact_button("主线", func(): study.resume(); study.select(study.tree.main.back() if not study.tree.main.is_empty() else 0), 28)
 	main.name = "VariationMainLine"
 	ui.study_bar.add_child(main)
 	if study.dirty:
-		var retry = ui.compact_button("保存失败 · 重试", func(): study.save(); bar_key = "", 28)
+		var retry = ui.compact_button("保存" if study.error.is_empty() else "重试保存", func(): study.save(); bar_key = "", 28)
 		retry.name = "RetryVariationSave"
 		retry.tooltip_text = study.error
 		ui.study_bar.add_child(retry)
-	else:
-		var done = ui.compact_button("结束", ui.finish_study, 28)
-		done.name = "ExitVariations"
-		ui.study_bar.add_child(done)
+	var done = ui.compact_button("结束", ui.finish_study, 28)
+	done.name = "ExitVariations"
+	ui.study_bar.add_child(done)
 
 func move_button(id: int, primary: bool) -> Button:
 	var study = ui.study
@@ -91,7 +90,7 @@ func update_ribbon() -> void:
 			var alternative = move_button(alt_id, false)
 			column.add_child(alternative)
 			if alt_id == study.tree.cursor: selected = alternative
-	if selected != null: ui.move_scroll.ensure_control_visible.call_deferred(selected)
+	if selected != null: ui.reveal_ribbon.call_deferred(selected.get_instance_id())
 
 func segments() -> Array:
 	var tree = ui.study.tree
@@ -134,7 +133,7 @@ func show_lines() -> void:
 	if not study.active: ui.start_variation_analysis(); return
 	if not study.effective(): study.resume()
 	var column = ui._page("变化线路", "variations")
-	column.add_child(ui.label("点击着手定位棋盘，长按着手可编辑。变化自动保存在棋谱库。", 13))
+	column.add_child(ui.label("点击着手定位棋盘，长按着手可编辑。修改后可选择保存或不保存；仅回放不会新增存档。", 13))
 	for entry in segments():
 		column.add_child(ui.label("主线" if entry.primary else "第 %d 手起 · %s变化" % [study.tree.nodes[entry.root].depth, "嵌套" if entry.depth > 1 else ""], 13))
 		var row = HBoxContainer.new()

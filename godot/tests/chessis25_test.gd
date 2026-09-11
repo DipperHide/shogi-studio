@@ -32,6 +32,7 @@ func run(instance) -> void:
 	if "--chessis28-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis28/variations")
 	if "--chessis29-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis29/chessis25")
 	if "--chessis30-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis30/chessis25")
+	if "--chessis34-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis34/variations")
 	DirAccess.make_dir_recursive_absolute(output)
 	app.records.root = output.path_join("records")
 	app.save_path = output.path_join("active-test.json")
@@ -82,10 +83,11 @@ func run(instance) -> void:
 	study.view.annotations[str(app.replay_index)] = [[0, 80]]
 	app.ui.persist_viewed()
 	check(study.tree.nodes[nested].annotations == [[0, 80]], "branch drawing is saved on its own node")
+	check(study.save(), "explicit save persists edited analysis")
 	saved_path = study.record_path
 	var stored = app.records.read(saved_path)
-	check(stored != null and stored.moves == source.moves and stored.comments == source.comments, "automatic record save preserves the original main moves and comments")
-	check(stored.variation_tree.nodes.size() == study.tree.nodes.size(), "automatic save includes every nested branch")
+	check(stored != null and stored.moves == source.moves and stored.comments == source.comments, "explicit record save preserves the original main moves and comments")
+	check(stored.variation_tree.nodes.size() == study.tree.nodes.size(), "explicit save includes every nested branch")
 	for appearance in ["minimal", "wood"]:
 		app.set_appearance(appearance)
 		for dimensions in [Vector2i(393, 852), Vector2i(852, 393)]:
@@ -136,6 +138,7 @@ func run(instance) -> void:
 	await settled()
 	var expected: String = app._display_position().key()
 	app.ui.branch_here()
+	if app.ui.page_name == "replace-game": await press("DiscardMatchChanges")
 	check(not app._study_active() and app.game.position.key() == expected and app.game.variation_tree != null, "continue from a nested variation creates the exact playable position and keeps its alternatives")
 	check(app.Game.from_data(app.game.to_data()) != null, "continued branch is a valid persistent game")
 	FileAccess.open(output.path_join("study-record.json"), FileAccess.WRITE).store_string(FileAccess.get_file_as_string(saved_path))

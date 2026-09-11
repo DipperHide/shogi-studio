@@ -22,6 +22,7 @@ func unchanged(label: String) -> void:
 
 func run(instance) -> void:
 	app=instance; output=ProjectSettings.globalize_path("res://../review/app/chessis33/ui")
+	if "--chessis34-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis34/archive-ui")
 	DirAccess.make_dir_recursive_absolute(output)
 	app.records.root=output.path_join("records-"+str(Time.get_ticks_usec())); app.save_path=output.path_join("active.json"); app.ui.tutorial.progress_path=output.path_join("learning.json")
 	app.get_tree().create_timer(240).timeout.connect(func(): app.get_tree().quit(2))
@@ -137,6 +138,8 @@ func run(instance) -> void:
 	app.ui.show_archives(); await ready_list(); await press("ArchiveImportFile")
 	picker.analysis_record_imported.emit(picker.request,"position startpos moves 7g7f","")
 	check(await until(func(): return not app.ui.analysis_import.busy,8),"valid archive import finishes")
+	check(app.ui.page_name=="analysis-import-choice" and app.records.list_all().size()==count_before,"valid file waits for explicit save choice")
+	await press("ImportAndSave")
 	check(app.records.list_all().size()==count_before+1 and not app.review_path.is_empty() and app.review_game.moves.size()==1,"valid folder import archives then loads")
 	app.ui.platform=null; app.ui.live_enabled=false; app._pause_search()
 	FileAccess.open(output.path_join("preview-motion.json"),FileAccess.WRITE).store_string(JSON.stringify(motions))

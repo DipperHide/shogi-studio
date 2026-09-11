@@ -130,10 +130,14 @@ func show_info(entry: Dictionary) -> void:
 	ui.layout()
 
 func load_preview() -> void:
-	if not is_instance_valid(preview) or not ui.finish_study(): return
+	if not is_instance_valid(preview): return
 	var next = preview.game
 	var ply: int = preview.ply
 	var flipped: bool = preview.board.flipped
+	if not ui.finish_study(true, func(): load_position(next, ply, flipped)): return
+	load_position(next, ply, flipped)
+
+func load_position(next, ply: int, flipped: bool) -> void:
 	ui.autoplay_on = false
 	ui.app.review_game = next; ui.app.review_path = ""; ui.app.replay_index = ply
 	ui.app.flipped = flipped

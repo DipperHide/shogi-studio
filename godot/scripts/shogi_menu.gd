@@ -80,7 +80,7 @@ func is_open() -> bool:
 
 func button(value: String, action: Callable) -> Button:
 	var item = Button.new()
-	item.text = app.t(value)
+	localize(item, value)
 	item.custom_minimum_size.y = 50
 	item.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	item.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -101,12 +101,22 @@ func button(value: String, action: Callable) -> Button:
 
 func label(value: String, font_size: int = 18) -> Label:
 	var item = Label.new()
-	item.text = app.t(value)
+	localize(item, value)
 	item.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	item.add_theme_font_size_override("font_size", font_size)
 	if font_size >= 19: item.add_theme_font_override("font", Design.heading_font(app.text_font))
 	if font_size <= 16: item.add_theme_color_override("font_color", app.palette().muted)
 	return item
+
+func localize(item: Control, source: String) -> void:
+	item.set_meta("translation_source", source)
+	item.text = app.t(source)
+	item.set_meta("translation_rendered", item.text)
+
+func refresh_translations() -> void:
+	for item in root.find_children("*", "Control", true, false):
+		if item.has_meta("translation_source") and item.text == item.get_meta("translation_rendered"):
+			localize(item, item.get_meta("translation_source"))
 
 func _page(title: String, name: String, use_sheet: bool = false) -> VBoxContainer:
 	if page != null:
@@ -148,9 +158,11 @@ func _page(title: String, name: String, use_sheet: bool = false) -> VBoxContaine
 	header.move_child(back_button, 0)
 	if name == "home": back_button.visible = false
 	var board_button = button(app.t("棋盘"), close)
+	board_button.name = "PageBoard"
+	board_button.autowrap_mode = TextServer.AUTOWRAP_OFF
 	board_button.custom_minimum_size.x = 56
 	board_button.size_flags_horizontal = Control.SIZE_SHRINK_END
-	board_button.visible = name != "home" and not use_sheet
+	board_button.visible = name not in ["home", "save-study", "replace-game", "analysis-import-choice"] and not use_sheet
 	header.add_child(board_button)
 	var scroll = preload("res://scripts/shogi_page_scroll.gd").new()
 	page_scroll = scroll
@@ -503,8 +515,9 @@ func show_host() -> void:
 			error.text = app.t("端口应为 1024 至 65535")
 			return
 		var seat = (1 if randi() % 2 == 0 else -1) if side.selected == 2 else (1 if side.selected == 0 else -1)
-		app._host_network(int(port.text), seat, clock_option.selected)
-		show_connection()
+		var port_value = int(port.text)
+		var clock_value = clock_option.selected
+		replace_game(func(): app._host_network(port_value, seat, clock_value); show_connection())
 	))
 
 func show_join() -> void:
@@ -525,8 +538,10 @@ func show_join() -> void:
 		if code.text.length() != 6 or not code.text.is_valid_int():
 			error.text = app.t("请输入六位房间码")
 			return
-		app._join_network(address.text, int(port.text), code.text)
-		show_connection()
+		var address_value = address.text
+		var port_value = int(port.text)
+		var code_value = code.text
+		replace_game(func(): app._join_network(address_value, port_value, code_value); show_connection())
 	))
 
 func show_connection() -> void:
@@ -594,7 +609,7 @@ func show_offer() -> void:
 
 func show_leave_network() -> void:
 	var column = _page(app.t("退出联机"), "leave-network")
-	column.add_child(label(app.t("退出后会断开连接并保存棋谱；对手可看到掉线状态。")))
+	column.add_child(label(app.t("退出后会断开连接；可以选择保存或不保存棋谱。")))
 	column.add_child(button(app.t("保存棋谱并退出"), func():
 		if not app._archive_game():
 			column.add_child(label(app.notice))
@@ -602,6 +617,11 @@ func show_leave_network() -> void:
 		if not app._leave_network():
 			column.add_child(label(app.notice))
 			return
+		app._new_game()
+		close()
+	))
+	column.add_child(button(app.t("不保存并退出"), func():
+		if not app._leave_network(): return
 		app._new_game()
 		close()
 	))
@@ -628,9 +648,9 @@ func show_bluetooth() -> void:
 		if not platform.bluetoothPermissionsGranted():
 			platform.requestBluetoothPermissions()
 			return
-		platform.makeDiscoverable()
-		app._connect_bluetooth(true, "", 1 if side.selected == 0 else -1, clock_option.selected)
-		show_connection()
+		var seat = 1 if side.selected == 0 else -1
+		var clock_value = clock_option.selected
+		replace_game(func(): platform.makeDiscoverable(); app._connect_bluetooth(true, "", seat, clock_value); show_connection())
 	))
 	column.add_child(button(app.t("搜索附近设备"), func(): platform.scanDevices()))
 	column.add_child(button(app.t("停止搜索"), func(): platform.stopScan()))
@@ -660,8 +680,7 @@ func _bluetooth_device(json: String) -> void:
 	var address: String = device.address
 	devices_column.add_child(button(str(device.get("name", app.t("未命名设备"))) + "\n" + address, func():
 		platform.stopScan()
-		app._connect_bluetooth(false, address)
-		show_connection()
+		replace_game(func(): app._connect_bluetooth(false, address); show_connection())
 	))
 
 func sheet_height() -> float:
@@ -671,6 +690,7 @@ func sheet_width() -> float:
 	return minf(380, app.safe_rect().size.x * 0.46) if app.size.x > app.size.y else 0.0
 
 func apply_theme() -> void:
+	refresh_translations()
 	var p: Dictionary = app.palette()
 	var theme = Theme.new()
 	theme.default_font = app.text_font
@@ -866,7 +886,7 @@ func show_result() -> void:
 	row.add_child(outcome)
 	column.add_child(label(app.t("共 %d 手", [app.game.moves.size()]), 14))
 	column.add_child(button(app.t("复盘这局"), func(): show_history(app.game.moves.size())))
-	column.add_child(button(app.t("再来一局"), func(): app._restart_request(); close()))
+	column.add_child(button(app.t("再来一局"), func(): app._restart_request()))
 	column.add_child(button(app.t("回到首页"), show_home))
 
 func show_engine() -> void:
@@ -999,15 +1019,20 @@ func _import_text(text: String) -> void:
 	else: show_record_details(saved)
 
 func replace_game(action: Callable) -> void:
-	if app.game.moves.is_empty() and app.session == null:
-		if app._archive_game(): action.call()
-		else: show_message(app.notice)
+	if has_method("finish_study") and not call("finish_study", false, func(): replace_game(action)): return
+	if not app._has_archive_changes() and app.session == null:
+		action.call()
 		return
 	confirmation_callback = action
 	var column = _page(app.t("开始新的对局？"), "replace-game")
-	column.add_child(label(app.t("当前棋谱将保存；联机对局会断开连接。"), 16))
-	column.add_child(button(app.t("保存并开始"), func():
-		if app._archive_game(): confirmation_callback.call()
-		else: show_message(app.notice)
-	))
-	column.add_child(button(app.t("继续对局"), close))
+	column.add_child(label(app.t("是否将当前棋谱保存到棋谱库？联机对局会断开连接。"), 16))
+	var problem = label("", 14); column.add_child(problem); problem.hide()
+	var save = button(app.t("保存并继续"), func():
+		if app._archive_game(): action.call()
+		else: problem.text = app.notice; problem.show()
+	)
+	save.name = "SaveMatchChanges"; column.add_child(save)
+	var discard = button(app.t("不保存并继续"), action)
+	discard.name = "DiscardMatchChanges"; column.add_child(discard)
+	var cancel = button(app.t("继续对局"), close)
+	cancel.name = "CancelMatchExit"; column.add_child(cancel)

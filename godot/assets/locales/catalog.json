@@ -28,8 +28,8 @@
     "Flip board"
   ],
   "提示与分析": [
-    "ヒント・解析",
-    "Hint & analysis"
+    "ヒントと検討",
+    "Hints and analysis"
   ],
   "本局棋谱": [
     "現在の棋譜",
@@ -45,11 +45,11 @@
   ],
   "当前联机": [
     "接続中の対局",
-    "Connection"
+    "Current connection"
   ],
   "保存棋谱": [
     "棋譜を保存",
-    "Save record"
+    "Save game"
   ],
   "已存棋谱": [
     "棋譜一覧",
@@ -780,11 +780,11 @@
     "Language"
   ],
   "棋字": [
-    "駒の文字",
+    "駒文字",
     "Piece lettering"
   ],
   "菱湖书法": [
-    "菱湖書体",
+    "菱湖書",
     "Ryoko calligraphy"
   ],
   "日文明朝体": [
@@ -801,10 +801,10 @@
   ],
   "标准": [
     "標準",
-    "Standard"
+    "Normal"
   ],
   "慢": [
-    "ゆっくり",
+    "遅い",
     "Slow"
   ],
   "落子声音": [
@@ -817,10 +817,10 @@
   ],
   "试听": [
     "試聴",
-    "Preview"
+    "Preview sound"
   ],
   "落点提示": [
-    "合法手の表示",
+    "移動可能なマスを表示",
     "Legal move hints"
   ],
   "上一步标记": [
@@ -832,8 +832,8 @@
     "Board coordinates"
   ],
   "同机自动转向": [
-    "同端末対局で自動反転",
-    "Auto-flip in local play"
+    "同一端末対局で自動反転",
+    "Auto-flip in local games"
   ],
   "引擎与署名": [
     "エンジン・クレジット",
@@ -1144,12 +1144,12 @@
     "Classic flat"
   ],
   "立体木制": [
-    "木製（3D）",
-    "3D wood"
+    "立体の木製駒",
+    "3D wooden pieces"
   ],
   "落子前确认": [
-    "着手を確認",
-    "Confirm each move"
+    "着手前に確認",
+    "Confirm before moving"
   ],
   "你的棋局": [
     "あなたの対局",
@@ -1258,5 +1258,581 @@
   "对局": [
     "対局",
     "Game"
+  ],
+  "持驹：无": [
+    "持ち駒なし",
+    "No pieces in hand"
+  ],
+  "起局": [
+    "開始局面",
+    "Start"
+  ],
+  "变化 · %d": [
+    "変化 · %d",
+    "Lines · %d"
+  ],
+  "返回变化分析": [
+    "変化の検討に戻る",
+    "Return to analysis"
+  ],
+  "主线": [
+    "本譜",
+    "Main line"
+  ],
+  "结束": [
+    "終了",
+    "Finish"
+  ],
+  "保存": [
+    "保存",
+    "Save"
+  ],
+  "重试保存": [
+    "保存を再試行",
+    "Retry save"
+  ],
+  "不保存": [
+    "保存しない",
+    "Discard"
+  ],
+  "继续编辑": [
+    "編集を続ける",
+    "Keep editing"
+  ],
+  "从这里下": [
+    "ここから対局",
+    "Play here"
+  ],
+  "快速报告": [
+    "簡易レポート",
+    "Quick report"
+  ],
+  "深度报告": [
+    "詳細レポート",
+    "Deep report"
+  ],
+  "好棋线路": [
+    "推奨手順",
+    "Best line"
+  ],
+  "更多选项": [
+    "その他の操作",
+    "More options"
+  ],
+  "棋盘与棋子": [
+    "盤と駒",
+    "Board and pieces"
+  ],
+  "分析棋谱": [
+    "棋譜を検討",
+    "Analyze a game"
+  ],
+  "历史大赛对局": [
+    "大会の棋譜",
+    "Tournament games"
+  ],
+  "我的棋谱": [
+    "自分の棋譜",
+    "My games"
+  ],
+  "大师棋谱": [
+    "プロの棋譜",
+    "Master games"
+  ],
+  "开局与练习": [
+    "定跡と練習",
+    "Openings and practice"
+  ],
+  "互动教程": [
+    "対話式レッスン",
+    "Interactive lessons"
+  ],
+  "对弈 · 分析 · 进步": [
+    "対局・検討・上達",
+    "Play · Analyze · Improve"
+  ],
+  "胜率估计 · 计算中…": [
+    "推定勝率 · 計算中…",
+    "Win estimate · calculating…"
+  ],
+  "胜率估计 · 引擎暂不可用": [
+    "推定勝率 · エンジン利用不可",
+    "Win estimate · engine unavailable"
+  ],
+  "胜率估计  先手 %.0f%%  ·  后手 %.0f%%": [
+    "推定勝率  先手 %.0f%% · 後手 %.0f%%",
+    "Win estimate  Sente %.0f%% · Gote %.0f%%"
+  ],
+  "YaneuraOu · 深度 %d": [
+    "YaneuraOu · 深さ %d",
+    "YaneuraOu · depth %d"
+  ],
+  "  (深度 %d)": [
+    "  (深さ %d)",
+    "  (depth %d)"
+  ],
+  "候选线路预览": [
+    "候補手順の再生",
+    "Candidate line preview"
+  ],
+  "分析已暂停": [
+    "検討を一時停止中",
+    "Analysis paused"
+  ],
+  "正在寻找好棋线路… 点击候选着手右侧播放按钮，可逐手查看。": [
+    "推奨手順を探索中… 候補手の再生ボタンで手順を確認できます。",
+    "Finding the best line… Use a candidate’s play button to step through it."
+  ],
+  "点击「分析」查看候选着手。": [
+    "検討を開始すると候補手が表示されます。",
+    "Start analysis to see candidate moves."
+  ],
+  "↶ 返回原局": [
+    "↶ 元の局面へ",
+    "↶ Return to game"
+  ],
+  "开始 / 暂停引擎分析": [
+    "エンジン検討の開始・一時停止",
+    "Start / pause engine analysis"
+  ],
+  "保存这次修改？": [
+    "変更を保存しますか？",
+    "Save these changes?"
+  ],
+  "已修改走法、变化或注释。保存会写入棋谱库；不保存会放弃本次未保存的修改。": [
+    "指し手・変化・コメントが変更されています。保存すると棋譜一覧に記録されます。保存しない場合、未保存の変更は失われます。",
+    "Moves, variations or comments have changed. Save them to your library, or discard the unsaved changes."
+  ],
+  "变化线路": [
+    "変化手順",
+    "Variations"
+  ],
+  "试下变化": [
+    "変化を試す",
+    "Try a variation"
+  ],
+  "声音": [
+    "サウンド",
+    "Sound"
+  ],
+  "音效、音量与试听": [
+    "効果音・音量・試聴",
+    "Effects, volume and preview"
+  ],
+  "主题、棋字、坐标与动画": [
+    "テーマ・駒文字・座標・アニメーション",
+    "Themes, lettering, coordinates and animation"
+  ],
+  "对弈设置": [
+    "対局設定",
+    "Game settings"
+  ],
+  "确认落子、提示与自动转向": [
+    "着手確認・ヒント・自動反転",
+    "Move confirmation, hints and auto-flip"
+  ],
+  "引擎与分析": [
+    "エンジンと検討",
+    "Engine and analysis"
+  ],
+  "线程、内存与候选着手": [
+    "スレッド・メモリ・候補手",
+    "Threads, memory and candidate moves"
+  ],
+  "导出和恢复本地数据": [
+    "ローカルデータの出力・復元",
+    "Export and restore local data"
+  ],
+  "经典木纹": [
+    "標準の木目",
+    "Classic wood"
+  ],
+  "胡桃木": [
+    "ウォールナット",
+    "Walnut"
+  ],
+  "青绿": [
+    "青緑",
+    "Teal"
+  ],
+  "蓝色": [
+    "青",
+    "Blue"
+  ],
+  "石板": [
+    "スレート",
+    "Slate"
+  ],
+  "自定义": [
+    "カスタム",
+    "Custom"
+  ],
+  "自定义棋盘颜色": [
+    "盤の色を選択",
+    "Custom board color"
+  ],
+  "二维将棋": [
+    "平面の駒",
+    "2D shogi"
+  ],
+  "书法平面": [
+    "平面の書体",
+    "Flat calligraphy"
+  ],
+  "日文明朝": [
+    "明朝体",
+    "Mincho"
+  ],
+  "显示引擎箭头": [
+    "エンジンの矢印を表示",
+    "Engine arrows"
+  ],
+  "显示评价条": [
+    "評価バーを表示",
+    "Evaluation bar"
+  ],
+  "评价条位置": [
+    "評価バーの位置",
+    "Evaluation bar position"
+  ],
+  "智能": [
+    "自動",
+    "Automatic"
+  ],
+  "左侧": [
+    "左側",
+    "Left"
+  ],
+  "底部": [
+    "下部",
+    "Bottom"
+  ],
+  "仅报告回放时在左侧": [
+    "レポート再生時のみ左側",
+    "Left during report replay"
+  ],
+  "局面编辑器显示实时评分": [
+    "局面編集で評価値を表示",
+    "Live score in position editor"
+  ],
+  "显示受攻击的棋子": [
+    "攻撃されている駒を表示",
+    "Highlight attacked pieces"
+  ],
+  "棋子动画": [
+    "駒のアニメーション",
+    "Move animation"
+  ],
+  "关闭": [
+    "オフ",
+    "Off"
+  ],
+  "快速": [
+    "速い",
+    "Fast"
+  ],
+  "慢速": [
+    "遅い",
+    "Slow"
+  ],
+  "自动回放间隔": [
+    "自動再生の間隔",
+    "Autoplay interval"
+  ],
+  "0.5 秒": [
+    "0.5 秒",
+    "0.5 seconds"
+  ],
+  "1 秒": [
+    "1 秒",
+    "1 second"
+  ],
+  "2 秒": [
+    "2 秒",
+    "2 seconds"
+  ],
+  "3 秒": [
+    "3 秒",
+    "3 seconds"
+  ],
+  "分析棋盘的新变化": [
+    "検討中の新しい変化",
+    "New analysis variations"
+  ],
+  "替换后续主线": [
+    "以降の本譜を置き換える",
+    "Replace remaining main line"
+  ],
+  "保留主线，另存为变化": [
+    "本譜を残して変化を作る",
+    "Keep main line and add variation"
+  ],
+  "拖动落子": [
+    "ドラッグで着手",
+    "Drag to move"
+  ],
+  "坏棋提醒": [
+    "悪手の警告",
+    "Bad move alerts"
+  ],
+  "显示胜率估计": [
+    "推定勝率を表示",
+    "Show estimated win rate"
+  ],
+  "玩家名称": [
+    "プレイヤー名",
+    "Player name"
+  ],
+  "保存名称": [
+    "名前を保存",
+    "Save name"
+  ],
+  "线程数": [
+    "スレッド数",
+    "Threads"
+  ],
+  "Hash 内存 (MB)": [
+    "ハッシュメモリ (MB)",
+    "Hash memory (MB)"
+  ],
+  "候选着手数": [
+    "候補手の数",
+    "Candidate moves"
+  ],
+  "应用并重启引擎": [
+    "適用してエンジンを再起動",
+    "Apply and restart engine"
+  ],
+  "引擎与评价条": [
+    "エンジンと評価バー",
+    "Engine and evaluation bar"
+  ],
+  "暂停分析": [
+    "検討を一時停止",
+    "Pause analysis"
+  ],
+  "开始分析": [
+    "検討を開始",
+    "Start analysis"
+  ],
+  "增加候选着手": [
+    "候補手を増やす",
+    "More candidate moves"
+  ],
+  "减少候选着手": [
+    "候補手を減らす",
+    "Fewer candidate moves"
+  ],
+  "引擎设置": [
+    "エンジン設定",
+    "Engine settings"
+  ],
+  "在此输入棋谱或 SFEN 局面": [
+    "棋譜または SFEN 局面を入力",
+    "Enter a game record or SFEN position here"
+  ],
+  "练习中": [
+    "練習中",
+    "Practice"
+  ],
+  "开局": [
+    "定跡",
+    "Openings"
+  ],
+  "长按可查看变化、注释或提升主线": [
+    "長押しで変化・コメント・本譜への昇格",
+    "Hold for variations, comments or promotion to main line"
+  ],
+  "棋盘": [
+    "盤面",
+    "Board"
+  ],
+  "备份与恢复": [
+    "バックアップと復元",
+    "Backup and restore"
+  ],
+  "棋盘主题": [
+    "盤のテーマ",
+    "Board theme"
+  ],
+  "棋子外观": [
+    "駒の外観",
+    "Piece appearance"
+  ],
+  "从此处继续": [
+    "この局面から対局",
+    "Play from here"
+  ],
+  "整局分析报告": [
+    "棋譜全体の分析レポート",
+    "Full game report"
+  ],
+  "添加注释": [
+    "コメントを追加",
+    "Add comment"
+  ],
+  "编辑棋谱信息": [
+    "棋譜情報を編集",
+    "Edit game information"
+  ],
+  "画箭头与圆圈": [
+    "矢印・丸を描く",
+    "Draw arrows and circles"
+  ],
+  "清除本步标记": [
+    "この局面の印を消す",
+    "Clear position marks"
+  ],
+  "导出棋谱 / SFEN": [
+    "棋譜 / SFEN を出力",
+    "Export game / SFEN"
+  ],
+  "第 %d 手可能是失误 · 查看更好线路": [
+    "%d 手目は悪手の可能性 · 推奨手順を見る",
+    "Possible mistake at move %d · View a better line"
+  ],
+  " · 引擎评价损失 %d": [
+    " · 評価値の損失 %d",
+    " · Evaluation loss %d"
+  ],
+  "历史大赛 · %d 手": [
+    "大会棋譜 · %d 手",
+    "Tournament game · %d moves"
+  ],
+  "报告快照 · 第 %d 手 · 深度 %d": [
+    "保存された評価 · %d 手目 · 深さ %d",
+    "Saved evaluation · move %d · depth %d"
+  ],
+  "这步的更好线路；可播放查看，或从这里重新下。": [
+    "この局面の推奨手順です。再生するか、ここから指し直せます。",
+    "Play through this better line, or play again from here."
+  ],
+  "标记已保存": [
+    "印を記録しました",
+    "Marks recorded"
+  ],
+  "拖动两个格子画箭头，点格子画圆。返回键结束。": [
+    "マス間をドラッグして矢印、タップして丸を描きます。戻るで終了。",
+    "Drag between squares for an arrow; tap for a circle. Press Back to finish."
+  ],
+  "该局面没有保存的候选线路。": [
+    "この局面に保存された候補手順はありません。",
+    "No candidate lines saved for this position."
+  ],
+  "此局面尚未分析": [
+    "未検討の局面",
+    "Position not yet analyzed"
+  ],
+  "点击播放分析可继续搜索。": [
+    "検討の再生ボタンで探索を続けられます。",
+    "Press the analysis play button to continue searching."
+  ],
+  "↶ 返回分析报告": [
+    "↶ 分析レポートへ",
+    "↶ Back to report"
+  ],
+  "载入棋谱": [
+    "棋譜の読み込み",
+    "Load game"
+  ],
+  "是否将当前棋谱保存到棋谱库？联机对局会断开连接。": [
+    "現在の棋譜を保存しますか？オンライン対局は切断されます。",
+    "Save the current game to your library? Any online game will disconnect."
+  ],
+  "不保存并继续": [
+    "保存せずに続ける",
+    "Continue without saving"
+  ],
+  "保存并继续": [
+    "保存して続ける",
+    "Save and continue"
+  ],
+  "答题方": [
+    "解答側",
+    "Your turn"
+  ],
+  "对方": [
+    "相手側",
+    "Opponent"
+  ],
+  "新对局": [
+    "新しい対局",
+    "New game"
+  ],
+  "棋谱库": [
+    "棋譜一覧",
+    "Game library"
+  ],
+  "与电脑对弈": [
+    "コンピューターと対局",
+    "Play the computer"
+  ],
+  "选择难度与先后手": [
+    "強さと手番を選択",
+    "Choose difficulty and side"
+  ],
+  "与朋友共用棋盘": [
+    "友達と同じ盤で対局",
+    "Share the board with a friend"
+  ],
+  "电脑对电脑": [
+    "コンピューター同士",
+    "Computer vs computer"
+  ],
+  "观看引擎双方对弈": [
+    "エンジン同士の対局を観戦",
+    "Watch two engines play"
+  ],
+  "IP 直连对局": [
+    "IP 直接接続で対局",
+    "Direct IP game"
+  ],
+  "连接附近的 Android 设备": [
+    "近くの Android 端末と接続",
+    "Connect to a nearby Android device"
+  ],
+  "仅载入分析": [
+    "検討に読み込むだけ",
+    "Load for analysis only"
+  ],
+  "保存到棋谱库并载入": [
+    "保存して読み込む",
+    "Save to library and load"
+  ],
+  "%d 手 · 可以只载入回放，也可以保存到个人棋谱库。": [
+    "%d 手 · 再生用に読み込むか、自分の棋譜一覧に保存できます。",
+    "%d moves · Load for replay only, or save to your game library."
+  ],
+  "选择电脑": [
+    "コンピューターを選択",
+    "Choose a computer"
+  ],
+  "选择练习搭档": [
+    "練習相手を選ぶ",
+    "Choose a practice partner"
+  ],
+  "熟悉每一枚棋子的走法": [
+    "駒の動かし方を学ぶ",
+    "Learn how each piece moves"
+  ],
+  "练习吃子与持驹打入": [
+    "駒を取る・打つ練習",
+    "Practice captures and drops"
+  ],
+  "留意对方的下一步": [
+    "相手の次の手を読む",
+    "Watch your opponent’s next move"
+  ],
+  "制定完整的攻守计划": [
+    "攻守の計画を立てる",
+    "Plan your attack and defense"
+  ],
+  "寻找局面中的关键着手": [
+    "局面の急所を見つける",
+    "Find the key move"
+  ],
+  "挑战完整搜索强度": [
+    "最大の探索強度に挑戦",
+    "Challenge the full engine strength"
   ]
 }

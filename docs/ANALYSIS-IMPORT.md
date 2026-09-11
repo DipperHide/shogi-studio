@@ -9,7 +9,7 @@
 1. 打开“分析棋谱”，在“棋谱文字 / 文件”中输入或粘贴 KIF、CSA、USI、SFEN 或本应用 JSON，再点“载入棋谱”。选择文件后直接校验并载入。
 2. 长文本超过 16,000 字时显示只读预览，完整内容仍用于校验。可以重新粘贴或清空；不会把截短的预览当作原棋谱。
 3. 从“最近棋谱”中搜索、选择本机保存的对局。“历史大赛”保留近期官方目录和 195 局离线棋谱。
-4. 错误显示在弹窗内，原对局和变化分析保持原状。成功载入才结束旧变化会话并显示新棋谱；进行中的实际对局仍保留。
+4. 错误显示在弹窗内，原对局和变化分析保持原状。若旧变化已修改，先选择保存、不保存或继续编辑，再执行待处理的载入；进行中的实际对局仍保留。
 
 输入与文件限制为 2 MiB。普通导入保留棋谱文字注释；公开赛事下载仍使用原有去除讲解的流程。文件支持 UTF-8、UTF-8 BOM 与 CP932（Windows Shift JIS），不表示已支持所有 KIF 方言、KI2 或所有历史编码。SFEN 只代表一个局面。
 
@@ -17,13 +17,13 @@
 
 ## English
 
-The analysis dialog has an inline record field, explicit Paste and Choose File actions, two source tabs and a separate Recent Games list. Load KIF, CSA, USI, SFEN or this app's JSON directly into analysis. The original live game stays intact; valid imports end any previous variation session before replacing the reviewed record.
+The analysis dialog has an inline record field, explicit Paste and Choose File actions, two source tabs and a separate Recent Games list. Load KIF, CSA, USI, SFEN or this app's JSON directly into analysis. The original live game stays intact; when the previous variation has edits, loading waits for a save/discard decision.
 
 Files support UTF-8/BOM and CP932, with a 2 MiB limit. Text over 16,000 characters has a read-only preview while the complete source, including comments, is parsed in a private worker. Dismissed picker replies and parser results are ignored. Recent games support search and pagination; history includes the existing official catalog and offline collection. Chess PGN and Lichess games cannot be converted into shogi, and no account connection is claimed.
 
 ## 日本語
 
-分析ダイアログ内で棋譜を入力・貼り付け・ファイル選択でき、保存済み棋譜は別の一覧から検索して読み込めます。KIF・CSA・USI・SFEN・本アプリの JSON に対応し、読み込み後は手順再生、候補手の確認、選択局面からの対局が可能です。検証に成功した場合だけ以前の変化分析を終了し、表示中の棋譜を置き換えます。進行中の対局は保持します。
+分析ダイアログ内で棋譜を入力・貼り付け・ファイル選択でき、保存済み棋譜は別の一覧から検索して読み込めます。KIF・CSA・USI・SFEN・本アプリの JSON に対応し、読み込み後は手順再生、候補手の確認、選択局面からの対局が可能です。以前の変化分析に変更がある場合は、保存または破棄を選んだ後で表示する棋譜を切り替えます。進行中の対局は保持します。
 
 UTF-8／BOM と CP932 に対応し、上限は 2 MiB です。16,000 文字を超える場合はプレビューのみを短縮し、コメントを含む全文を別スレッドで検証します。閉じた画面への古い結果は反映しません。チェスの PGN や Lichess の対局を将棋に変換する機能ではありません。
 

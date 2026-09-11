@@ -2,6 +2,7 @@ extends RefCounted
 ## Owns an editable analysis record while the live match remains paused.
 const Variations = preload("res://scripts/shogi_variation_tree.gd")
 const Game = preload("res://scripts/shogi_game.gd")
+const Changes = preload("res://scripts/shogi_record_changes.gd")
 var app
 var active = false
 var paused = false
@@ -17,6 +18,7 @@ var context: Dictionary = {}
 var record_path = ""
 var title = "变化分析"
 var dirty = false
+var saved_signature = ""
 var error = ""
 var history: Array = []
 var last_action = ""
@@ -40,16 +42,15 @@ func start(source, ply: int = -1, source_path: String = "") -> bool:
 	history.clear()
 	last_action = ""
 	error = ""
-	var reuse = source.variation_tree != null and not source_path.is_empty() and source_path.get_base_dir() == app.records.root
+	var reuse = not source_path.is_empty() and source_path.get_base_dir() == app.records.root
 	record_path = source_path if reuse else ""
 	title = "变化分析 · " + str(metadata.get("先手", "先手")) + " – " + str(metadata.get("后手", "后手"))
 	if reuse:
-		for record in app.records.list_all():
-			if record.path == source_path: title = record.title
+		title = str(app.records.document(source_path).get("title", title))
 	active = true
 	paused = false
-	dirty = true
-	if not save(): active = false; return false
+	saved_signature = Changes.study_signature(tree, metadata)
+	dirty = false
 	app.ui._board_keep()
 	app.ui.live_enabled = not app.testing
 	select(tree.cursor)
@@ -113,7 +114,14 @@ func save() -> bool:
 	else: success = app.records.write(record_path, record, title)
 	error = "" if success else app.records.error
 	dirty = not success
+	if success:
+		saved_signature = Changes.study_signature(tree, metadata)
+		if app.review_game == view: app.review_path = record_path
 	return success
+
+func changed() -> void:
+	dirty = Changes.study_signature(tree, metadata) != saved_signature
+	error = ""
 
 func remember(action: String) -> void:
 	history.append({"tree": tree.to_data(), "metadata": metadata.duplicate(true), "action": action})
@@ -179,8 +187,7 @@ func commit(move: Dictionary, confirmed: bool = false) -> bool:
 	elif extending:
 		tree.main = tree.path(id)
 	select(id)
-	dirty = true
-	save()
+	changed()
 	app._play_sound()
 	return true
 
@@ -189,16 +196,14 @@ func promote(id: int) -> void:
 	remember("提升为主线")
 	tree.promote(id)
 	select(id)
-	dirty = true
-	save()
+	changed()
 
 func remove(id: int) -> void:
 	if not tree.nodes.has(id) or id == 0: return
 	remember("删除变化")
 	tree.remove(id)
 	select(tree.cursor)
-	dirty = true
-	save()
+	changed()
 
 func undo() -> void:
 	if history.is_empty(): return
@@ -207,8 +212,7 @@ func undo() -> void:
 	metadata = snapshot.metadata.duplicate(true)
 	last_action = ""
 	select(tree.cursor)
-	dirty = true
-	save()
+	changed()
 
 func persist_view() -> void:
 	remember("修改注释与标记")
@@ -217,8 +221,7 @@ func persist_view() -> void:
 	for ply in range(ids.size()):
 		tree.nodes[ids[ply]].comment = str(view.comments.get(str(ply), ""))
 		tree.nodes[ids[ply]].annotations = Variations.canonical_marks(view.annotations.get(str(ply), []))
-	dirty = true
-	save()
+	changed()
 
 func resume() -> void:
 	if not active: return
@@ -229,12 +232,14 @@ func resume() -> void:
 	app.ui._board_keep()
 	select(tree.cursor, true)
 
-func stop(restore: bool = true) -> bool:
+func stop(restore: bool = true, discard: bool = false) -> bool:
 	if not active: return true
-	if not save(): return false
+	if dirty and not discard: return false
 	if not app.ui.pv_context.is_empty(): app.ui.stop_pv(false)
 	active = false
 	paused = false
+	dirty = false
+	error = ""
 	app._pause_search()
 	if restore:
 		app.ui.close()
@@ -242,6 +247,14 @@ func stop(restore: bool = true) -> bool:
 		app.review_path = context.path
 		app.replay_index = context.ply
 		app.ui.live_enabled = context.live
+	# Candidate rows belong to the study position, even when live analysis is
+	# paused in the restored game. Never leave their play buttons actionable.
+	app.ui.live_key = ""
+	app.ui.live_details.clear()
+	app.ui.arrows.clear()
+	app.ui.clear_pv_rows()
+	app.ui.eval_label.text = "YaneuraOu"
+	app.ui.live_text.show()
 	app.ui.ribbon_key = ""
 	app._refresh()
 	return true

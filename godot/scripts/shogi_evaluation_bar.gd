@@ -148,7 +148,7 @@ func _draw() -> void:
 		else:
 			var x = area.position.x + factor * area.size.x
 			draw_line(Vector2(x, 0), Vector2(x, 5), accent, 3 if i == 4 else 1)
-	var caption = ("d%d" % state.depth if state.depth > 0 else "") if side else state.text + ("  (深度 %d)" % state.depth if state.depth > 0 and not state.text.contains("詰") else "")
+	var caption = ("d%d" % state.depth if state.depth > 0 else "") if side else state.text + (ui.app.t("  (深度 %d)") % state.depth if state.depth > 0 and not state.text.contains("詰") else "")
 	var font: Font = ui.Design.heading_font(ui.app.text_font)
 	var font_size = 10 if side else 14
 	while font_size > (7 if side else 8) and font.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > size.x - (0 if side else 10): font_size -= 1

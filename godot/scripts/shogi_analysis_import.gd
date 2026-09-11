@@ -1,6 +1,6 @@
 extends RefCounted
 const Draft = preload("res://scripts/shogi_import_draft.gd")
-const FLOW = ["analysis-import", "analysis-help"]
+const FLOW = ["analysis-import", "analysis-help", "analysis-import-choice"]
 var ui
 var draft = Draft.new()
 var input: TextEdit
@@ -30,7 +30,7 @@ func leaving(name: String) -> void:
 
 func action(caption: String, callback: Callable, id: String, icon: String = "", height: int = 46) -> Button:
 	var item = ui.compact_button(caption, callback, height)
-	item.name = id; item.tooltip_text = caption; item.accessibility_name = caption
+	item.name = id; item.tooltip_text = ui.app.t(caption); item.accessibility_name = ui.app.t(caption)
 	item.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	if not icon.is_empty():
 		item.icon = ui.reference_icon(icon); item.expand_icon = true
@@ -100,7 +100,7 @@ func build_input(content: VBoxContainer) -> void:
 	input.name = "AnalysisInput"
 	input.custom_minimum_size.y = 120
 	input.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
-	input.placeholder_text = "在此输入棋谱或 SFEN 局面"
+	input.placeholder_text = ui.app.t("在此输入棋谱或 SFEN 局面")
 	var mono = SystemFont.new(); mono.font_names = PackedStringArray(["monospace"])
 	input.add_theme_font_override("font", mono); input.add_theme_font_size_override("font_size", 13)
 	for state in ["normal", "read_only", "focus"]: input.add_theme_stylebox_override(state, ui.Design.box(Color.TRANSPARENT, 14, 12))
@@ -234,13 +234,33 @@ func parsed(request: int, revision: int, result: Dictionary, path: String = "", 
 		return
 	if save_in_archive:
 		if ui.app.session != null: draft.error = "请先退出联机对局，再载入其他棋谱。"; refresh_input(); return
-		path = ui.app.records.archive(result.game,draft.source_name.get_basename())
-		if path.is_empty(): draft.error = ui.app.records.error; refresh_input(); return
+		show_import_choice(result.game)
+		return
 	open_game(result.game, path)
+
+func show_import_choice(game) -> void:
+	var title: String = draft.source_name.get_basename()
+	var column = ui._page("载入棋谱", "analysis-import-choice")
+	column.add_child(ui.label(ui.app.t("%d 手 · 可以只载入回放，也可以保存到个人棋谱库。") % game.moves.size(), 15))
+	column.add_child(action("仅载入分析", func(): open_game(game), "ImportWithoutSaving"))
+	var problem = ui.label("", 14); problem.name = "ImportSaveError"; column.add_child(problem); problem.hide()
+	column.add_child(action("保存到棋谱库并载入", func(): save_import(game, title), "ImportAndSave"))
+	column.add_child(action("取消", func(): show(0), "CancelImportChoice"))
+
+func save_import(game, title: String) -> void:
+	if not ui.finish_study(true, func(): save_import(game, title)): return
+	var path: String = ui.app.records.archive(game, title)
+	if path.is_empty():
+		var message: String = ui.app.records.error
+		if ui.page_name != "analysis-import-choice": show_import_choice(game)
+		var problem = ui.page.find_child("ImportSaveError", true, false)
+		problem.text = message; problem.show()
+		return
+	open_game(game, path)
 
 func open_game(game, path: String = "") -> bool:
 	if ui.app.session != null: draft.error = "请先退出联机对局，再载入其他棋谱。"; refresh_input(); return false
-	if not ui.finish_study(): return false
+	if not ui.finish_study(true, func(): open_game(game, path)): return false
 	ui.app._pause_search(); ui.report.cancel()
 	ui.autoplay_on = false; ui.live_enabled = false
 	ui.clear_pv_rows(); ui.live_details.clear(); ui.arrows.clear()

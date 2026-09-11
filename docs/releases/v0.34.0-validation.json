@@ -1,0 +1,108 @@
+{
+  "version": "0.34.0",
+  "functional_checks": {
+    "variation-core": 67,
+    "import-core": 28,
+    "hint-core": 242,
+    "archive-core": 48,
+    "chessis34": 75,
+    "board-hud": 703,
+    "chessis25": 110,
+    "chessis33": 169,
+    "chessis30": 132,
+    "chessis29": 267,
+    "chessis32": 179,
+    "chessis31": 171,
+    "windows-package-probe": 148,
+    "verification": 61
+  },
+  "functional_total": 2400,
+  "failures": [],
+  "evidence": [
+    {
+      "path": "core\\variation-core.json",
+      "sha256": "0ca5cb0d7d49494c533969275d8f49ac8421166bb5c7f0341cec50f7f2fd8fcf"
+    },
+    {
+      "path": "core\\import-core.json",
+      "sha256": "c410367ec4d18c9ec2e3e4b7e9e06a6610e0e3c9a1041c00dae473aee827bf67"
+    },
+    {
+      "path": "core\\hint-core.json",
+      "sha256": "bf5ff4a6ed071d50fb6567514751cd3fc0dd8ed471c53fd2f178565e712abd20"
+    },
+    {
+      "path": "core\\archive-core.json",
+      "sha256": "6180757e211e14f97db085da96cd8f2f82002cc6df1f228830e5fe23a2182d46"
+    },
+    {
+      "path": "regression\\chessis34.json",
+      "sha256": "de6e7ab043ff9bc30237ccf85693f84214bcc8b18466026be2639764b27c0593"
+    },
+    {
+      "path": "regression\\board-hud.json",
+      "sha256": "b6d318b2a8c851de53407c37517fc23ebed6c9f527adfa6b97c29cd08041b9af"
+    },
+    {
+      "path": "regression\\chessis25.json",
+      "sha256": "73afd3a345b731e30f4736e7d325f93014e0607caf6429b06704679da4fafea8"
+    },
+    {
+      "path": "regression\\chessis33.json",
+      "sha256": "84fb203985a5b668ab0c3eba43b4ba7760701d9dbdaa739c695b63a12799be0d"
+    },
+    {
+      "path": "regression\\chessis30.json",
+      "sha256": "b308197b3fae19f96c776ac8428c1ad558893463b37ec354e281b428fc0db9ff"
+    },
+    {
+      "path": "regression\\chessis29.json",
+      "sha256": "fbe641c995ccf7b3daef20a3b0ae85310a172aa0bb782612399fbde181cc676e"
+    },
+    {
+      "path": "regression\\chessis32.json",
+      "sha256": "bbaf96da80f7813b27e852cc0c576651b5737a6c8e7a4ff46251bce08ef75210"
+    },
+    {
+      "path": "regression\\chessis31.json",
+      "sha256": "40bc1169de31e6ef26f7e0071431c368437acb0314e59f4a05311ac9304b1090"
+    },
+    {
+      "path": "package\\windows-package-probe.json",
+      "sha256": "036b1ff32163f188be4b0b3420d6fe0d102a3b700df0bc57c7f7f6c46eea4be2"
+    },
+    {
+      "path": "package\\verification.json",
+      "sha256": "f6bc35102a5a3bfa5dd39c4e676f80042e46706568f25bf8dd8fb89427115bd9"
+    }
+  ],
+  "packaged_modules": {
+    "shogi_board_hud": "b517b9b41f735082d98643cbeadfa66e760aaf68680c3022007e8890365ff63a",
+    "shogi_record_changes": "feb63d8faaf30a01724501db24fec6dabed2d518336de98b1db623e73e1f6db0",
+    "shogi_variation_study": "5efc74f5ea807f6c1b91bc7306c9c8b29c1e13535676b7327edb41d45b018d24",
+    "shogi_variation_view": "32be99aa6f59c4021819e28da6652427b918d4da466879d1222cffd40a070938",
+    "shogi_i18n": "f0d3b8bca816fe50ebd4045bc5821c719378bc32d51a993cad57248d06e6ba41",
+    "shogi_board_view": "a7218df74b97121ed52db85e97e22380142caf86f2c6f1132af0fbf952f29ff8",
+    "shogi_chessis_menu": "19c2b5c845329630e314da9fdb33a8f02a25b36f2ccd7204dcb20c9d04d41050"
+  },
+  "first_board_frame_ms": 2238,
+  "artifacts": [
+    {
+      "path": "builds/Shogi-0.34.0-windows-x64.zip",
+      "bytes": 150388446,
+      "sha256": "aecb12c18ad30f21ceacbc4548d7bd07ac19b723d96a6451e9f9a4c7dad92850"
+    },
+    {
+      "path": "builds/Shogi-0.34.0-android-arm64.apk",
+      "bytes": 136298092,
+      "sha256": "adab823e82ffb8c9afe66f4c5e573a6cb9aecd6d14620f969a7fb1857a267f74"
+    }
+  ],
+  "android_device_tested": false,
+  "android_validation": null,
+  "rendering_stalls_resolved": false,
+  "all_ui_translated": false,
+  "full_chessis_parity": false,
+  "github_published": false,
+  "publication_report": "docs/releases/v0.34.0-publication.json"
+}

@@ -7,7 +7,7 @@
 - 点击整行载入分析；眼睛按钮打开独立预览，心形按钮收藏，信息按钮展开详情，铅笔按钮编辑名称、棋手、日期、赛事、场所与标签。
 - 筛选支持多个关键词（全部匹配）、收藏状态、多个标签（任一匹配）、添加时间排序及 SFEN 局面。局面搜索逐手校验完整棋谱，包含行棋方和持驹；可填入当前棋盘局面。修改筛选后点击“显示结果”，关闭放弃草稿，重置清空条件。
 - 预览从初始局面开始，上一手、下一手、自动播放、翻转和长按跳转复用现有动画。着手文字明确区分成与不成。“载入分析”保留选中手数，可随后从这里继续下。返回列表不会替换原棋局。
-- 右下角文件夹选择文件，合法棋谱校验完成后先保存到棋谱库，再载入分析。取消、错误和过期结果不会保存。一般分析输入仍可直接载入而不自动归档。
+- 右下角文件夹选择文件，合法棋谱校验完成后可选“仅载入分析”或“保存到棋谱库并载入”。取消、错误和过期结果不会保存。一般分析输入仍可直接载入而不自动归档。
 - 收藏、标签和添加时间随棋谱保存，包含在完整备份中；旧版棋谱与旧备份仍可读取。文件已被其他操作修改时，旧编辑会被拒绝，避免覆盖新数据。
 - “编辑棋谱信息 → 导出 / 删除”保留原有单局操作。批量选择、批量分析／导出／删除、跨棋谱练习、已分析筛选和列表内报告统计尚未实现。
 
@@ -21,7 +21,7 @@ Version 0.33 puts **My games** and **Master games** in a shared full-screen arch
 
 Filter by all query words, favorite status, any selected tag, creation order, or an intermediate SFEN position. Position matching includes the side to move and pieces in hand and requires a legal replay. Apply commits filter changes; closing discards them. Record previews are independent, animated and preserve promotion choices. Load a preview at its selected ply, then continue play from there.
 
-The folder action validates and saves an imported file before loading it. Favorites, tags and creation times survive saving and backup/restore. Old files remain compatible, and stale edits cannot overwrite newer files. Export and delete remain available through the metadata editor. Batch actions, cross-record practice, analyzed-state filters and per-record report summaries remain incomplete. New screens are primarily in Chinese.
+After validation, the folder action offers loading without saving or saving to the library before loading. Favorites, tags and creation times survive saving and backup/restore. Old files remain compatible, and stale edits cannot overwrite newer files. Export and delete remain available through the metadata editor. Batch actions, cross-record practice, analyzed-state filters and per-record report summaries remain incomplete. New screens are primarily in Chinese.
 
 ## 日本語
 
@@ -29,7 +29,7 @@ The folder action validates and saves an imported file before loading it. Favori
 
 複数キーワードの全一致、お気に入り、選択タグのいずれか、追加日時、途中の SFEN 局面で絞り込めます。局面検索は手番と持駒を含み、全手順の合法性を確認します。「显示结果」で適用し、閉じると変更を破棄します。独立したプレビューには移動アニメーションと成・不成の表示があり、選択手数を保って解析に読み込み、その局面から対局を続けられます。
 
-フォルダーから読み込む棋譜は検証後に保存されます。お気に入り・タグ・追加日時はバックアップでも保持し、旧形式にも対応します。古い編集内容による上書きは拒否します。情報編集から従来の書き出し・削除に進めます。一括操作、複数棋譜の復習、解析済み絞り込み、一覧内の解析集計は未対応です。新画面の主な表示言語は中国語です。
+フォルダーからの読み込みは検証後に、解析への読み込みのみ、または棋譜庫への保存を選べます。お気に入り・タグ・追加日時はバックアップでも保持し、旧形式にも対応します。古い編集内容による上書きは拒否します。情報編集から従来の書き出し・削除に進めます。一括操作、複数棋譜の復習、解析済み絞り込み、一覧内の解析集計は未対応です。新画面の主な表示言語は中国語です。
 
 ## 参考与验证
 

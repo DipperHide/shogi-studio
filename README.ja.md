@@ -2,17 +2,17 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
 
-Android・Windows 向けの無料将棋アプリです。Godot 4.7.2 と、やねうら王のローカル解析エンジンを使用します。現在のバージョンは **0.33.0**。**既存の機能はすべて無料で、会員制度・購入画面・有料解除はありません。**
+Android・Windows 向けの無料将棋アプリです。Godot 4.7.2 と、やねうら王のローカル解析エンジンを使用します。現在のバージョンは **0.34.0**。**既存の機能はすべて無料で、会員制度・購入画面・有料解除はありません。**
 
 ![木製の将棋盤](docs/images/board-0.20.png)
 
 ## インストール
 
-ソースと配布ファイルを公開しました：[0.33.0 Release](https://github.com/DipperHide/shogi-studio/releases/tag/v0.33.0)。棋譜一覧の毎日更新が有効になり、クラウドでの初回更新も成功しました。
+ソースと配布ファイルを公開しました：[0.34.0 Release](https://github.com/DipperHide/shogi-studio/releases/tag/v0.34.0)。棋譜一覧の毎日更新が有効になり、クラウドでの初回更新も成功しました。
 
-[Releases](https://github.com/DipperHide/shogi-studio/releases) から `Shogi-0.33.0-android-arm64.apk` をダウンロードしてください。ARM64 対応 Android 端末向けの完全な APK です。Windows は `Shogi-0.33.0-windows-x64.zip` を展開し、`Shogi.exe` を実行します。`engines` フォルダーは同じ場所に置いてください。
+[Releases](https://github.com/DipperHide/shogi-studio/releases) から `Shogi-0.34.0-android-arm64.apk` をダウンロードしてください。ARM64 対応 Android 端末向けの完全な APK です。Windows は `Shogi-0.34.0-windows-x64.zip` を展開し、`Shogi.exe` を実行します。`engines` フォルダーは同じ場所に置いてください。
 
-Android のパッケージ名は `org.shogistudio.artpreview`、versionCode は 51 です。release テンプレートで書き出し、上書き更新のため従来の開発用署名を継続しています。秘密鍵は含めません。異なる署名のビルドを入れる前に棋譜をバックアップしてください。
+Android のパッケージ名は `org.shogistudio.artpreview`、versionCode は 52 です。release テンプレートで書き出し、上書き更新のため従来の開発用署名を継続しています。秘密鍵は含めません。異なる署名のビルドを入れる前に棋譜をバックアップしてください。
 
 ## 主な機能
 
@@ -35,7 +35,9 @@ Android のパッケージ名は `org.shogistudio.artpreview`、versionCode は 
 - 0.32 のヒントは成・不成を明記し、2D・3D の盤上表示と候補番号を対応させました。同じ移動先の選択肢を区別でき、読み筋の途中と復習問題でも不成を表示します。[成りのヒント](docs/PROMOTION-HINTS.md)を参照してください。
 - 0.33 で自分の棋譜と大会棋譜を共通タブに統合。お気に入り、タグ、情報編集、SFEN 検索、独立したアニメーション付きプレビューを追加。選択手数を保って読み込み、バックアップにもタグ等を保存します。[使い方](docs/PERSONAL-ARCHIVE.md)。
 
-[変化の使い方](docs/VARIATIONS.md) · [0.33 の検証結果](docs/TESTING-0.33.md)（中国語） · [Evaluation bar / 評価バー / 评价条](docs/EVALUATION-BAR.md) · [Position editor / 局面編集 / 局面编辑](docs/POSITION-EDITOR.md) · [Opening preview / 戦法プレビュー / 开局预览](docs/OPENING-PREVIEW.md) · [Analysis import / 棋譜入力 / 分析导入](docs/ANALYSIS-IMPORT.md) · [Tournament archive / 大会棋譜 / 大赛棋谱](docs/TOURNAMENT-ARCHIVE.md)
+- 0.34 では持ち駒台を明るい木目にし、対局者名と時計の重なりを修正しました。メニューで盤面を縮めず、英語・日本語の盤面と設定表示を確認しました。変更後は保存・破棄・編集続行を選べます。龍王アイコンも明るい木目に変更しました。[保存と実機確認](docs/OPTIONAL-SAVING.md) を参照してください。
+
+[変化の使い方](docs/VARIATIONS.md) · [0.34 の検証結果](docs/TESTING-0.34.md)（中国語） · [Evaluation bar / 評価バー / 评价条](docs/EVALUATION-BAR.md) · [Position editor / 局面編集 / 局面编辑](docs/POSITION-EDITOR.md) · [Opening preview / 戦法プレビュー / 开局预览](docs/OPENING-PREVIEW.md) · [Analysis import / 棋譜入力 / 分析导入](docs/ANALYSIS-IMPORT.md) · [Tournament archive / 大会棋譜 / 大赛棋谱](docs/TOURNAMENT-ARCHIVE.md)
 
 高度な画面とレッスン本文は主に中国語です。基本ナビゲーションは中・英・日文に対応しますが、三言語 README はアプリ全体の翻訳完了を意味しません。
 
@@ -57,7 +59,7 @@ Windows、Python 3.11 以降、Godot **4.7.2** と対応テンプレート、JDK
 python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -r requirements-dev.txt
 ./scripts/build_android.ps1
-./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.33.0
+./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.34.0
 ./scripts/test_chessis20.ps1
 ./scripts/test_chessis20.ps1 -CoreOnly -Network
 ./scripts/test_chessis23.ps1
@@ -70,7 +72,7 @@ python -m venv .venv
 
 開発時は Godot で `godot/project.godot` を開きます。実行用素材、エンジン、NNUE は同梱し、対応するエンジンソースはビルド時に同梱アーカイブから展開します。release APK にはローカルで `GODOT_ANDROID_KEYSTORE_RELEASE_PATH`、`GODOT_ANDROID_KEYSTORE_RELEASE_USER`、`GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD` を設定し、`./scripts/build_android.ps1 -Release` を実行します。署名情報をコミットしないでください。
 
-[CI](.github/workflows/ci.yml) は push・PR 時にコアテストを実行します。ローカルでは 4 種類の画面サイズ、先後反転、明暗、駒取り・成り・駒打ち、連続フレームの動き、実エンジンも確認します。[0.23 分類統計の検証](docs/TESTING-0.23.md) と [0.20 盤・大会更新の検証](docs/TESTING-0.20.md) を参照してください。バグが完全になくなる保証はできません。今回は Android 実機未接続のため、Bluetooth 二台接続やバックグラウンド復帰は実機確認が必要です。
+[CI](.github/workflows/ci.yml) は push・PR 時にコアテストを実行します。ローカルでは 4 種類の画面サイズ、先後反転、明暗、駒取り・成り・駒打ち、連続フレームの動き、実エンジンも確認します。[0.23 分類統計の検証](docs/TESTING-0.23.md) と [0.20 盤・大会更新の検証](docs/TESTING-0.20.md) を参照してください。バグが完全になくなる保証はできません。Android 14 の実機で起動、棋譜一覧、2D／3D 再生を確認しました。[実機記録](docs/ANDROID-DEVICE-BASELINE.md) に測定値を掲載しています。Bluetooth 二台接続は未検証です。
 
 検証用 Windows PC では、空のウィンドウでも約 450 ミリ秒の描画停止が発生し、未解決です。すべての端末で常に滑らかな動作を保証するものではありません。[0.24 アニメーション検証](docs/TESTING-0.24.md) を参照してください。
 

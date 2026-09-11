@@ -235,6 +235,10 @@ func show_preview(entry: Dictionary, game) -> void:
 func load_preview() -> void:
 	if not is_instance_valid(preview): return
 	var game=preview.game; var ply: int=preview.ply; var flipped: bool=preview.board.flipped; var path: String=preview_entry.path
+	if not ui.finish_study(true, func(): load_position(game, path, ply, flipped)): return
+	load_position(game, path, ply, flipped)
+
+func load_position(game, path: String, ply: int, flipped: bool) -> void:
 	if ui.analysis_import.open_game(game,path): ui.app.flipped=flipped; ui.app._set_replay(ply)
 
 func show_edit(entry: Dictionary, game) -> void:

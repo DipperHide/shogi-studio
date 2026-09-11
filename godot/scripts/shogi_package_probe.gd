@@ -60,6 +60,7 @@ func run(owner_node) -> void:
 	app.ui.close()
 	await probe_promotion_hints()
 	await probe_personal_archive()
+	await probe_optional_saving()
 	var frame_times: Array[float] = []
 	for frame in range(90):
 		var tick = Time.get_ticks_usec()
@@ -422,6 +423,33 @@ func probe_personal_archive() -> void:
 	app.ui.close(); app.ui.live_enabled=false; app._pause_search()
 	app.records.delete_record(path); DirAccess.remove_absolute(app.records.root)
 	app.records.root=old_root; app.review_game=old_review; app.replay_index=old_ply; app.review_path=old_path; app._refresh()
+
+func probe_optional_saving() -> void:
+	var old_root: String = app.records.root
+	app.records.root = "user://package-saving-" + str(Time.get_ticks_usec())
+	var source = app.Game.new(); source.mode = "local"
+	for value in ["7g7f", "3c3d"]: source.play(app.Codec.parse_move(value, source.position))
+	app.ui.start_variation_analysis(source, 1)
+	var study = app.ui.study
+	verify(not study.dirty and study.record_path.is_empty() and app.records.list_all().is_empty(), "packaged unchanged analysis does not auto archive")
+	study.seek(0); study.seek(2)
+	verify(app.ui.finish_study() and app.records.list_all().is_empty(), "packaged pure replay exits without writing")
+	app.ui.start_variation_analysis(source, 1)
+	app.preferences.studio.variation_policy = "never"; app.preferences.studio.variation_policy_confirmed = true
+	study.commit(app.Codec.parse_move("8c8d", study.current.position))
+	verify(study.dirty and app.records.list_all().is_empty(), "packaged edits remain unsaved until chosen")
+	app.ui.finish_study()
+	await capture("optional-save-dialog")
+	app.ui.page.find_child("CancelStudyExit", true, false).pressed.emit()
+	verify(study.active and study.dirty, "packaged save dialog cancel retains changes")
+	app.ui.finish_study(); app.ui.page.find_child("SaveStudyChanges", true, false).pressed.emit()
+	var path: String = study.record_path
+	verify(not study.active and app.records.read(path).variation_tree.nodes.size() == 4, "packaged explicit save stores complete branch")
+	app._load_archive(path); study.view.comments["0"] = "discarded"; study.persist_view()
+	app.ui.finish_study(); app.ui.page.find_child("DiscardStudyChanges", true, false).pressed.emit()
+	verify(not app.records.read(path).comments.has("0"), "packaged discard preserves stored record")
+	app.ui.close(); app.ui.live_enabled = false; app._pause_search()
+	app.records.delete_record(path); DirAccess.remove_absolute(app.records.root); app.records.root = old_root
 
 func probe_accuracy_insight() -> void:
 	app.ui.show_accuracy_insight(1)

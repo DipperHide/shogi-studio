@@ -2,6 +2,7 @@ extends Control
 ## Minimal renderer and the shared, language-aware board overlay.
 var app
 const Hint = preload("res://scripts/shogi_move_hint.gd")
+const Hud = preload("res://scripts/shogi_board_hud.gd")
 var hint_badges: Array = []
 var avatar = preload("res://assets/brand/ai-icon.png")
 const FACE_NAMES = ["", "Fu", "Kyosha", "Keima", "Ginsho", "Kinsho", "Kakugyo", "Hisha", "Gyokusho", "Tokin", "Narikyo", "Narikei", "Narigin", "", "Uma", "Ryu"]
@@ -15,6 +16,7 @@ func _ready() -> void:
 		if not name.is_empty(): faces[name] = load("res://assets/glyphs/" + name + ".svg")
 
 func text(value: String, rect: Rect2, font_size: int, color: Color, inverted: bool = false, font: Font = null) -> void:
+	if rect.size.x <= 4 or rect.size.y <= 0: return
 	if font == null: font = app.text_font
 	font_size = maxi(10, font_size)
 	while font_size > 10 and font.get_string_size(value, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > rect.size.x - 4:
@@ -29,10 +31,10 @@ func text(value: String, rect: Rect2, font_size: int, color: Color, inverted: bo
 	draw_string(font, baseline, value, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color)
 	draw_set_transform(Vector2.ZERO)
 
-func glyph(value: int, rect: Rect2, color: Color) -> void:
+func glyph(value: int, rect: Rect2, color: Color, held: bool = false) -> void:
 	rect = piece_rect(rect)
 	var inverted: bool = (value < 0) != app.flipped
-	if app.preferences.appearance == "anime2d":
+	if app.preferences.appearance == "anime2d" or (held and app.preferences.appearance == "wood"):
 		var p: Dictionary = app.palette()
 		var half = rect.size * Vector2(0.39, 0.43)
 		var points = PackedVector2Array([Vector2(0, -half.y), Vector2(half.x * 0.72, -half.y * 0.62), Vector2(half.x, half.y), Vector2(-half.x, half.y), Vector2(-half.x * 0.72, -half.y * 0.62)])
@@ -76,6 +78,19 @@ func corners(rect: Rect2, color: Color) -> void:
 		draw_line(p, p + Vector2(dx, 0), color, 2, true)
 		draw_line(p, p + Vector2(0, dy), color, 2, true)
 
+func tray_background(area: Rect2, empty: bool, p: Dictionary) -> void:
+	var warm: bool = app.preferences.appearance in ["wood", "anime2d"]
+	var colors = Hud.colors(p, warm, app.dark)
+	var style = app.Design.box(colors.tray, 6, 0)
+	style.border_color = colors.edge
+	style.set_border_width_all(1)
+	draw_style_box(style, area.grow(-1))
+	if warm:
+		for row in range(3):
+			var y = area.position.y + 10 + row * 10
+			draw_line(Vector2(area.position.x + 7, y), Vector2(area.end.x - 7, y + 1), Color(0.55, 0.38, 0.17, 0.06), 0.6, true)
+	if empty: text(app.t("持驹：无"), area, 12, colors.muted)
+
 func _draw() -> void:
 	if app == null: return
 	if app.first_board_frame_ms < 0: app.first_board_frame_ms = Time.get_ticks_msec()
@@ -100,8 +115,7 @@ func _draw() -> void:
 		for side in [1, -1]:
 			var slot: Rect2 = app.hand_slot(side, 7)
 			var tray = Rect2(app.bottom_player_rect.position.x if app.wide_layout else app.board_rect.position.x, slot.position.y, app.bottom_player_rect.size.x if app.wide_layout else app.board_rect.size.x, 42)
-			draw_style_box(app.Design.box(p.soft, 10, 0), tray)
-			if app.hand_rects[side].is_empty(): text(app.t("持驹：无"), tray, 12, p.muted)
+			tray_background(tray, app.hand_rects[side].is_empty(), p)
 		if app.preferences.last_move and ply > 0:
 			var last: Dictionary = viewed.moves[ply - 1]
 			draw_rect(app.square_rect(last.to).grow(-1), p.last)
@@ -141,7 +155,7 @@ func _draw() -> void:
 				var count: int = position.hands[side][kind]
 				if count > 1:
 					var rect: Rect2 = app.hand_slot(side, kind)
-					text(str(count), Rect2(rect.end - Vector2(20, 19), Vector2(20, 19)), 13, p.muted)
+					text(str(count), Rect2(rect.end - Vector2(20, 19), Vector2(20, 19)), 13, Hud.colors(p, app.preferences.appearance == "anime2d", app.dark).muted)
 		if app.preferences.hints and app.replay_index < 0:
 			var seen: Dictionary = {}
 			for move in app.legal:
@@ -164,13 +178,12 @@ func _draw() -> void:
 			var hand_y: float = player.end.y + 4 if app.wide_layout else app.board_rect.end.y + 4 if (side == 1) != app.flipped else app.board_rect.position.y - 46
 			var tray = Rect2(player.position.x, hand_y, player.size.x, 42)
 			if tray.size.x <= 0: continue
-			draw_style_box(app.Design.box(p.soft, 10, 0), tray)
-			if app.hand_rects[side].is_empty(): text(app.t("持驹：无"), tray, 12, p.muted)
+			tray_background(tray, app.hand_rects[side].is_empty(), p)
 			for kind in app.hand_rects[side]:
 				var rect: Rect2 = app.hand_slot(side, kind)
 				if app.selected_drop == kind and position.turn == side: draw_style_box(app.Design.box(p.selected, 8, 0), rect)
-				glyph(side * kind, rect, p.ink)
-				if position.hands[side][kind] > 1: text(str(position.hands[side][kind]), Rect2(rect.end - Vector2(16, 16), Vector2(16, 16)), 11, p.ink)
+				glyph(side * kind, rect, p.piece_ink, true)
+				if position.hands[side][kind] > 1: text(str(position.hands[side][kind]), Rect2(rect.end - Vector2(16, 16), Vector2(16, 16)), 11, Hud.colors(p, true, app.dark).muted)
 		for square in app.checked_cells: draw_rect(app.square_rect(square).grow(-1), p.danger, false, 2)
 	# Shared overlays retain identical semantics over either renderer.
 	if wood and app.preferences.last_move and ply > 0:
@@ -212,27 +225,27 @@ func _draw() -> void:
 
 func _player(side: int, area: Rect2, p: Dictionary, position, viewed) -> void:
 	if area.size.x < 100: return
-	draw_style_box(app.Design.box(p.surface, 12, 0), area)
+	var colors = Hud.colors(p, app.preferences.appearance in ["wood", "anime2d"], app.dark)
+	var layout = Hud.player_layout(area)
+	draw_style_box(app.Design.box(colors.player, 7, 0), Rect2(area.position, Vector2(area.size.x, 40)))
 	var local: bool = side == (app.session.local_side if app.session != null else app.game.human_side)
 	if app._practice_active(): local = side == app.ui.practice.exercise.positions[0].turn
-	if local:
-		draw_circle(area.position + Vector2(21, 21), 16, p.soft)
-		text("玉", Rect2(area.position + Vector2(5, 5), Vector2(32, 32)), 20, p.ink, false, mincho)
-	else:
-		draw_circle(area.position + Vector2(21, 21), 16, p.soft)
-		text("玉" if app._practice_active() else "AI" if app.game.mode == "ai" and app.session == null else app.t("友"), Rect2(area.position + Vector2(5, 5), Vector2(32, 32)), 12, p.accent)
+	if not layout.compact:
+		draw_circle(layout.avatar.get_center(), 15, colors.avatar)
+		text("玉" if local or app._practice_active() else "AI" if app.game.mode == "ai" and app.session == null else app.t("友"), layout.avatar, 18 if local else 12, p.ink, false, mincho if local else null)
 	var name = app.t("你") if local else app.t("对手") if app.session != null else app.t("电脑") if app.game.mode == "ai" else app.t("棋友")
-	if local: name = app.preferences.studio.username
+	if local: name = app.t("你") if app.preferences.studio.username == "你" else app.preferences.studio.username
 	if app.game.engine_match: name = "YaneuraOu"
-	if viewed.metadata.has("先手" if side == 1 else "后手"): name = str(viewed.metadata["先手" if side == 1 else "后手"])
+	var player_key = "先手" if side == 1 else "后手" if viewed.metadata.has("后手") else "後手"
+	if viewed.metadata.has(player_key): name = str(viewed.metadata[player_key])
 	if name != app.t("先手" if side == 1 else "后手"): name += " · " + app.t("先手" if side == 1 else "后手")
-	text(name, Rect2(area.position + Vector2(42, 0), Vector2(area.size.x - 142, 42)), 13, p.ink)
+	text(name, layout.name, 12 if layout.compact else 13, colors.ink)
 	var clock: String = viewed.clock.text_for(side, app.session != null and not app.session.is_host)
 	if clock.is_empty(): clock = app.t("行棋中") if side == position.turn and viewed.result.is_empty() else app.t("不限时")
-	if app._practice_active(): clock = "答题方" if local else "对方"
-	var clock_area = Rect2(area.end.x - 92, area.position.y + 5, 87, 32)
-	draw_style_box(app.Design.box(p.accent if side == position.turn else p.soft, 8, 0), clock_area)
-	text(clock, clock_area, 14, p.background if side == position.turn else p.muted)
+	if app._practice_active(): clock = app.t("答题方" if local else "对方")
+	var clock_area: Rect2 = layout.clock
+	draw_style_box(app.Design.box(p.accent if side == position.turn else colors.clock, 5, 0), clock_area)
+	text(clock, clock_area, 11 if layout.compact else 13, Color.WHITE if side == position.turn else colors.clock_ink)
 
 func arrow(from: Vector2, to: Vector2, color: Color, width: float) -> void:
 	var direction = (to - from).normalized()

@@ -59,6 +59,10 @@ jobs:
         run: xvfb-run -a Godot_v4.7.2-stable_linux.x86_64 --path godot --audio-driver Dummy -- --unified-test --chessis32
       - name: Personal archive UI on a virtual display
         run: xvfb-run -a Godot_v4.7.2-stable_linux.x86_64 --path godot --audio-driver Dummy -- --unified-test --chessis33
+      - name: Optional saving and continuation UI on a virtual display
+        run: xvfb-run -a Godot_v4.7.2-stable_linux.x86_64 --path godot --audio-driver Dummy -- --unified-test --chessis34
+      - name: Board layout and Chinese, English, Japanese displays
+        run: xvfb-run -a Godot_v4.7.2-stable_linux.x86_64 --path godot --audio-driver Dummy -- --unified-test --board-hud
       - name: Keep test evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -78,3 +82,4 @@ jobs:
             review/app/chessis31
             review/app/chessis32
             review/app/chessis33
+            review/app/chessis34

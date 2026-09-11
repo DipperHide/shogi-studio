@@ -77,6 +77,8 @@ var wood_view
 var review_game
 var review_path: String = ""
 var save_path: String = SAVE_PATH
+const RecordChanges = preload("res://scripts/shogi_record_changes.gd")
+var archive_baseline: String = ""
 var save_failed: bool = false
 var preferences_failed: bool = false
 var dark: bool = true
@@ -160,7 +162,7 @@ func _ready() -> void:
 		test_runner = load("res://scripts/shogi_package_probe.gd").new()
 		test_runner.run.call_deferred(self)
 	elif "--unified-test" in args or "--unified-peer" in args:
-		test_runner = load("res://tests/chessis33_test.gd" if "--chessis33" in args else "res://tests/chessis32_test.gd" if "--chessis32" in args else "res://tests/chessis31_test.gd" if "--chessis31" in args else "res://tests/chessis30_test.gd" if "--chessis30" in args else "res://tests/chessis29_test.gd" if "--chessis29" in args else "res://tests/chessis28_test.gd" if "--chessis28" in args else "res://tests/chessis27_test.gd" if "--chessis27" in args else "res://tests/chessis26_test.gd" if "--chessis26" in args else "res://tests/chessis25_test.gd" if "--chessis25" in args else "res://tests/chessis24_test.gd" if "--chessis24" in args else "res://tests/chessis23_test.gd" if "--chessis23" in args else "res://tests/chessis22_test.gd" if "--chessis22" in args else "res://tests/chessis21_test.gd" if "--chessis21" in args else "res://tests/chessis20_test.gd" if "--chessis20" in args else "res://tests/chessis19_test.gd" if "--chessis19" in args else "res://tests/chessis18_test.gd" if "--chessis18" in args else "res://tests/chessis17_test.gd" if "--chessis17" in args else "res://tests/chessis16_test.gd" if "--chessis16" in args else "res://tests/chessis15_test.gd" if "--chessis15" in args else "res://tests/chessis14_test.gd" if "--chessis14" in args else "res://tests/chessis13_test.gd" if "--chessis13" in args else "res://tests/chessis12_test.gd" if "--chessis12" in args else "res://tests/chessis11_test.gd" if "--chessis11" in args else "res://tests/chessis_motion_test.gd" if "--motion-probe" in args else "res://tests/chessis10_test.gd" if "--chessis10" in args else "res://tests/chessis09_test.gd" if "--chessis09" in args else "res://tests/chessis_ui_test.gd" if "--chessis" in args else "res://tests/ui08_test.gd" if "--ui08" in args else "res://tests/ui07_test.gd" if "--ui07" in args else "res://tests/unified_peer_test.gd" if "--unified-peer" in args else "res://tests/unified_test.gd").new()
+		test_runner = load("res://tests/board_hud_test.gd" if "--board-hud" in args else "res://tests/chessis34_test.gd" if "--chessis34" in args else "res://tests/chessis33_test.gd" if "--chessis33" in args else "res://tests/chessis32_test.gd" if "--chessis32" in args else "res://tests/chessis31_test.gd" if "--chessis31" in args else "res://tests/chessis30_test.gd" if "--chessis30" in args else "res://tests/chessis29_test.gd" if "--chessis29" in args else "res://tests/chessis28_test.gd" if "--chessis28" in args else "res://tests/chessis27_test.gd" if "--chessis27" in args else "res://tests/chessis26_test.gd" if "--chessis26" in args else "res://tests/chessis25_test.gd" if "--chessis25" in args else "res://tests/chessis24_test.gd" if "--chessis24" in args else "res://tests/chessis23_test.gd" if "--chessis23" in args else "res://tests/chessis22_test.gd" if "--chessis22" in args else "res://tests/chessis21_test.gd" if "--chessis21" in args else "res://tests/chessis20_test.gd" if "--chessis20" in args else "res://tests/chessis19_test.gd" if "--chessis19" in args else "res://tests/chessis18_test.gd" if "--chessis18" in args else "res://tests/chessis17_test.gd" if "--chessis17" in args else "res://tests/chessis16_test.gd" if "--chessis16" in args else "res://tests/chessis15_test.gd" if "--chessis15" in args else "res://tests/chessis14_test.gd" if "--chessis14" in args else "res://tests/chessis13_test.gd" if "--chessis13" in args else "res://tests/chessis12_test.gd" if "--chessis12" in args else "res://tests/chessis11_test.gd" if "--chessis11" in args else "res://tests/chessis_motion_test.gd" if "--motion-probe" in args else "res://tests/chessis10_test.gd" if "--chessis10" in args else "res://tests/chessis09_test.gd" if "--chessis09" in args else "res://tests/chessis_ui_test.gd" if "--chessis" in args else "res://tests/ui08_test.gd" if "--ui08" in args else "res://tests/ui07_test.gd" if "--ui07" in args else "res://tests/unified_peer_test.gd" if "--unified-peer" in args else "res://tests/unified_test.gd").new()
 		test_runner.run.call_deferred(self)
 	elif testing:
 		test_runner = load("res://tests/network_ui_test.gd" if "--network-ui-test" in args else "res://tests/complete_ui_test.gd" if "--complete-test" in args else "res://tests/minimal_test.gd").new()
@@ -181,7 +183,7 @@ func _sync_mobile_scale() -> void:
 func _layout() -> void:
 	if board_view == null: return
 	var usable = safe_rect()
-	if ui != null and ui.sheet:
+	if ui != null and ui.sheet and not ui.has_method("receive_info"):
 		usable.size.y = maxf(260, usable.size.y - ui.sheet_height())
 		usable.size.x = maxf(260, usable.size.x - ui.sheet_width())
 	play_area = Design.board_area(usable)
@@ -207,7 +209,8 @@ func _layout() -> void:
 		var gutter = 28 if side_eval else 0
 		var credit = 16 if side_eval else 0
 		if not wide_layout:
-			edge = maxf(108, minf(usable.size.x - 14 - gutter, usable.size.y - 433 - variation_margin + credit))
+			# A study adds both a second ribbon row and a row of editing actions.
+			edge = maxf(108, minf(usable.size.x - 14 - gutter, usable.size.y - 433 - variation_margin * 2 + credit))
 			cell = edge / 9.0
 			board_rect = Rect2(Vector2(usable.get_center().x - edge / 2 + gutter / 2.0, usable.position.y + 126 + variation_margin), Vector2.ONE * edge)
 			top_player_rect = Rect2(board_rect.position - Vector2(0, 88), Vector2(edge, 42))
@@ -394,6 +397,7 @@ func _new_game() -> bool:
 	revision += 1
 	pending_ai.clear()
 	game = Game.new()
+	archive_baseline = RecordChanges.game_signature(game)
 	replay_index = -1
 	flipped = false
 	keyboard_hand = 0
@@ -759,19 +763,23 @@ func _declare_win() -> bool:
 	return true
 
 func _archive_game() -> bool:
-	if testing: return true
+	if testing: archive_baseline = RecordChanges.game_signature(game); return true
 	var path = records.archive(game)
 	if path.is_empty(): notice = records.error; save_failed = true; _redraw()
+	else: archive_baseline = RecordChanges.game_signature(game)
 	return not path.is_empty()
+
+func _has_archive_changes() -> bool:
+	return RecordChanges.has_content(game) and RecordChanges.game_signature(game) != archive_baseline
 
 func _list_archives() -> Array:
 	return records.list_all()
 
 func _load_archive(path: String) -> bool:
 	if session != null: return false
-	if ui != null and ui.has_method("finish_study") and not ui.finish_study(false): return false
 	var saved = records.read(path)
 	if saved == null: notice = records.error; return false
+	if ui != null and ui.has_method("finish_study") and not ui.finish_study(false, func(): _load_archive(path)): return false
 	_pause_search()
 	review_game = saved
 	review_path = path
@@ -785,12 +793,14 @@ func _load_archive(path: String) -> bool:
 func _restart_request() -> void:
 	if session != null:
 		session.request("rematch")
-	elif _archive_game():
-		_start_match(game.mode, game.human_side, engine_level, engine_provider, game.clock.preset)
+	else:
+		ui.replace_game(func():
+			_start_match(game.mode, game.human_side, engine_level, engine_provider, game.clock.preset)
+			ui.close()
+		)
 
 func _prepare_network() -> bool:
 	if ui != null and ui.has_method("finish_study") and not ui.finish_study(false): return false
-	if not _archive_game(): return false
 	if not _leave_network(): return false
 	_leave_review()
 	_pause_search()
@@ -1015,13 +1025,16 @@ func _set_replay(ply: int) -> void:
 	_present_transition(before, false)
 
 func _continue_review() -> bool:
-	if session != null or review_game == null or not _archive_game(): return false
+	if session != null or review_game == null: return false
 	var data = review_game.to_data().duplicate(true)
 	if replay_index >= 0 and replay_index < review_game.moves.size():
 		Game.truncate_data(data, replay_index)
 		for key in ["resigned", "resigned_side", "agreed_draw", "declared_side", "clock"]: data.erase(key)
 	var next = Game.from_data(data)
 	if next == null: return false
+	if ui.has_method("adopt_game"):
+		ui.adopt_game(next)
+		return game == next
 	if not testing and next.save_to(save_path) != OK:
 		notice = "保存棋谱失败"
 		save_failed = true
