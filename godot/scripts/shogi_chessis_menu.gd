@@ -82,6 +82,7 @@ var variation_ui
 var opening_view
 var analysis_import
 var tournament_view
+var archive_view
 var study_bar: HBoxContainer
 
 func initialize(owner_node) -> void:
@@ -99,6 +100,8 @@ func initialize(owner_node) -> void:
 	tournaments.initialize(ProjectSettings.globalize_path("res://../.work/tournaments-ui-test") if app.testing else "user://tournaments", not app.testing)
 	tournament_view = preload("res://scripts/shogi_tournament_view.gd").new()
 	tournament_view.ui = self
+	archive_view = preload("res://scripts/shogi_archive_view.gd").new()
+	archive_view.ui = self
 	tournaments.changed.connect(func():
 		tournament_view.refresh()
 	)
@@ -245,6 +248,7 @@ func initialize(owner_node) -> void:
 	layout()
 
 func _page(title: String, name: String, use_sheet: bool = false) -> VBoxContainer:
+	if archive_view != null: archive_view.leaving(name)
 	if tournament_view != null: tournament_view.leaving(name)
 	if analysis_import != null: analysis_import.leaving(name)
 	if opening_view != null: opening_view.stop_preview()
@@ -271,6 +275,7 @@ func banner(parent: Control, _compact: bool = false) -> void:
 	parent.add_child(strip)
 
 func close() -> void:
+	if archive_view != null: archive_view.leaving("")
 	if tournament_view != null: tournament_view.leaving("")
 	if analysis_import != null: analysis_import.leaving("")
 	if opening_view != null: opening_view.stop_preview()
@@ -362,6 +367,7 @@ func layout() -> void:
 	if evaluation_bar != null: evaluation_bar.layout_bar()
 	if analysis_import != null: analysis_import.layout()
 	if tournament_view != null: tournament_view.layout()
+	if archive_view != null: archive_view.layout()
 
 func apply_theme() -> void:
 	var report_colors: Dictionary = {}
@@ -373,6 +379,7 @@ func apply_theme() -> void:
 	if page_name in ["openings", "opening-info"] and opening_view != null: opening_view.apply_theme()
 	if analysis_import != null: analysis_import.apply_theme()
 	if tournament_view != null: tournament_view.apply_theme()
+	if archive_view != null: archive_view.apply_theme()
 	if toolbar == null: return
 	for item in toolbar.get_children():
 		item.add_theme_stylebox_override("normal", Design.box(Color(0, 0, 0, 0.12), 5, 4))
@@ -684,6 +691,17 @@ func show_menu() -> void:
 	if app.session != null: column.add_child(button("当前联机", show_connection))
 
 func back() -> void:
+	if page_name in archive_view.PAGES:
+		for option in page.find_children("*","OptionButton",true,false):
+			if option.get_popup().visible: option.get_popup().hide(); return
+		if keyboard_height > 0:
+			DisplayServer.virtual_keyboard_hide()
+			var focus = root.get_viewport().gui_get_focus_owner()
+			if focus != null: focus.release_focus()
+			return
+		if page_name == "archive-filter": archive_view.close_filter(); return
+		if page_name == "analysis-recent": archive_view.leave_archive(); return
+		archive_view.show(); return
 	if page_name == "tournament-filter":
 		var options = page.find_child("HistoricYear",true,false)
 		if options != null and options.get_popup().visible: options.get_popup().hide(); return
@@ -693,8 +711,8 @@ func back() -> void:
 			if focus != null: focus.release_focus()
 			return
 		tournament_view.close_filter("cancel"); return
-	if page_name == "tournament-archive": _board_keep(); return
-	if page_name in ["analysis-import", "analysis-recent", "analysis-help"]:
+	if page_name == "tournament-archive": archive_view.leave_archive(); return
+	if page_name in ["analysis-import", "analysis-help"]:
 		if file_dialog != null and is_instance_valid(file_dialog) and file_dialog.visible:
 			file_dialog.hide()
 			if file_dialog.has_meta("analysis_import"): analysis_import.file_received(analysis_import.picker_ticket, "", "")
@@ -704,7 +722,7 @@ func back() -> void:
 			var focus = root.get_viewport().gui_get_focus_owner()
 			if focus != null: focus.release_focus()
 			return
-		if page_name != "analysis-import": analysis_import.show(); return
+		if page_name != "analysis-import": analysis_import.show(0); return
 	if page_name == "opening-info": opening_view.show_list(); return
 	if page_name == "editor" and is_instance_valid(editor) and editor.interaction.pointer_id != -2: editor.interaction.cancel(); return
 	if page_name == "evaluation-options": _board_keep(); return
@@ -1787,23 +1805,7 @@ func show_engine_settings() -> void:
 	column.add_child(button("引擎与署名", show_engine))
 
 func show_archives() -> void:
-	var column = _page("棋谱库", "archives")
-	var row = HBoxContainer.new()
-	column.add_child(row)
-	row.add_child(button("导入文件", import_record))
-	row.add_child(button("粘贴棋谱", show_paste))
-	var search = field(column, "搜索棋谱", "")
-	var results = VBoxContainer.new()
-	column.add_child(results)
-	var populate = func(query: String):
-		for child in results.get_children(): results.remove_child(child); child.queue_free()
-		for entry in app.records.list_all():
-			if not query.is_empty() and not str(entry.title).contains(query): continue
-			var path: String = entry.path
-			results.add_child(action_row(record_display_title(entry.title), "查看 · 分析 · 导出", "history", func(): show_record_details(path)))
-		if results.get_child_count() == 0: results.add_child(label("没有匹配的棋谱。", 15))
-	search.text_changed.connect(populate)
-	populate.call("")
+	archive_view.enter(true)
 
 func show_backup() -> void:
 	var column = _page("备份与恢复", "backup")

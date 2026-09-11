@@ -1,6 +1,7 @@
 extends RefCounted
 ## Records are independent from the active session. Every read replays legal moves.
 const Game = preload("res://scripts/shogi_game.gd")
+const Archive = preload("res://scripts/shogi_archive_model.gd")
 var root: String = "user://records"
 var error: String = ""
 
@@ -16,9 +17,22 @@ func read(path: String):
 	if game == null: error = "这份棋谱无法读取。"
 	return game
 
-func write(path: String, game, title: String) -> bool:
+func document(path: String) -> Dictionary:
+	var file = FileAccess.open(path,FileAccess.READ)
+	if file == null or file.get_length()>Game.MAX_SAVE_BYTES: return {}
+	var value = JSON.parse_string(file.get_as_text())
+	return value if value is Dictionary else {}
+
+func write(path: String, game, title: String, archive_data: Variant = null) -> bool:
 	error = ""
-	var serialized = JSON.stringify({"record_version": 1, "title": title.strip_edges().left(100), "game": game.to_data()}, "\t")
+	var created = FileAccess.get_modified_time(path) if FileAccess.file_exists(path) else int(Time.get_unix_time_from_system())
+	var meta = Archive.metadata(document(path).get("archive",{}) if archive_data == null else archive_data,created)
+	if meta.is_empty(): error = "收藏或标签数据无效，棋谱未修改。"; return false
+	return write_document(path,{"record_version":1,"title":title.strip_edges().left(100),"game":game.to_data(),"archive":meta})
+
+func write_document(path: String, data: Dictionary, expected: String = "") -> bool:
+	error = ""
+	var serialized = JSON.stringify(data,"\t")
 	if serialized.to_utf8_buffer().size() > Game.MAX_SAVE_BYTES:
 		error = "棋谱文件过大，请拆分变化或缩短注释后保存。"
 		return false
@@ -33,29 +47,43 @@ func write(path: String, game, title: String) -> bool:
 	f.flush()
 	var code = f.get_error()
 	f.close()
+	if not expected.is_empty() and FileAccess.get_sha256(path)!=expected:
+		DirAccess.remove_absolute(path+".tmp")
+		error = "棋谱已被其他操作更新，请重新打开后再保存。"; return false
 	if code != OK or DirAccess.rename_absolute(path + ".tmp", path) != OK:
 		error = "保存棋谱失败"
 		return false
 	return true
 
-func archive(game, title: String = "") -> String:
+func archive(game, title: String = "", archive_data: Variant = null) -> String:
 	var stamp = Time.get_datetime_string_from_system().replace(":", "-")
 	var path = root.path_join(stamp + "-" + str(Time.get_ticks_usec()) + ".json")
-	return path if write(path, game, stamp if title.is_empty() else title) else ""
+	return path if write(path, game, stamp if title.is_empty() else title,archive_data) else ""
 
-func list_all() -> Array:
+func update_metadata(path: String, metadata: Dictionary, expected: String) -> bool:
+	error = ""
+	if path.get_base_dir()!=root or not path.ends_with(".json"): error = "棋谱不在当前档案目录中。"; return false
+	var doc = document(path)
+	var meta = Archive.metadata(metadata,FileAccess.get_modified_time(path))
+	if doc.is_empty() or meta.is_empty() or not doc.get("game",doc) is Dictionary: error = "棋谱或标签无法读取。"; return false
+	if not doc.has("game"): doc = {"record_version":1,"title":path.get_file().trim_suffix(".json"),"game":doc}
+	doc.archive = meta
+	return write_document(path,doc,expected)
+
+func list_all(cancel: Callable = Callable()) -> Array:
 	var result: Array = []
 	var dir = DirAccess.open(root)
 	if dir == null: return result
 	for name in dir.get_files():
+		if cancel.is_valid() and cancel.call(): break
 		if not name.ends_with(".json"): continue
 		var path = root.path_join(name)
 		var f = FileAccess.open(path, FileAccess.READ)
 		if f == null or f.get_length() > 2097152: continue
+		var source = f.get_as_text()
 		var parser = JSON.new()
-		var data = parser.data if parser.parse(f.get_as_text()) == OK else null
-		var title = str(data.get("title", name.trim_suffix(".json"))) if data is Dictionary else name
-		result.append({"path": path, "title": title, "modified": FileAccess.get_modified_time(path)})
+		var data = parser.data if parser.parse(source) == OK else null
+		result.append(Archive.describe(path,data,FileAccess.get_modified_time(path),source.sha256_text()))
 	result.sort_custom(func(a, b): return a.modified > b.modified)
 	return result
 

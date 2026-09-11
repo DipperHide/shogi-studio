@@ -19,8 +19,8 @@ var footer: HBoxContainer
 
 func build(owner_view, source: Dictionary, parsed) -> void:
 	view = owner_view; entry = source.duplicate(true); game = parsed
-	game.metadata["棋战"] = entry.name
-	ply = game.moves.size()
+	if not entry.get("record",false): game.metadata["棋战"] = entry.name
+	ply = 0 if entry.get("record",false) else game.moves.size()
 	name = "OpeningPreview"
 	vertical = true
 	add_theme_constant_override("separation", 8)
@@ -36,13 +36,15 @@ func build(owner_view, source: Dictionary, parsed) -> void:
 	moves = RichTextLabel.new()
 	moves.name = "OpeningMoves"
 	moves.bbcode_enabled = true; moves.fit_content = true; moves.scroll_active = false
+	if entry.get("record",false): moves.fit_content = false; moves.scroll_active = true; moves.custom_minimum_size.y = 62
 	moves.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	moves.add_theme_font_size_override("normal_font_size", 13)
 	moves.add_theme_color_override("default_color", Color("f8f1e6"))
 	details.add_child(moves)
-	for i in range(game.moves.size()): labels.append("%d. %s" % [i + 1, game.labels[i]])
+	for i in range(game.moves.size()): labels.append("%d. %s" % [i + 1, preload("res://scripts/shogi_move_hint.gd").notation(game.positions[i],game.moves[i]) if entry.get("record",false) else game.labels[i]])
 	moves.meta_clicked.connect(func(value): seek(int(str(value))))
-	var metadata = view.text(view.Data.side_name(int(entry.get("side", 0))) + " · " + str(entry.get("group", "")) + " · 教学示例，无对局胜率数据", 12)
+	var summary: String = entry.summary if entry.get("record",false) else view.Data.side_name(int(entry.get("side", 0))) + " · " + str(entry.get("group", "")) + " · 教学示例，无对局胜率数据"
+	var metadata = view.text(summary, 12)
 	metadata.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	details.add_child(metadata)
 	board = preload("res://scripts/shogi_opening_board.gd").new()
@@ -115,7 +117,9 @@ func update_controls() -> void:
 	play_button.tooltip_text = "暂停播放" if playing else "逐手播放"
 	play_button.accessibility_name = play_button.tooltip_text
 	var shown = []
-	for i in range(labels.size()):
+	var start = maxi(0,ply-8) if entry.get("record",false) else 0
+	var end = mini(labels.size(),start+16) if entry.get("record",false) else labels.size()
+	for i in range(start,end):
 		var label: String = labels[i]
 		if i == ply - 1: label = "[color=#ffdd57]" + label + "[/color]"
 		shown.append("[url=%d]%s[/url]" % [i + 1, label])

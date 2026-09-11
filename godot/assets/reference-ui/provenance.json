@@ -137,6 +137,31 @@
       "decoded_sha256": "ecee95932f61cf2d78215b7e62a77a5f95901bcad04232f2d0d4a0d3075b0a08"
     },
     {
+      "asset": "ic_folder.svg",
+      "source": "res/drawable/ic_folder.xml",
+      "decoded_sha256": "0017e776465765d0cde8b5291bc5542ff66debe48fbc6660882f95ff7798359f"
+    },
+    {
+      "asset": "ic_favorite.svg",
+      "source": "res/drawable/ic_favorite.xml",
+      "decoded_sha256": "ec7038334b139b265680a24a2214c2cd55896016abb244752a7ba7e585621783"
+    },
+    {
+      "asset": "ic_favorite_border.svg",
+      "source": "res/drawable/ic_favorite_border.xml",
+      "decoded_sha256": "894bfdf4a64316415fcdb58da7c9988ca672e5beaec63eed247fea4689848561"
+    },
+    {
+      "asset": "ic_info.svg",
+      "source": "res/drawable/ic_info.xml",
+      "decoded_sha256": "3ca96d18b99a261993d184bf47ed74b7285f69999eb77fc798651cdc38c37993"
+    },
+    {
+      "asset": "ic_edit.svg",
+      "source": "res/drawable/ic_edit.xml",
+      "decoded_sha256": "3b1e9abd4839227e711144fd3365c55584541ce8e76cf34af7d544aa92a3fa61"
+    },
+    {
       "asset": "ic_tune.svg",
       "source": "res/drawable/ic_tune.xml",
       "decoded_sha256": "1cc52daff244e5ece1a43bf5fcaaf5fe6acf68ae7898ffdfcbb7ac741cc681f7"

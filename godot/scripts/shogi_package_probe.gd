@@ -59,6 +59,7 @@ func run(owner_node) -> void:
 	await probe_tournament_archive(historic)
 	app.ui.close()
 	await probe_promotion_hints()
+	await probe_personal_archive()
 	var frame_times: Array[float] = []
 	for frame in range(90):
 		var tick = Time.get_ticks_usec()
@@ -396,6 +397,31 @@ func probe_promotion_hints() -> void:
 	verify(app._display_position().board[app.Codec.parse_square("5b")]==9, "packaged preview executes the promoted alternative")
 	app.ui.stop_pv(false); app.ui.live_enabled = false; app.ui.live_details.clear(); app.ui.clear_pv_rows(); app.ui.arrows.clear()
 	app.review_game = previous; app.replay_index = previous_ply; app._refresh()
+
+func probe_personal_archive() -> void:
+	var old_root: String=app.records.root; var old_review=app.review_game; var old_ply: int=app.replay_index; var old_path: String=app.review_path
+	app.records.root="user://package-archive-"+str(Time.get_ticks_usec())
+	var source=app.Game.new(); source.mode="local"
+	source.play(app.Codec.parse_move("7g7f",source.position))
+	var path: String=app.records.archive(source,"成品棋谱库测试",{"favorite":false,"tags":["成品校验"],"created":100})
+	verify(not path.is_empty(),"packaged personal archive stores game and tags")
+	var archive=app.ui.archive_view; app.ui.show_archives()
+	var deadline=Time.get_ticks_msec()+5000
+	while archive.indexing and Time.get_ticks_msec()<deadline: await app.get_tree().process_frame
+	verify(not archive.indexing and archive.rows.size()==1,"packaged personal library scans in background")
+	if archive.rows.size()==1:
+		archive.favorite(archive.rows[0])
+		verify(app.records.document(path).archive.favorite,"packaged favorite writes to disk")
+		archive.show_preview(archive.rows[0],app.records.read(path))
+		verify(archive.preview.ply==0 and app.review_game==old_review,"packaged private record preview preserves active replay")
+		await capture("personal-archive-preview")
+		archive.preview.seek(1)
+		verify(await observe_motion("personal-archive-preview",func(): return archive.preview.board.motion),"packaged record preview paints intermediate frames")
+		archive.load_preview()
+		verify(app.ui.page==null and app.replay_index==1 and app.review_path==path,"packaged preview load keeps selected ply")
+	app.ui.close(); app.ui.live_enabled=false; app._pause_search()
+	app.records.delete_record(path); DirAccess.remove_absolute(app.records.root)
+	app.records.root=old_root; app.review_game=old_review; app.replay_index=old_ply; app.review_path=old_path; app._refresh()
 
 func probe_accuracy_insight() -> void:
 	app.ui.show_accuracy_insight(1)

@@ -1,6 +1,6 @@
 extends RefCounted
 const Draft = preload("res://scripts/shogi_import_draft.gd")
-const FLOW = ["analysis-import", "analysis-recent", "analysis-help"]
+const FLOW = ["analysis-import", "analysis-help"]
 var ui
 var draft = Draft.new()
 var input: TextEdit
@@ -14,10 +14,7 @@ var ticket = 0
 var picker_ticket = 0
 var job
 var changing = false
-var recent_query = ""
-var recent_list: VBoxContainer
-var recent_entries: Array = []
-var recent_limit = 20
+var archive_file = false
 
 func initialize(menu) -> void:
 	ui = menu
@@ -45,7 +42,7 @@ func action(caption: String, callback: Callable, id: String, icon: String = "", 
 func show(tab: int = -1) -> void:
 	if tab == 2: show_recent(); return
 	if tab < 0: tab = int(ui.app.preferences.studio.get("analysis_tab", 0))
-	if tab == 1: ui.tournament_view.show(); return
+	if tab == 1: ui.archive_view.enter(false); return
 	ui.archive_tab = clampi(tab, 0, 1)
 	var content = ui.report_dialog("分析棋谱", "analysis-import", "载入棋谱，查看局面与候选着手", "ic_drawer_analyze_outline")
 	var outer = ui.page.get_child(0)
@@ -137,18 +134,12 @@ func layout() -> void:
 	var safe: Rect2 = ui.app.safe_rect()
 	safe.size.y = maxf(160, safe.size.y - ui.keyboard_height)
 	var width = minf(420, safe.size.x * 0.94)
-	var wanted = 660 if ui.page_name == "analysis-import" else 620 if ui.page_name == "analysis-recent" else 470
+	var wanted = 660 if ui.page_name == "analysis-import" else 470
 	ui.page.size = Vector2(width, minf(wanted, safe.size.y - 24))
 	ui.page.position = safe.position + (safe.size - ui.page.size) / 2
 	ui.backdrop.color = Color(0, 0, 0, 0.6)
 
 func refresh_input() -> void:
-	if ui.page_name == "analysis-recent" and is_instance_valid(recent_list):
-		var status = ui.page.find_child("AnalysisRecentStatus", true, false)
-		status.text = "正在校验棋谱…" if busy else draft.error
-		status.visible = not status.text.is_empty()
-		for item in recent_list.find_children("AnalysisSaved*", "Button", false, false): item.disabled = busy
-		return
 	if ui.page_name != "analysis-import" or ui.archive_tab != 0 or not is_instance_valid(input): return
 	changing = true
 	input.text = draft.preview(); input.editable = not draft.locked() and not busy
@@ -178,8 +169,9 @@ func paste() -> void:
 	if value.is_empty(): draft.error = "剪贴板没有可读取的棋谱。"; refresh_input(); return
 	set_source(value)
 
-func choose_file() -> void:
+func choose_file(save_in_archive: bool = false) -> void:
 	if busy or picker_ticket != 0: return
+	archive_file = save_in_archive
 	ticket += 1; picker_ticket = ticket
 	var request = picker_ticket
 	refresh_input()
@@ -204,10 +196,14 @@ func read_file(request: int, path: String) -> void:
 
 func file_received(request: int, value: String, error: String, name: String = "") -> void:
 	if request != picker_ticket or picker_ticket == 0 or ui.page_name not in FLOW: return
+	var save_in_archive = archive_file
+	archive_file = false
 	picker_ticket = 0
 	if not error.is_empty(): draft.error = error; refresh_input(); return
 	if value.is_empty(): refresh_input(); return
-	if set_source(value, name): load_draft()
+	if set_source(value, name):
+		if ui.app.session != null: draft.error = "请先退出联机对局，再载入其他棋谱。"; refresh_input(); return
+		start_parse(draft.source,"",save_in_archive)
 
 func load_draft() -> void:
 	if busy: return
@@ -215,27 +211,31 @@ func load_draft() -> void:
 	if draft.source.strip_edges().is_empty(): draft.error = "请先输入、粘贴或选择棋谱。"; refresh_input(); return
 	start_parse(draft.source)
 
-func start_parse(source: String, path: String = "") -> void:
+func start_parse(source: String, path: String = "", save_in_archive: bool = false) -> void:
 	if busy: return
 	ticket += 1
 	var request = ticket
 	var revision: int = draft.revision
 	job = preload("res://scripts/shogi_import_job.gd").new()
 	ui.add_child(job)
-	job.completed.connect(func(result): parsed(request, revision, result, path))
+	job.completed.connect(func(result): parsed(request, revision, result, path, save_in_archive))
 	busy = true; refresh_input()
 	var error: Error = job.begin(source)
 	if error != OK:
 		job.queue_free(); job = null; busy = false
 		draft.error = "无法启动棋谱校验，请重试。"; refresh_input()
 
-func parsed(request: int, revision: int, result: Dictionary, path: String = "") -> void:
+func parsed(request: int, revision: int, result: Dictionary, path: String = "", save_in_archive: bool = false) -> void:
 	busy = false; job = null
 	if request != ticket or revision != draft.revision or ui.page_name not in FLOW: refresh_input(); return
 	if result.game == null:
 		draft.error = result.error
 		refresh_input()
 		return
+	if save_in_archive:
+		if ui.app.session != null: draft.error = "请先退出联机对局，再载入其他棋谱。"; refresh_input(); return
+		path = ui.app.records.archive(result.game,draft.source_name.get_basename())
+		if path.is_empty(): draft.error = ui.app.records.error; refresh_input(); return
 	open_game(result.game, path)
 
 func open_game(game, path: String = "") -> bool:
@@ -254,35 +254,7 @@ func open_game(game, path: String = "") -> bool:
 	return true
 
 func show_recent() -> void:
-	var content = ui.report_dialog("最近棋谱", "analysis-recent", "选择一局，直接载入分析棋盘", "ic_history")
-	var search = ui.field(content, "搜索棋谱", recent_query); search.name = "AnalysisRecentSearch"
-	draft.error = ""
-	var status = ui.label("", 13); status.name = "AnalysisRecentStatus"; content.add_child(status)
-	recent_entries = ui.app.records.list_all()
-	recent_limit = 20
-	recent_list = VBoxContainer.new(); content.add_child(recent_list)
-	search.text_changed.connect(func(value): recent_query = value; recent_limit = 20; refresh_recent())
-	refresh_recent(); layout()
-	apply_theme()
-
-func refresh_recent() -> void:
-	for child in recent_list.get_children(): recent_list.remove_child(child); child.queue_free()
-	var needle = recent_query.strip_edges().to_lower()
-	var entries = recent_entries.filter(func(entry): return needle.is_empty() or str(entry.title).to_lower().contains(needle))
-	if entries.is_empty(): recent_list.add_child(ui.label("没有匹配的棋谱。", 14))
-	for entry in entries.slice(0, recent_limit):
-		var path: String = entry.path
-		recent_list.add_child(action(ui.record_display_title(entry.title), func(): read_record(path), "AnalysisSaved" + str(recent_list.get_child_count()), "ic_history", 50))
-	if entries.size() > recent_limit: recent_list.add_child(action("显示更多", func(): recent_limit += 20; refresh_recent(), "AnalysisMore", "", 40))
-	refresh_input()
-
-func read_record(path: String) -> void:
-	if busy: return
-	if ui.app.session != null: ui.show_message("请先退出联机对局，再载入其他棋谱。"); return
-	var file = FileAccess.open(path, FileAccess.READ)
-	if file == null or file.get_length() > Draft.MAX_BYTES: ui.show_message("棋谱文件无法读取，或超过 2 MiB。"); return
-	draft.error = ""
-	start_parse(file.get_as_text(), path)
+	ui.archive_view.enter(true)
 
 func show_help() -> void:
 	var content = ui.report_dialog("导入将棋棋谱", "analysis-help", "从文字或文件载入", "ic_file")

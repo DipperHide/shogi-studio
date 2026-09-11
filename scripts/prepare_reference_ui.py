@@ -16,6 +16,7 @@ A = '{http://schemas.android.com/apk/res/android}'
 names = ['ic_eye', 'ic_play', 'ic_pause', 'ic_report', 'ic_quick_report', 'ic_deep_report', 'ic_settings', 'ic_arrow_forward', 'ic_arrow_drop_up', 'ic_hint_up', 'ic_stop', 'ic_close', 'ic_baseline_menu_24', 'ic_search', 'ic_flip_board', 'ic_nav_previous', 'ic_nav_next', 'ic_nav_play', 'ic_nav_pause', 'ic_nav_more']
 names.extend(['ic_drawer_analyze_outline', 'ic_paste', 'ic_file', 'ic_history'])
 names.extend(['ic_filter', 'ic_check_black_24dp', 'ic_clear_black_24dp'])
+names.extend(['ic_folder', 'ic_favorite', 'ic_favorite_border', 'ic_info', 'ic_edit'])
 names.append('ic_tune')
 names.append('ic_undo')
 names.append('ic_circle_check')

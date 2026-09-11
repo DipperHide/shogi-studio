@@ -63,10 +63,7 @@ func show() -> void:
 	close.size_flags_horizontal = Control.SIZE_SHRINK_END; close.custom_minimum_size.x = 44; header.add_child(close)
 	var fixed = VBoxContainer.new(); fixed.add_theme_constant_override("separation", 4)
 	outer.add_child(fixed); outer.move_child(fixed, 1)
-	var tabs = HBoxContainer.new(); fixed.add_child(tabs)
-	tabs.add_child(action("棋谱文字 / 文件", func(): ui.analysis_import.select_tab(0), "AnalysisTab0", "", 40))
-	var selected = action("历史大赛", func(): pass, "AnalysisTab1", "", 40)
-	selected.add_theme_stylebox_override("normal", ui.Design.box(Color("3d82f4"), 4, 4)); tabs.add_child(selected)
+	ui.archive_view.tabs(fixed,false)
 	var sources = HBoxContainer.new(); fixed.add_child(sources)
 	for recent in [true, false]:
 		var item = action("近期赛事" if recent else "离线历史", func(): switch_source(recent), "LatestTournaments" if recent else "OfflineTournaments", "", 38)
@@ -97,6 +94,7 @@ func apply_theme() -> void:
 		ui.page.add_theme_stylebox_override("panel", wood)
 		for label in ui.page.find_children("*", "Label", true, false): label.add_theme_color_override("font_color", Color("f8f1e6") if label.get_theme_font_size("font_size") >= 16 else Color("d4c8b5"))
 		for item in ui.page.find_children("*", "Button", true, false):
+			if item.name in ["ArchiveMyGames","ArchiveMasterGames"]: continue
 			for key in ["font_color","font_hover_color","font_pressed_color","icon_normal_color","icon_hover_color","icon_pressed_color"]: item.add_theme_color_override(key, Color("f8f1e6"))
 			var fill = Color("3d82f4") if item.name == "AnalysisTab1" else Color("736044") if item.name == ("LatestTournaments" if ui.historic_recent else "OfflineTournaments") else Color("493c29")
 			if str(item.name).begins_with("HistoricLoad_"): fill = Color.TRANSPARENT

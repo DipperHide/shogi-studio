@@ -6,7 +6,7 @@ func collect(app, tutorial) -> Dictionary:
 	var records: Array = []
 	for entry in app.records.list_all():
 		var saved = app.records.read(entry.path)
-		if saved != null: records.append({"title": entry.title, "game": saved.to_data()})
+		if saved != null: records.append({"title": entry.title, "game": saved.to_data(), "archive":entry.archive})
 	tutorial._ensure_loaded()
 	var prefs = {}
 	for key in PREF_KEYS: prefs[key] = app.preferences.get(key)
@@ -23,7 +23,9 @@ func restore(app, tutorial, data: Variant, restore_preferences: bool, restore_le
 		if not entry is Dictionary: error = "备份内容无效。"; return -1
 		var saved = app.Game.from_data(entry.get("game"))
 		if saved == null: error = "备份包含损坏棋谱，未开始恢复。"; return -1
-		validated.append({"game": saved, "title": str(entry.get("title", "恢复棋谱")).left(100)})
+		var meta = app.records.Archive.metadata(entry.get("archive",{}),int(Time.get_unix_time_from_system()))
+		if meta.is_empty(): error = "备份包含无效收藏或标签，未开始恢复。"; return -1
+		validated.append({"game": saved, "title": str(entry.get("title", "恢复棋谱")).left(100),"archive":meta})
 	var next_preferences
 	var next_progress
 	var temporary: String = app.records.root.get_base_dir().path_join("restore-validation-" + str(Time.get_ticks_usec()))
@@ -58,7 +60,7 @@ func restore(app, tutorial, data: Variant, restore_preferences: bool, restore_le
 	snapshot.close()
 	var count = 0
 	for entry in validated:
-		if app.records.archive(entry.game, entry.title).is_empty(): error = "已恢复 %d 份，后续写入失败。" % count; return -1
+		if app.records.archive(entry.game, entry.title,entry.archive).is_empty(): error = "已恢复 %d 份，后续写入失败。" % count; return -1
 		count += 1
 	if restore_preferences:
 		if not app.testing and next_preferences.save_to() != OK: error = "棋谱已恢复，设置写入失败。"; return -1

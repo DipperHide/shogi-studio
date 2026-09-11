@@ -1,6 +1,6 @@
 # Chessis 20.9 → 将棋：实现对照
 
-本文件记录对用户提供的 `base.apk.1` 的静态检查和截至本项目 0.32.0 的改造。**当前版本不是“所有功能、所有 UI 已完全复制”的完成声明。** 0.9 的动画／赛事库、0.10 的报告设置、0.11 的对弈辅助／教程、0.12 的准确率／阶段报告、0.13 的失误练习、0.14 的着手分类、0.15 的报告摘要、0.16 的着手详情、0.17 的准确率详情、0.18 的紧凑阶段弹窗、0.19 的阶段走势摘要证据分别位于 `review/app/chessis09/` 至 `review/app/chessis19/` 的 `REPORT.md`。0.20 的棋盘、免费功能与赛事更新见 `docs/TESTING-0.20.md`；0.21 的阶段条重排见 `docs/REPORT-PHASE-RIBBON.md`；0.22 的评分图标记和定位见 `docs/REPORT-CHART.md`；0.23 分类统计见 `docs/REPORT-STATISTICS.md`；0.24 回放衔接及残留绘制停顿见 `docs/ANIMATION-CONTINUITY.md`；0.25 变化编辑见 `docs/VARIATIONS.md`；0.26 评价条见 `docs/EVALUATION-BAR.md`；0.27 局面编辑见 `docs/POSITION-EDITOR.md`；0.28 动画计时见 `docs/ANIMATION-CLOCK.md`；0.29 开局预览见 `docs/OPENING-PREVIEW.md`；0.30 分析导入见 `docs/ANALYSIS-IMPORT.md`；0.31 大赛档案见 `docs/TOURNAMENT-ARCHIVE.md`；0.32 升变提示见 `docs/PROMOTION-HINTS.md`。
+本文件记录对用户提供的 `base.apk.1` 的静态检查和截至本项目 0.33.0 的改造。**当前版本不是“所有功能、所有 UI 已完全复制”的完成声明。** 0.9 的动画／赛事库、0.10 的报告设置、0.11 的对弈辅助／教程、0.12 的准确率／阶段报告、0.13 的失误练习、0.14 的着手分类、0.15 的报告摘要、0.16 的着手详情、0.17 的准确率详情、0.18 的紧凑阶段弹窗、0.19 的阶段走势摘要证据分别位于 `review/app/chessis09/` 至 `review/app/chessis19/` 的 `REPORT.md`。0.20 的棋盘、免费功能与赛事更新见 `docs/TESTING-0.20.md`；0.21 的阶段条重排见 `docs/REPORT-PHASE-RIBBON.md`；0.22 的评分图标记和定位见 `docs/REPORT-CHART.md`；0.23 分类统计见 `docs/REPORT-STATISTICS.md`；0.24 回放衔接及残留绘制停顿见 `docs/ANIMATION-CONTINUITY.md`；0.25 变化编辑见 `docs/VARIATIONS.md`；0.26 评价条见 `docs/EVALUATION-BAR.md`；0.27 局面编辑见 `docs/POSITION-EDITOR.md`；0.28 动画计时见 `docs/ANIMATION-CLOCK.md`；0.29 开局预览见 `docs/OPENING-PREVIEW.md`；0.30 分析导入见 `docs/ANALYSIS-IMPORT.md`；0.31 大赛档案见 `docs/TOURNAMENT-ARCHIVE.md`；0.32 升变提示见 `docs/PROMOTION-HINTS.md`；0.33 个人档案见 `docs/PERSONAL-ARCHIVE.md`。
 
 ## 参考证据
 
@@ -64,6 +64,8 @@
 | 外观完整库 | 当前使用将棋棋字、木制模型和自定义颜色，没有逐个重制原版所有国际象棋棋子包、运动样式编辑器、声音包与强度配色面板。 |
 | 全语言 | 既有中日英基础导航仍在；新功能以中文为主，没有复制原版全部语言分包。 |
 | 真机与双机 | 本轮没有连接 Android 设备；新 APK 尚未在手机实测，新版蓝牙双机、系统文件选择器和后台恢复仍待验收。历史实测不能代替本轮实测。 |
+
+0.33 已增加个人／大师页签、收藏、标签、信息编辑、独立动画预览、创建时间排序和局面筛选，收藏与标签进入备份。尚缺批量选择／操作、已分析筛选、跨棋谱练习及列表报告统计。
 
 ## 验证入口
 
