@@ -30,10 +30,16 @@ jobs:
       - name: Rules, record parsing, reports and update recovery
         run: |
           set -euo pipefail
-          for test in rules_test chessis_core_test report12_test story19_test report_chart22_test report_quality23_test tournament_sync20_test historic_games_test variation25_test evaluation26_test editor27_test motion_clock28_test openings29_test; do
+          for test in rules_test chessis_core_test report12_test story19_test report_chart22_test report_quality23_test tournament_sync20_test historic_games_test variation25_test evaluation26_test editor27_test motion_clock28_test openings29_test import30_test; do
             Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script "res://tests/$test.gd" -- --chessis20-regression
           done
           python scripts/check_rules_oracle.py --report review/app/chessis20/rules-oracle.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Android record text decoder on the host JVM
+        run: python scripts/test_import30_java.py
       - name: Replay interruption regression on a virtual display
         run: |
           sudo apt-get update
@@ -43,6 +49,10 @@ jobs:
         run: xvfb-run -a Godot_v4.7.2-stable_linux.x86_64 --path godot --audio-driver Dummy -- --unified-test --chessis25 --portable-variation
       - name: Opening preview UI on a virtual display
         run: xvfb-run -a Godot_v4.7.2-stable_linux.x86_64 --path godot --audio-driver Dummy -- --unified-test --chessis29
+      - name: Analysis import UI on a virtual display
+        run: |
+          python scripts/prepare_import30_fixture.py
+          xvfb-run -a Godot_v4.7.2-stable_linux.x86_64 --path godot --audio-driver Dummy -- --unified-test --chessis30 --portable-import
       - name: Keep test evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -58,3 +68,4 @@ jobs:
             review/app/chessis27
             review/app/chessis28
             review/app/chessis29
+            review/app/chessis30

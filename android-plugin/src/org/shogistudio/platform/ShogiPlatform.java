@@ -53,6 +53,9 @@ public final class ShogiPlatform extends GodotPlugin {
     private boolean receiverRegistered;
     private static final int IMPORT_RECORD = 4714, EXPORT_RECORD = 4715;
     private volatile String exportText = "";
+    private static final int IMPORT_ANALYSIS = 4716;
+    private int analysisRequest;
+    private boolean analysisPickerActive;
 
     public ShogiPlatform(Godot godot) { super(godot); }
     @Override public String getPluginName() { return "ShogiPlatform"; }
@@ -62,6 +65,7 @@ public final class ShogiPlatform extends GodotPlugin {
             new SignalInfo("bluetooth_device", String.class),
             new SignalInfo("bluetooth_message", String.class),
             new SignalInfo("record_imported", String.class),
+            new SignalInfo("analysis_record_imported", Integer.class, String.class, String.class),
             new SignalInfo("record_exported", Boolean.class)
         ));
     }
@@ -122,6 +126,26 @@ public final class ShogiPlatform extends GodotPlugin {
         });
     }
     @Override public void onMainActivityResult(int code, int result, Intent data) {
+        if (code == IMPORT_ANALYSIS) {
+            final int request = analysisRequest;
+            analysisPickerActive = false;
+            if (result != Activity.RESULT_OK || data == null || data.getData() == null) {
+                analysisResult(request, "", "");
+                return;
+            }
+            final android.net.Uri uri = data.getData();
+            io.execute(() -> {
+                String text = "", error = "";
+                try (InputStream input = getActivity().getContentResolver().openInputStream(uri)) {
+                    text = AnalysisRecordText.read(input);
+                    if (text.isEmpty()) error = "棋谱文件为空。";
+                } catch (Exception failure) {
+                    error = "棋谱读取失败：请使用不超过 2 MiB 的 UTF-8 或 Shift JIS 文件。";
+                }
+                analysisResult(request, text, error);
+            });
+            return;
+        }
         if ((code == IMPORT_RECORD || code == EXPORT_RECORD) && result == Activity.RESULT_OK && data != null && data.getData() != null) {
             android.net.Uri uri = data.getData();
             io.execute(() -> {
@@ -164,6 +188,27 @@ public final class ShogiPlatform extends GodotPlugin {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("*/*");
             try { getActivity().startActivityForResult(intent, IMPORT_RECORD); }
             catch (RuntimeException e) { runOnRenderThread(() -> emitSignal("record_imported", "")); }
+        });
+    }
+    private void analysisResult(int request, String text, String error) {
+        runOnRenderThread(() -> emitSignal("analysis_record_imported", request, text, error));
+    }
+    @UsedByGodot public void pickAnalysisRecord(int request) {
+        runOnUiThread(() -> {
+            if (analysisPickerActive) {
+                analysisResult(request, "", "请先关闭已打开的文件选择器。");
+                return;
+            }
+            analysisRequest = request;
+            analysisPickerActive = true;
+            try {
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT)
+                        .addCategory(Intent.CATEGORY_OPENABLE).setType("*/*");
+                getActivity().startActivityForResult(intent, IMPORT_ANALYSIS);
+            } catch (RuntimeException failure) {
+                analysisPickerActive = false;
+                analysisResult(request, "", "无法打开文件选择器。");
+            }
         });
     }
     @UsedByGodot public void exportRecord(String text) {

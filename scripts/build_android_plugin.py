@@ -26,7 +26,8 @@ if not godot_jar.exists():
             godot_jar.parent.mkdir(parents=True, exist_ok=True)
             godot_jar.write_bytes(aar.read("classes.jar"))
 classpath = str(godot_jar) + ";" + str(SDK / "platforms/android-36/android.jar")
-subprocess.run([str(JAVA / "javac.exe"), "-encoding", "UTF-8", "-source", "17", "-target", "17", "-classpath", classpath, "-d", str(CLASSES), str(ROOT / "android-plugin/src/org/shogistudio/platform/ShogiPlatform.java")], check=True)
+sources = sorted((ROOT / "android-plugin/src").rglob("*.java"))
+subprocess.run([str(JAVA / "javac.exe"), "-encoding", "UTF-8", "-source", "17", "-target", "17", "-classpath", classpath, "-d", str(CLASSES), *map(str, sources)], check=True)
 jar = BUILD / "classes.jar"
 with ZipFile(jar, "w", ZIP_DEFLATED) as archive:
     for path in CLASSES.rglob("*.class"):

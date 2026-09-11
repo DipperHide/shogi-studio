@@ -80,6 +80,7 @@ var retry_from_report: bool = false
 var study
 var variation_ui
 var opening_view
+var analysis_import
 var study_bar: HBoxContainer
 
 func initialize(owner_node) -> void:
@@ -90,6 +91,8 @@ func initialize(owner_node) -> void:
 	variation_ui.ui = self
 	opening_view = preload("res://scripts/shogi_opening_view.gd").new()
 	opening_view.ui = self
+	analysis_import = preload("res://scripts/shogi_analysis_import.gd").new()
+	analysis_import.initialize(self)
 	tournaments = preload("res://scripts/shogi_tournament_sync.gd").new()
 	add_child(tournaments)
 	tournaments.initialize(ProjectSettings.globalize_path("res://../.work/tournaments-ui-test") if app.testing else "user://tournaments", not app.testing)
@@ -244,6 +247,7 @@ func initialize(owner_node) -> void:
 	layout()
 
 func _page(title: String, name: String, use_sheet: bool = false) -> VBoxContainer:
+	if analysis_import != null: analysis_import.leaving(name)
 	if opening_view != null: opening_view.stop_preview()
 	if practice_active() and name not in ["promotion", "confirm-move"]: practice.stop(false)
 	if not pv_context.is_empty(): stop_pv(false)
@@ -268,6 +272,7 @@ func banner(parent: Control, _compact: bool = false) -> void:
 	parent.add_child(strip)
 
 func close() -> void:
+	if analysis_import != null: analysis_import.leaving("")
 	if opening_view != null: opening_view.stop_preview()
 	var practicing = practice_active()
 	var studying = study_active()
@@ -355,6 +360,7 @@ func layout() -> void:
 		page.position = available.position + (available.size - dialog_size) / 2
 		backdrop.color = Color(0, 0, 0, 0.6)
 	if evaluation_bar != null: evaluation_bar.layout_bar()
+	if analysis_import != null: analysis_import.layout()
 
 func apply_theme() -> void:
 	var report_colors: Dictionary = {}
@@ -364,6 +370,7 @@ func apply_theme() -> void:
 	for item in report_colors: item.add_theme_color_override("font_color", report_colors[item])
 	if page_name == "editor" and is_instance_valid(editor): editor.apply_theme()
 	if page_name in ["openings", "opening-info"] and opening_view != null: opening_view.apply_theme()
+	if analysis_import != null: analysis_import.apply_theme()
 	if toolbar == null: return
 	for item in toolbar.get_children():
 		item.add_theme_stylebox_override("normal", Design.box(Color(0, 0, 0, 0.12), 5, 4))
@@ -673,6 +680,17 @@ func show_menu() -> void:
 	if app.session != null: column.add_child(button("当前联机", show_connection))
 
 func back() -> void:
+	if page_name in ["analysis-import", "analysis-recent", "analysis-help"]:
+		if file_dialog != null and is_instance_valid(file_dialog) and file_dialog.visible:
+			file_dialog.hide()
+			if file_dialog.has_meta("analysis_import"): analysis_import.file_received(analysis_import.picker_ticket, "", "")
+			return
+		if keyboard_height > 0:
+			DisplayServer.virtual_keyboard_hide()
+			var focus = root.get_viewport().gui_get_focus_owner()
+			if focus != null: focus.release_focus()
+			return
+		if page_name != "analysis-import": analysis_import.show(); return
 	if page_name == "opening-info": opening_view.show_list(); return
 	if page_name == "editor" and is_instance_valid(editor) and editor.interaction.pointer_id != -2: editor.interaction.cancel(); return
 	if page_name == "evaluation-options": _board_keep(); return
@@ -791,29 +809,8 @@ func branch_here() -> void:
 	var next = app.Game.from_data(data)
 	if next != null: adopt_game(next)
 
-func show_import_analysis(tab: int = 0) -> void:
-	archive_tab = tab
-	var column = _page("分析棋谱", "analysis-import")
-	column.add_child(label("导入棋谱，或选择历史大赛对局。", 12))
-	var tabs = HBoxContainer.new()
-	tabs.add_theme_constant_override("separation", 3)
-	column.add_child(tabs)
-	for i in range(3):
-		var index = i
-		var b = compact_button(["棋谱文件", "历史大赛", "我的棋谱"][i], func(): show_import_analysis(index), 40)
-		b.add_theme_stylebox_override("normal", Design.box(app.palette().accent if i == tab else app.palette().soft, 8, 4))
-		if i == tab: b.add_theme_color_override("font_color", Color.WHITE)
-		tabs.add_child(b)
-	if tab == 1:
-		build_historic_content(column)
-	elif tab == 2:
-		column.add_child(button("打开我的棋谱库", show_archives))
-		column.add_child(button("分析当前棋局", func(): start_report(false)))
-	else:
-		column.add_child(button("打开棋谱文件", import_record))
-		column.add_child(button("粘贴棋谱 / SFEN", show_paste))
-		column.add_child(button("分析当前棋局", func(): start_report(false)))
-		column.add_child(label("支持 KIF · CSA · USI · SFEN · JSON", 13))
+func show_import_analysis(tab: int = -1) -> void:
+	analysis_import.show(tab)
 
 func show_historic_games() -> void:
 	show_import_analysis(1)
@@ -929,13 +926,7 @@ func open_historic(entry: Dictionary) -> void:
 	_open_tournament_game(next)
 
 func _open_tournament_game(next) -> void:
-	if not pv_context.is_empty(): stop_pv()
-	app._pause_search()
-	app._cancel_motion()
-	app.review_game = next
-	app.review_path = ""
-	app.replay_index = 0
-	_board_keep()
+	if not analysis_import.open_game(next): return
 	live_enabled = false
 	live_details.clear()
 	clear_pv_rows()

@@ -26,6 +26,7 @@ func shown_motion(target: int, label: String) -> void:
 func run(instance) -> void:
 	app = instance
 	output = ProjectSettings.globalize_path("res://../review/app/chessis29/ui")
+	if "--chessis30-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis30/chessis29")
 	DirAccess.make_dir_recursive_absolute(output)
 	app.records.root = output.path_join("records"); app.save_path = output.path_join("active-test.json")
 	app.ui.tutorial.progress_path = output.path_join("learning-test.json")

@@ -33,6 +33,7 @@ func run(owner_node) -> void:
 	await capture("drawer")
 	var exchange = preload("res://scripts/shogi_exchange.gd").new()
 	verify(exchange.parse("position startpos moves 7g7f 3c3d") != null, "packaged interchange parser available")
+	await probe_analysis_import(exchange)
 	app.ui.show_openings("四間")
 	var openings = app.ui.opening_view
 	verify(openings.visible_entries.size() == 1, "packaged opening search finds Japanese aliases")
@@ -78,6 +79,7 @@ func run(owner_node) -> void:
 		verify(Engine.has_singleton("ShogiPlatform"), "Android platform plugin registered")
 		if Engine.has_singleton("ShogiPlatform"):
 			var platform = Engine.get_singleton("ShogiPlatform")
+			verify(platform.has_method("pickAnalysisRecord") and platform.has_signal("analysis_record_imported"), "Android analysis picker bridge registered")
 			report.native_engine_path = platform.enginePath()
 			report.native_engine_visible_to_file_access = FileAccess.file_exists(report.native_engine_path)
 			report.bluetooth_adapter = platform.bluetoothSupported()
@@ -151,6 +153,39 @@ func run(owner_node) -> void:
 	verify(tutorial.progress.error.is_empty() and FileAccess.file_exists(course_probe_path), "packaged tutorial progress writes successfully")
 	app.ui.close()
 	finish()
+
+func probe_analysis_import(exchange) -> void:
+	var original = app.game
+	app.ui.show_import_analysis(0)
+	var importer = app.ui.analysis_import
+	verify(importer.input != null and app.ui.page.size.x <= 420.1, "packaged reference analysis input opens")
+	importer.set_source("invalid shogi record"); importer.load_draft()
+	var deadline = Time.get_ticks_msec() + 5000
+	while importer.busy and Time.get_ticks_msec() < deadline: await app.get_tree().process_frame
+	verify(not importer.busy and not importer.draft.error.is_empty() and app.review_game == null, "packaged invalid input preserves original board with inline error")
+	var source = exchange.parse("position startpos moves 7g7f 3c3d")
+	source.comments["2"] = "原文注釈".repeat(4001)
+	importer.set_source(JSON.stringify(source.to_data()))
+	verify(importer.draft.locked() and not importer.input.editable and importer.input.text.length() < 16010, "packaged long draft limits only the preview")
+	await capture("analysis-input")
+	importer.load_draft()
+	verify(importer.busy, "packaged legality parser starts in background")
+	deadline = Time.get_ticks_msec() + 8000
+	while importer.busy and Time.get_ticks_msec() < deadline: await app.get_tree().process_frame
+	verify(not importer.busy and app.ui.page == null and app.review_game != null, "packaged complete draft loads directly into analysis")
+	if importer.busy or app.review_game == null: return
+	verify(app.review_game.comments["2"] == source.comments["2"] and app.review_game.moves.size() == 2, "packaged import retains full comment beyond preview")
+	verify(app.game == original and original.moves.is_empty() and app.replay_index == 0 and app.ui.live_enabled, "packaged import preserves live game and activates analysis at start")
+	app.ui.live_enabled = false; app._pause_search()
+	app.ui.show_history(1)
+	verify(await observe_motion("imported-record"), "packaged imported replay has intermediate painted frames")
+	verify(app.ui.continue_button.visible, "packaged imported position can continue playing")
+	if OS.get_name() != "Android":
+		app.ui.show_import_analysis(0); importer.choose_file()
+		app.ui.back()
+		verify(importer.picker_ticket == 0 and not importer.file_button.disabled, "packaged file picker back allows another choice")
+	app.ui.close()
+	app.review_game = null; app.review_path = ""; app.replay_index = -1; app._refresh()
 
 func probe_mistake_practice() -> void:
 	var original = app.game

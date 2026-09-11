@@ -102,6 +102,26 @@
       "decoded_sha256": "0828ec3314ddc7f64fd24e6ebbfdf8d21a9fc94ae92799de465c5e171600a02c"
     },
     {
+      "asset": "ic_drawer_analyze_outline.svg",
+      "source": "res/drawable/ic_drawer_analyze_outline.xml",
+      "decoded_sha256": "51ba41a53393a2125ca4b9ab0cae0fd69f4b3f3b3984eff47fdb3dcc8f24b3dd"
+    },
+    {
+      "asset": "ic_paste.svg",
+      "source": "res/drawable/ic_paste.xml",
+      "decoded_sha256": "426bfefc2af709df65e086d710ec399f2ec089a9ac5d2ec8219cbb8f0850a850"
+    },
+    {
+      "asset": "ic_file.svg",
+      "source": "res/drawable/ic_file.xml",
+      "decoded_sha256": "4b30261a072df9f47de9a68a9f20497c366df84764827bb1cbd1c74ac49674ce"
+    },
+    {
+      "asset": "ic_history.svg",
+      "source": "res/drawable/ic_history.xml",
+      "decoded_sha256": "9adbba48dbc51b9d519f1b556e4051a375b1e8170ba6c19f043cfc21b1e12fb8"
+    },
+    {
       "asset": "ic_tune.svg",
       "source": "res/drawable/ic_tune.xml",
       "decoded_sha256": "1cc52daff244e5ece1a43bf5fcaaf5fe6acf68ae7898ffdfcbb7ac741cc681f7"

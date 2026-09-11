@@ -2,7 +2,7 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
 
-面向 Android 和 Windows 的免费将棋对弈、复盘与学习应用，使用 Godot 4.7.2 和 YaneuraOu 本地引擎。当前版本 **0.29.0**，**所有功能免费开放，没有会员、购买入口或付费解锁**。
+面向 Android 和 Windows 的免费将棋对弈、复盘与学习应用，使用 Godot 4.7.2 和 YaneuraOu 本地引擎。当前版本 **0.30.0**，**所有功能免费开放，没有会员、购买入口或付费解锁**。
 
 ![木制棋盘](docs/images/board-0.20.png)
 
@@ -10,9 +10,9 @@
 
 本地安装包已生成；GitHub 仓库与 Release 尚未发布，需要先恢复维护者本机的 GitHub 登录。
 
-从 [Releases](https://github.com/DipperHide/shogi-studio/releases) 下载 `Shogi-0.29.0-android-arm64.apk`，适用于 ARM64 Android 设备。Windows 下载 `Shogi-0.29.0-windows-x64.zip`，解压后运行 `Shogi.exe`，保留同目录的 `engines` 文件夹。
+从 [Releases](https://github.com/DipperHide/shogi-studio/releases) 下载 `Shogi-0.30.0-android-arm64.apk`，适用于 ARM64 Android 设备。Windows 下载 `Shogi-0.30.0-windows-x64.zip`，解压后运行 `Shogi.exe`，保留同目录的 `engines` 文件夹。
 
-Android 包名 `org.shogistudio.artpreview`，versionCode 47。使用 release 导出模板，沿用前版开发签名以便覆盖升级；私钥不在仓库中。安装不同签名的构建前请导出备份。
+Android 包名 `org.shogistudio.artpreview`，versionCode 48。使用 release 导出模板，沿用前版开发签名以便覆盖升级；私钥不在仓库中。安装不同签名的构建前请导出备份。
 
 ## 功能
 
@@ -30,8 +30,9 @@ Android 包名 `org.shogistudio.artpreview`，versionCode 47。使用 release �
 - 0.27 局面编辑新增独立评价、暂停、拖动摆子、独立撤销／重做、保存局面导航和 SFEN 剪贴板，取消／完成固定在屏幕底部。修复窄屏持驹输入撑宽页面的问题。
 - 0.28 棋子先显示起点再移动，绘制停顿后继续播放剩余动作；覆盖主棋盘、分析回放与教程。低帧率时播放时间会延长，Windows 绘制停顿本身仍未解决。
 - 0.29 开局与围玉增加分类／先后手筛选、中英日别名搜索和独立动画预览。预览不替换原棋谱，确认载入时保留选中位置；横屏完整显示棋盘。仍为九条教学示例，无大师胜率数据。
+- 0.30 分析导入改为内嵌输入、粘贴／文件卡片、来源页签和最近棋谱列表；异步校验保留完整长注释，支持 UTF-8／CP932。载入直接进入分析，取消和过期回调不会替换当前棋谱。
 
-[变化分析用法](docs/VARIATIONS.md) · [0.29 测试结果](docs/TESTING-0.29.md) · [Evaluation bar / 評価バー / 评价条](docs/EVALUATION-BAR.md) · [Position editor / 局面編集 / 局面编辑](docs/POSITION-EDITOR.md) · [Opening preview / 戦法プレビュー / 开局预览](docs/OPENING-PREVIEW.md)
+[变化分析用法](docs/VARIATIONS.md) · [0.30 测试结果](docs/TESTING-0.30.md) · [Evaluation bar / 評価バー / 评价条](docs/EVALUATION-BAR.md) · [Position editor / 局面編集 / 局面编辑](docs/POSITION-EDITOR.md) · [Opening preview / 戦法プレビュー / 开局预览](docs/OPENING-PREVIEW.md) · [Analysis import / 棋譜入力 / 分析导入](docs/ANALYSIS-IMPORT.md)
 
 主要页面和教程文字以中文为主，基础导航支持中、英、日文。三语 README 不代表应用全部页面已完整翻译。
 
@@ -53,7 +54,7 @@ Android 包名 `org.shogistudio.artpreview`，versionCode 47。使用 release �
 python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -r requirements-dev.txt
 ./scripts/build_android.ps1
-./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.29.0
+./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.30.0
 ```
 
 用 Godot 打开 `godot/project.godot` 可开发桌面版。运行素材、引擎和 NNUE 已包含；构建脚本会从同梱源码包恢复引擎源码目录。release APK 需在本机设置 `GODOT_ANDROID_KEYSTORE_RELEASE_PATH`、`GODOT_ANDROID_KEYSTORE_RELEASE_USER`、`GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD` 后运行 `./scripts/build_android.ps1 -Release`。不要提交 keystore 或密码。
@@ -66,9 +67,9 @@ python -m venv .venv
 ./scripts/test_chessis20.ps1 -CoreOnly -Network
 ./scripts/test_chessis23.ps1
 ./scripts/test_chessis24.ps1
-./scripts/test_chessis29.ps1 -CoreOnly
-./scripts/test_chessis29.ps1
-./scripts/test_package.ps1 -ReportDirectory review/app/chessis29/package -Executable builds/windows-0.29.0/Shogi.exe
+./scripts/test_chessis30.ps1 -CoreOnly
+./scripts/test_chessis30.ps1
+./scripts/test_package.ps1 -ReportDirectory review/app/chessis30/package -Executable builds/windows-0.30.0/Shogi.exe
 ```
 
 [CI](.github/workflows/ci.yml) 在 push／PR 时运行核心测试。本地另测四种尺寸、两个方向、明暗模式、持驹、吃子／升变／打入动画和实际引擎。结果见 [0.23 分类统计验证](docs/TESTING-0.23.md) 和 [0.20 棋盘／赛事验证](docs/TESTING-0.20.md)。测试降低已覆盖场景的回归风险，不能保证绝对没有 bug；本轮未连接 Android 真机，蓝牙双机和系统后台恢复仍需设备验收。

@@ -74,6 +74,10 @@ with ZipFile(apk) as archive:
     verify(not any("course_sources" in name or name.endswith(".epub") for name in archive.namelist()), "private source books are not bundled")
     dex = b"".join(archive.read(name) for name in archive.namelist() if name.endswith(".dex"))
     verify(b"closeOwnedSocket" in dex and b"ShogiPlatform" in dex, "updated Bluetooth socket cleanup plugin is packaged")
+    verify(b"pickAnalysisRecord" in dex and b"analysis_record_imported" in dex,
+           "request-scoped analysis file picker bridge is packaged")
+    verify(b"AnalysisRecordText" in dex and b"windows-31j" in dex,
+           "bounded UTF-8 and CP932 analysis decoder is packaged")
     verify(b"isBoardFrameReady" not in dex and b"boardReady" not in dex,
            "APK contains no obsolete board-frame splash handshake")
     # Android Gradle removes unneeded debug/symbol tables while packaging JNI.
