@@ -19,4 +19,6 @@ ax.set(title='3D capture: movement shown after a 400 ms render stall', xlabel='M
 ax.grid(alpha=.2)
 ax.legend(loc='lower right', frameon=False)
 fig.savefig(root / 'docs/images/motion28-progress.png', dpi=180)
-fig.savefig(root / 'docs/images/motion28-progress.svg')
+svg = root / 'docs/images/motion28-progress.svg'
+fig.savefig(svg)
+svg.write_text('\n'.join(line.rstrip() for line in svg.read_text('utf-8').splitlines()) + '\n', 'utf-8')
