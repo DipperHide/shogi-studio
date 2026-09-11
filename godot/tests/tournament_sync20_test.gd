@@ -22,6 +22,7 @@ func _initialize() -> void:
 	run.call_deferred()
 
 func run() -> void:
+	if "--chessis31-regression" in OS.get_cmdline_user_args(): output = "res://../review/app/chessis31"
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output))
 	var raw = Historic.entries()[0].kif.to_utf8_buffer()
 	var normalized = Download.normalize(raw)

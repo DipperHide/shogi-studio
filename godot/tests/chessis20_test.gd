@@ -18,6 +18,7 @@ func board_luminance() -> float:
 func run(instance) -> void:
 	app = instance
 	output = ProjectSettings.globalize_path("res://../review/app/chessis20/ui")
+	if "--chessis31-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis31/chessis20")
 	DirAccess.make_dir_recursive_absolute(output)
 	app.records.root = output.path_join("records")
 	app.save_path = output.path_join("active-test.json")
@@ -70,8 +71,12 @@ func run(instance) -> void:
 	app.ui.show_historic_games()
 	await settle()
 	check(app.ui.historic_recent and app.ui.historic_count.text.begins_with("26"), "recent tournament catalog opens by default")
+	app.ui.tournament_view.show_filter()
+	check(await until(func(): return app.ui.tournament_view.reveal>=1,4), "recent filters slide open")
 	var years = app.ui.page.find_child("HistoricYear", true, false)
 	check(years.item_count >= 3 and years.get_item_text(1) == "2026", "recent year choices follow catalog")
+	app.ui.tournament_view.close_filter("cancel")
+	check(await until(func(): return app.ui.page_name=="tournament-archive",4), "recent filters return to archive")
 	check(app.ui.page.find_child("RefreshTournaments", true, false) != null, "manual tournament refresh available")
 	await capture("recent-tournaments")
 	await click("离线历史")
@@ -82,7 +87,7 @@ func run(instance) -> void:
 		var original = app.game
 		var expected = app.ui.tournaments.entries()[0]
 		app.ui.tournaments.storage = output.path_join("download-test-" + str(Time.get_ticks_usec()))
-		app.ui.tournaments.open_game(expected)
+		app.ui.tournament_view.open_entry(expected)
 		check(await until(func(): return not app.ui.tournaments.downloading, 40), "official UI download finishes")
 		check(app.ui.page == null and app.review_game != null and app.review_game.moves.size() == int(expected.plies), "official download opens full game on board")
 		check(app.game == original and app.replay_index == 0, "downloaded replay preserves original match")

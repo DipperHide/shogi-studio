@@ -56,6 +56,7 @@ func run(owner_node) -> void:
 	verify(historic.entries().size() == 195, "195 complete tournament records packaged")
 	var historic_game = historic.game_for(historic.entries()[1])
 	verify(historic_game != null and historic_game.moves.size() > 60 and not historic_game.result.is_empty(), "packaged historic game replays to a verified result")
+	await probe_tournament_archive(historic)
 	app.ui.close()
 	var frame_times: Array[float] = []
 	for frame in range(90):
@@ -153,6 +154,38 @@ func run(owner_node) -> void:
 	verify(tutorial.progress.error.is_empty() and FileAccess.file_exists(course_probe_path), "packaged tutorial progress writes successfully")
 	app.ui.close()
 	finish()
+
+func probe_tournament_archive(historic) -> void:
+	var original = app.game
+	var previous = app.review_game
+	var previous_ply: int = app.replay_index
+	app.ui.show_historic_games()
+	var archive = app.ui.tournament_view
+	verify(app.ui.page_name == "tournament-archive" and archive.rows.size() == 26, "packaged tournament archive opens complete recent catalog")
+	archive.switch_source(false)
+	verify(archive.rows.size() == 195, "packaged archive exposes all offline games")
+	await RenderingServer.frame_post_draw
+	verify(app.ui.page.get_child(0).get_child(0).size.y == 44, "packaged archive has compact one-line header")
+	archive.show_filter()
+	verify(await observe_motion("tournament-filter",func(): return archive.reveal), "packaged tournament filter slides from bottom with intermediate frames")
+	verify(app.ui.page.find_child("HistoricFilterApply",true,false).text == "显示结果", "packaged filter retains label beside icon")
+	archive.draft.events = ["棋圣战","王位战"]
+	archive.close_filter("apply")
+	var deadline = Time.get_ticks_msec()+4000
+	while app.ui.page_name == "tournament-filter" and Time.get_ticks_msec()<deadline: await app.get_tree().process_frame
+	verify(archive.rows.size() == historic.search("","棋圣战").size()+historic.search("","王位战").size(), "packaged filter combines multiple events")
+	await capture("tournament-archive")
+	var entry = archive.rows[0]
+	archive.open_entry(entry)
+	verify(archive.local_busy, "packaged offline legality check runs in a private worker")
+	deadline = Time.get_ticks_msec()+8000
+	while archive.local_busy and Time.get_ticks_msec()<deadline: await app.get_tree().process_frame
+	verify(not archive.local_busy and app.ui.page == null and app.review_game.moves.size() == entry.plies, "packaged tournament row loads full legal replay")
+	verify(app.review_game.metadata["来源"] == entry.source and app.game == original, "packaged tournament retains source attribution and live match")
+	app.ui.show_history(10)
+	verify(await observe_motion("tournament-replay"), "packaged tournament replay displays real movement")
+	verify(app.ui.continue_button.visible, "packaged tournament can continue from selected move")
+	app.ui.close(); app.review_game = previous; app.replay_index = previous_ply; app._refresh()
 
 func probe_analysis_import(exchange) -> void:
 	var original = app.game

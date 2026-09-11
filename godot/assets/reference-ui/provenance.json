@@ -122,6 +122,21 @@
       "decoded_sha256": "9adbba48dbc51b9d519f1b556e4051a375b1e8170ba6c19f043cfc21b1e12fb8"
     },
     {
+      "asset": "ic_filter.svg",
+      "source": "res/drawable/ic_filter.xml",
+      "decoded_sha256": "1cc52daff244e5ece1a43bf5fcaaf5fe6acf68ae7898ffdfcbb7ac741cc681f7"
+    },
+    {
+      "asset": "ic_check_black_24dp.svg",
+      "source": "res/drawable/ic_check_black_24dp.xml",
+      "decoded_sha256": "784c8541e90c48e7b684134ccd2d4cce48e7ada3ae36c5c19b9cca2e08400085"
+    },
+    {
+      "asset": "ic_clear_black_24dp.svg",
+      "source": "res/drawable/ic_clear_black_24dp.xml",
+      "decoded_sha256": "ecee95932f61cf2d78215b7e62a77a5f95901bcad04232f2d0d4a0d3075b0a08"
+    },
+    {
       "asset": "ic_tune.svg",
       "source": "res/drawable/ic_tune.xml",
       "decoded_sha256": "1cc52daff244e5ece1a43bf5fcaaf5fe6acf68ae7898ffdfcbb7ac741cc681f7"

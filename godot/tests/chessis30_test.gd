@@ -22,6 +22,7 @@ func imported() -> void:
 func run(instance) -> void:
 	app = instance
 	output = ProjectSettings.globalize_path("res://../review/app/chessis30/ui")
+	if "--chessis31-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis31/chessis30")
 	DirAccess.make_dir_recursive_absolute(output)
 	app.records.root = output.path_join("records-" + str(Time.get_ticks_usec()))
 	app.save_path = output.path_join("active.json"); app.ui.tutorial.progress_path = output.path_join("learning.json")
@@ -95,7 +96,7 @@ func run(instance) -> void:
 	check(importer.feedback.text == "读取失败", "picker error is distinct from cancel")
 	source_unchanged("picker cancellation and failures")
 	# Long input remains complete; parsing runs in an isolated worker.
-	var long_record = FileAccess.get_file_as_string("res://../review/app/chessis30/long-record.json")
+	var long_record = FileAccess.get_file_as_string("res://../review/app/chessis31/long-record.json" if "--chessis31-regression" in OS.get_cmdline_user_args() else "res://../review/app/chessis30/long-record.json")
 	DisplayServer.clipboard_set(long_record); await press("AnalysisPaste")
 	check(importer.draft.locked() and not importer.input.editable and importer.input.text.length() < 16010, "large clipboard has bounded read-only preview")
 	await capture("analysis-long-input")
@@ -130,7 +131,7 @@ func run(instance) -> void:
 	app.ui.file_dialog.get_cancel_button().pressed.emit(); await settle()
 	check(importer.picker_ticket == 0 and not importer.file_button.disabled, "desktop Cancel button unlocks retry")
 	await press("AnalysisChooseFile")
-	var path = ProjectSettings.globalize_path("res://../review/app/chessis30/source-cp932.kif")
+	var path = ProjectSettings.globalize_path("res://../review/app/chessis31/source-cp932.kif" if "--chessis31-regression" in OS.get_cmdline_user_args() else "res://../review/app/chessis30/source-cp932.kif")
 	app.ui.file_dialog.file_selected.emit(path); app.ui.file_dialog.hide()
 	await imported()
 	check(app.ui.page == null and app.review_game.moves.size() == 5 and app.review_game.comments["5"].strip_edges() == "最終手の注釈", "desktop CP932 file routes directly to complete analysis")
@@ -145,7 +146,9 @@ func run(instance) -> void:
 	app.ui.start_variation_analysis(app.review_game, 0)
 	var historic = preload("res://scripts/shogi_historic_games.gd").new()
 	app.ui.show_import_analysis(1)
-	app.ui.open_historic(historic.entries()[1]); await settle()
+	app.ui.open_historic(historic.entries()[1])
+	check(await until(func(): return not app.ui.tournament_view.local_busy,15), "historic validation worker finishes")
+	await settle()
 	check(not app.ui.study.active and app.ui.page == null and app.review_game.moves.size() > 60 and not app.review_game.result.is_empty(), "historic game replaces active variation and retains full result")
 	preserve("historic import from variation")
 	# A superseded parser result must not replace a later editor/page choice.

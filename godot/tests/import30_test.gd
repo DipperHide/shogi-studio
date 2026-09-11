@@ -12,6 +12,7 @@ func check(ok: bool, label: String) -> void:
 
 func _init() -> void:
 	directory = ProjectSettings.globalize_path("res://../review/app/chessis30")
+	if "--chessis31-regression" in OS.get_cmdline_user_args(): directory = ProjectSettings.globalize_path("res://../review/app/chessis31")
 	DirAccess.make_dir_recursive_absolute(directory)
 	var draft = Draft.new()
 	check(draft.source.is_empty() and draft.preview().is_empty() and not draft.locked(), "empty draft")

@@ -81,6 +81,7 @@ var study
 var variation_ui
 var opening_view
 var analysis_import
+var tournament_view
 var study_bar: HBoxContainer
 
 func initialize(owner_node) -> void:
@@ -96,15 +97,12 @@ func initialize(owner_node) -> void:
 	tournaments = preload("res://scripts/shogi_tournament_sync.gd").new()
 	add_child(tournaments)
 	tournaments.initialize(ProjectSettings.globalize_path("res://../.work/tournaments-ui-test") if app.testing else "user://tournaments", not app.testing)
+	tournament_view = preload("res://scripts/shogi_tournament_view.gd").new()
+	tournament_view.ui = self
 	tournaments.changed.connect(func():
-		if page_name == "analysis-import" and archive_tab == 1 and historic_recent:
-			if is_instance_valid(tournament_status): tournament_status.text = tournaments.status_text()
-			if is_instance_valid(tournament_refresh): tournament_refresh.disabled = tournaments.refreshing
-			refresh_historic_list()
+		tournament_view.refresh()
 	)
-	tournaments.game_ready.connect(func(next):
-		if page_name == "analysis-import" and archive_tab == 1: _open_tournament_game(next)
-	)
+	tournaments.game_resolved.connect(tournament_view.resolved)
 	for child in toolbar.get_children(): toolbar.remove_child(child); child.queue_free()
 	toolbar.add_theme_constant_override("separation", 2)
 	for entry in [["☰", "菜单", show_drawer], ["⇅", "翻转棋盘", func(): app.flipped = not app.flipped; app._layout()], ["⌕", "提示与分析", toggle_live], ["‹", "上一手", func(): seek(-1)], ["▷", "自动回放", toggle_autoplay], ["›", "下一手", func(): seek(1)], ["↶", "悔棋", undo_from_board], ["•••", "更多", show_menu]]:
@@ -247,6 +245,7 @@ func initialize(owner_node) -> void:
 	layout()
 
 func _page(title: String, name: String, use_sheet: bool = false) -> VBoxContainer:
+	if tournament_view != null: tournament_view.leaving(name)
 	if analysis_import != null: analysis_import.leaving(name)
 	if opening_view != null: opening_view.stop_preview()
 	if practice_active() and name not in ["promotion", "confirm-move"]: practice.stop(false)
@@ -272,6 +271,7 @@ func banner(parent: Control, _compact: bool = false) -> void:
 	parent.add_child(strip)
 
 func close() -> void:
+	if tournament_view != null: tournament_view.leaving("")
 	if analysis_import != null: analysis_import.leaving("")
 	if opening_view != null: opening_view.stop_preview()
 	var practicing = practice_active()
@@ -361,6 +361,7 @@ func layout() -> void:
 		backdrop.color = Color(0, 0, 0, 0.6)
 	if evaluation_bar != null: evaluation_bar.layout_bar()
 	if analysis_import != null: analysis_import.layout()
+	if tournament_view != null: tournament_view.layout()
 
 func apply_theme() -> void:
 	var report_colors: Dictionary = {}
@@ -371,6 +372,7 @@ func apply_theme() -> void:
 	if page_name == "editor" and is_instance_valid(editor): editor.apply_theme()
 	if page_name in ["openings", "opening-info"] and opening_view != null: opening_view.apply_theme()
 	if analysis_import != null: analysis_import.apply_theme()
+	if tournament_view != null: tournament_view.apply_theme()
 	if toolbar == null: return
 	for item in toolbar.get_children():
 		item.add_theme_stylebox_override("normal", Design.box(Color(0, 0, 0, 0.12), 5, 4))
@@ -680,6 +682,16 @@ func show_menu() -> void:
 	if app.session != null: column.add_child(button("当前联机", show_connection))
 
 func back() -> void:
+	if page_name == "tournament-filter":
+		var options = page.find_child("HistoricYear",true,false)
+		if options != null and options.get_popup().visible: options.get_popup().hide(); return
+		if keyboard_height > 0:
+			DisplayServer.virtual_keyboard_hide()
+			var focus = root.get_viewport().gui_get_focus_owner()
+			if focus != null: focus.release_focus()
+			return
+		tournament_view.close_filter("cancel"); return
+	if page_name == "tournament-archive": _board_keep(); return
 	if page_name in ["analysis-import", "analysis-recent", "analysis-help"]:
 		if file_dialog != null and is_instance_valid(file_dialog) and file_dialog.visible:
 			file_dialog.hide()
@@ -815,115 +827,11 @@ func show_import_analysis(tab: int = -1) -> void:
 func show_historic_games() -> void:
 	show_import_analysis(1)
 
-func build_historic_content(column: VBoxContainer) -> void:
-	var sources = HBoxContainer.new()
-	column.add_child(sources)
-	for recent in [true, false]:
-		var select_source = compact_button("近期赛事" if recent else "离线历史", func():
-			historic_recent = recent
-			historic_query = ""; historic_event = "全部赛事"; historic_year = "全部年份"; historic_offset = 0
-			show_historic_games()
-		, 38)
-		select_source.name = "LatestTournaments" if recent else "OfflineTournaments"
-		select_source.add_theme_stylebox_override("normal", Design.box(app.palette().accent if recent == historic_recent else app.palette().soft, 8, 4))
-		if recent == historic_recent: select_source.add_theme_color_override("font_color", Color.WHITE)
-		sources.add_child(select_source)
-	if historic_recent:
-		tournament_refresh = compact_button("刷新", func(): tournaments.refresh(true), 38)
-		tournament_refresh.name = "RefreshTournaments"
-		tournament_refresh.disabled = tournaments.refreshing
-		sources.add_child(tournament_refresh)
-		tournament_status = label(tournaments.status_text(), 12)
-		tournament_status.name = "TournamentStatus"
-		column.add_child(tournament_status)
-		column.add_child(label("选择一局读取官方完整棋谱，下载后可离线回放、分析和续下。", 12))
-	var search = LineEdit.new()
-	search.name = "HistoricSearch"
-	search.placeholder_text = "搜索棋手、赛事或战型"
-	search.text = historic_query
-	search.custom_minimum_size.y = 42
-	column.add_child(search)
-	search.text_changed.connect(func(value): historic_query = value; historic_offset = 0; refresh_historic_list())
-	var filters = HBoxContainer.new()
-	column.add_child(filters)
-	var years: Array[String] = []
-	for entry in tournaments.entries() if historic_recent else Historic.entries():
-		var year = str(entry.tags.get("開始日時", "")).left(4)
-		if not year.is_empty() and not years.has(year): years.append(year)
-	years.sort(); years.reverse(); years.push_front("全部年份")
-	for options in [["全部赛事", "龙王战", "王位战", "王座战", "棋王战", "棋圣战", "叡王战"], years]:
-		var select = OptionButton.new()
-		select.custom_minimum_size.y = 38
-		select.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		for value in options: select.add_item(value)
-		var events: bool = options[0] == "全部赛事"
-		select.name = "HistoricEvent" if events else "HistoricYear"
-		select.select(options.find(historic_event if events else historic_year))
-		select.item_selected.connect(func(i):
-			if events: historic_event = select.get_item_text(i)
-			else: historic_year = select.get_item_text(i)
-			historic_offset = 0
-			refresh_historic_list()
-		)
-		filters.add_child(select)
-	historic_count = label("", 12)
-	column.add_child(historic_count)
-	historic_list = VBoxContainer.new()
-	historic_list.add_theme_constant_override("separation", 8)
-	column.add_child(historic_list)
-	refresh_historic_list()
-	if historic_recent: tournaments.refresh.call_deferred()
-
 func refresh_historic_list() -> void:
-	if not is_instance_valid(historic_list): return
-	for child in historic_list.get_children(): historic_list.remove_child(child); child.queue_free()
-	var entries = Historic.filter_entries(tournaments.entries() if historic_recent else Historic.entries(), historic_query, historic_event, historic_year)
-	historic_count.text = ("%d 局 · 官方已结束对局" if historic_recent else "%d 局 · 完整棋谱 · 离线可用") % entries.size()
-	if entries.is_empty():
-		historic_list.add_child(label("没有符合条件的对局，请更换棋手或筛选条件。", 14))
-		return
-	for entry in entries.slice(historic_offset, historic_offset + 20):
-		var item: Dictionary = entry
-		var panel = PanelContainer.new()
-		panel.name = "HistoricGame"
-		panel.add_theme_stylebox_override("panel", Design.box(Color.TRANSPARENT, 0, 10))
-		historic_list.add_child(panel)
-		var body = VBoxContainer.new()
-		panel.add_child(body)
-		var title = label(str(item.tags.get("先手", "")) + " — " + str(item.tags.get("後手", "")), 16)
-		title.add_theme_color_override("font_color", app.palette().ink)
-		title.add_theme_font_override("font", Design.heading_font(app.text_font))
-		body.add_child(title)
-		body.add_child(label(str(item.tags.get("棋戦", "")), 13))
-		var row = HBoxContainer.new()
-		body.add_child(row)
-		var terminal: String = "千日手" if "千日手" in item.terminal else "持将棋" if "持将棋" in item.terminal else ("先手胜" if int(item.plies) % 2 == 1 else "后手胜")
-		var info = label(str(item.tags.get("開始日時", "")).left(10) + " · %d 手 · %s" % [int(item.plies), terminal], 12)
-		info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		row.add_child(info)
-		var replay = compact_button("▷", func():
-			if item.has("kif"): open_historic(item)
-			else: tournaments.open_game(item)
-		, 32)
-		replay.disabled = historic_recent and tournaments.downloading
-		replay.size_flags_horizontal = Control.SIZE_SHRINK_END
-		replay.tooltip_text = "复盘完整对局"
-		row.add_child(replay)
-		var source = compact_button("↗", func(): OS.shell_open(item.source), 32)
-		source.size_flags_horizontal = Control.SIZE_SHRINK_END
-		source.tooltip_text = "官方棋谱来源"
-		row.add_child(source)
-		historic_list.add_child(HSeparator.new())
-	var navigation_row = HBoxContainer.new()
-	historic_list.add_child(navigation_row)
-	if historic_offset > 0: navigation_row.add_child(compact_button("上一页", func(): historic_offset = maxi(0, historic_offset - 20); refresh_historic_list(); page_scroll.scroll_vertical = 0))
-	if historic_offset + 20 < entries.size(): navigation_row.add_child(compact_button("下一页", func(): historic_offset += 20; refresh_historic_list(); page_scroll.scroll_vertical = 0))
+	tournament_view.refresh()
 
 func open_historic(entry: Dictionary) -> void:
-	var library = Historic.new()
-	var next = library.game_for(entry)
-	if next == null: show_message(library.error); return
-	_open_tournament_game(next)
+	tournament_view.open_entry(entry)
 
 func _open_tournament_game(next) -> void:
 	if not analysis_import.open_game(next): return

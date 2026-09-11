@@ -2,7 +2,7 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
 
-Android・Windows 向けの無料将棋アプリです。Godot 4.7.2 と、やねうら王のローカル解析エンジンを使用します。現在のバージョンは **0.30.0**。**既存の機能はすべて無料で、会員制度・購入画面・有料解除はありません。**
+Android・Windows 向けの無料将棋アプリです。Godot 4.7.2 と、やねうら王のローカル解析エンジンを使用します。現在のバージョンは **0.31.0**。**既存の機能はすべて無料で、会員制度・購入画面・有料解除はありません。**
 
 ![木製の将棋盤](docs/images/board-0.20.png)
 
@@ -10,9 +10,9 @@ Android・Windows 向けの無料将棋アプリです。Godot 4.7.2 と、や�
 
 ローカルの配布ファイルは作成済みです。GitHub リポジトリと Release は未公開で、管理者のローカル GitHub 認証の復旧が必要です。
 
-[Releases](https://github.com/DipperHide/shogi-studio/releases) から `Shogi-0.30.0-android-arm64.apk` をダウンロードしてください。ARM64 対応 Android 端末向けの完全な APK です。Windows は `Shogi-0.30.0-windows-x64.zip` を展開し、`Shogi.exe` を実行します。`engines` フォルダーは同じ場所に置いてください。
+[Releases](https://github.com/DipperHide/shogi-studio/releases) から `Shogi-0.31.0-android-arm64.apk` をダウンロードしてください。ARM64 対応 Android 端末向けの完全な APK です。Windows は `Shogi-0.31.0-windows-x64.zip` を展開し、`Shogi.exe` を実行します。`engines` フォルダーは同じ場所に置いてください。
 
-Android のパッケージ名は `org.shogistudio.artpreview`、versionCode は 48 です。release テンプレートで書き出し、上書き更新のため従来の開発用署名を継続しています。秘密鍵は含めません。異なる署名のビルドを入れる前に棋譜をバックアップしてください。
+Android のパッケージ名は `org.shogistudio.artpreview`、versionCode は 49 です。release テンプレートで書き出し、上書き更新のため従来の開発用署名を継続しています。秘密鍵は含めません。異なる署名のビルドを入れる前に棋譜をバックアップしてください。
 
 ## 主な機能
 
@@ -31,8 +31,9 @@ Android のパッケージ名は `org.shogistudio.artpreview`、versionCode は 
 - 0.28 は駒の開始位置を描画してから移動を進め、描画遅延による残りの動きの飛ばしを防ぎます。低フレームレート時には再生時間が延びます。Windows の描画停止自体は未解決です。
 - 0.29 は分類・先後の絞り込み、多言語の別名検索、独立した戦法プレビューを追加しました。読み込むまで元の棋譜を保持し、選択した手を引き継ぎます。横画面では盤面全体を表示します。九つの学習例であり、棋士対局の勝率データはありません。
 - 0.30 は分析画面内の棋譜入力・貼り付け・ファイル操作、入力元タブ、保存棋譜検索を追加しました。長文や UTF-8／CP932 の全文・コメントを別スレッドで検証し、成功時に分析盤へ読み込みます。閉じた画面への古い結果は反映しません。
+- 0.31 は大会の全画面一覧、下部フィルター、大会の複数選択、行全体からの読み込み、対局ごとの進捗・保存表示を追加しました。最近・過去で一覧状態を保持し、別スレッドで合法性を確認します。古い結果は現在の棋譜を置き換えません。
 
-[変化の使い方](docs/VARIATIONS.md) · [0.30 の検証結果](docs/TESTING-0.30.md)（中国語） · [Evaluation bar / 評価バー / 评价条](docs/EVALUATION-BAR.md) · [Position editor / 局面編集 / 局面编辑](docs/POSITION-EDITOR.md) · [Opening preview / 戦法プレビュー / 开局预览](docs/OPENING-PREVIEW.md) · [Analysis import / 棋譜入力 / 分析导入](docs/ANALYSIS-IMPORT.md)
+[変化の使い方](docs/VARIATIONS.md) · [0.31 の検証結果](docs/TESTING-0.31.md)（中国語） · [Evaluation bar / 評価バー / 评价条](docs/EVALUATION-BAR.md) · [Position editor / 局面編集 / 局面编辑](docs/POSITION-EDITOR.md) · [Opening preview / 戦法プレビュー / 开局预览](docs/OPENING-PREVIEW.md) · [Analysis import / 棋譜入力 / 分析导入](docs/ANALYSIS-IMPORT.md) · [Tournament archive / 大会棋譜 / 大赛棋谱](docs/TOURNAMENT-ARCHIVE.md)
 
 高度な画面とレッスン本文は主に中国語です。基本ナビゲーションは中・英・日文に対応しますが、三言語 README はアプリ全体の翻訳完了を意味しません。
 
@@ -54,13 +55,13 @@ Windows、Python 3.11 以降、Godot **4.7.2** と対応テンプレート、JDK
 python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -r requirements-dev.txt
 ./scripts/build_android.ps1
-./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.30.0
+./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.31.0
 ./scripts/test_chessis20.ps1
 ./scripts/test_chessis20.ps1 -CoreOnly -Network
 ./scripts/test_chessis23.ps1
 ./scripts/test_chessis24.ps1
-./scripts/test_chessis30.ps1 -CoreOnly
-./scripts/test_chessis30.ps1
+./scripts/test_chessis31.ps1 -CoreOnly
+./scripts/test_chessis31.ps1
 ```
 
 開発時は Godot で `godot/project.godot` を開きます。実行用素材、エンジン、NNUE は同梱し、対応するエンジンソースはビルド時に同梱アーカイブから展開します。release APK にはローカルで `GODOT_ANDROID_KEYSTORE_RELEASE_PATH`、`GODOT_ANDROID_KEYSTORE_RELEASE_USER`、`GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD` を設定し、`./scripts/build_android.ps1 -Release` を実行します。署名情報をコミットしないでください。

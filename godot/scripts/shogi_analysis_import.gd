@@ -45,6 +45,7 @@ func action(caption: String, callback: Callable, id: String, icon: String = "", 
 func show(tab: int = -1) -> void:
 	if tab == 2: show_recent(); return
 	if tab < 0: tab = int(ui.app.preferences.studio.get("analysis_tab", 0))
+	if tab == 1: ui.tournament_view.show(); return
 	ui.archive_tab = clampi(tab, 0, 1)
 	var content = ui.report_dialog("分析棋谱", "analysis-import", "载入棋谱，查看局面与候选着手", "ic_drawer_analyze_outline")
 	var outer = ui.page.get_child(0)
@@ -61,9 +62,7 @@ func show(tab: int = -1) -> void:
 		item.add_theme_stylebox_override("normal", ui.Design.box(ui.app.palette().accent if index == ui.archive_tab else Color.TRANSPARENT, 17, 4))
 		if index == ui.archive_tab: item.add_theme_color_override("font_color", Color.WHITE)
 		tabs.add_child(item)
-	if ui.archive_tab == 1:
-		ui.build_historic_content(content)
-	else: build_input(content)
+	build_input(content)
 	apply_theme()
 	layout()
 

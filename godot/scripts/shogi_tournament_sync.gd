@@ -2,6 +2,8 @@ extends Node
 ## Daily HTTPS catalog refresh, validated local KIF downloads and atomic cache.
 signal changed
 signal game_ready(game)
+signal game_resolved(request: int, id: String, game)
+const Job = preload("res://scripts/shogi_tournament_job.gd")
 const Download = preload("res://scripts/shogi_kif_download.gd")
 const Historic = preload("res://scripts/shogi_historic_games.gd")
 const MAX_INDEX = 4194304
@@ -10,6 +12,7 @@ var index: Dictionary = {}
 var message = ""
 var refreshing = false
 var downloading = false
+var download_id = ""
 var last_checked: int = 0
 var automatic = true
 var config: Dictionary = {}
@@ -79,42 +82,50 @@ func refresh(force: bool = false) -> void:
 	changed.emit()
 
 func cached_game(entry: Dictionary):
-	var data = _read(storage.path_join(entry.id + ".json"))
-	if data.is_empty() or not data.get("kif") is String: return null
-	var normalized = Download.normalize(data.kif.to_utf8_buffer())
-	if normalized.get("moves_sha256", "") != entry.moves_sha256: return null
-	return _validated_game(entry, normalized)
+	var normalized = cache_data(entry)
+	return _validated_game(entry, normalized) if not normalized.is_empty() else null
 
-func open_game(entry: Dictionary) -> void:
+func cache_data(entry: Dictionary) -> Dictionary:
+	if not valid_index({"schema": 1, "updated_utc": "", "games": [entry]}): return {}
+	var data = _read(storage.path_join(entry.id + ".json"))
+	if data.is_empty() or not data.get("kif") is String: return {}
+	var normalized = Download.normalize(data.kif.to_utf8_buffer())
+	if normalized.get("moves_sha256", "") != entry.moves_sha256 or normalized.get("plies", 0) != entry.plies: return {}
+	return normalized
+
+func open_game(entry: Dictionary, request: int = 0) -> void:
 	if downloading: return
 	# Validate even caller-supplied metadata before constructing a filename/URL.
 	if not valid_index({"schema": 1, "updated_utc": "", "games": [entry]}):
 		message = "赛事信息校验失败。"; changed.emit(); return
-	var game = cached_game(entry)
-	if game != null: game_ready.emit(game); return
 	downloading = true
+	download_id = entry.id
 	message = "正在读取官方棋谱…"
 	changed.emit()
-	var response = await _request(entry.kif_source, 2097152)
-	game = null
-	if response.ok:
-		var normalized = Download.normalize(response.body)
-		if normalized.get("moves_sha256", "") == entry.moves_sha256:
-			game = _validated_game(entry, normalized)
-			if game != null and not _save(entry.id + ".json", normalized): message = "棋谱已打开，本地保存失败。"
+	var normalized = cache_data(entry)
+	var cached = not normalized.is_empty()
+	if not cached:
+		var response = await _request(entry.kif_source, 2097152)
+		if response.ok: normalized = Download.normalize(response.body)
+	var game = null
+	if normalized.get("moves_sha256", "") == entry.moves_sha256:
+		var job = Job.new(); add_child(job)
+		if job.begin_record(entry, normalized) == OK:
+			var result: Dictionary = await job.completed
+			game = result.game
+		else: job.queue_free()
+		if game != null and not cached and not _save(entry.id + ".json", normalized): message = "棋谱已打开，本地保存失败。"
 	if game == null: message = "官方棋谱暂不可用或校验未通过。请刷新目录后重试，也可打开官方页面。"
-	elif message == "正在读取官方棋谱…": message = "棋谱已下载，可离线回放和分析。"
+	elif message == "正在读取官方棋谱…": message = "棋谱已载入，可离线回放和分析。"
 	downloading = false
+	download_id = ""
 	changed.emit()
-	if game != null: game_ready.emit(game)
+	if game != null:
+		game_ready.emit(game)
+		game_resolved.emit(request, entry.id, game)
 
 func _validated_game(entry: Dictionary, normalized: Dictionary):
-	if normalized.get("plies", 0) != entry.plies: return null
-	var combined = entry.duplicate(true)
-	combined.kif = normalized.kif
-	var game = Historic.new().game_for(combined)
-	if game == null or game.moves.size() != int(entry.plies) or game.result.is_empty(): return null
-	return game
+	return Job.validate(entry, normalized)
 
 func _request(url: String, limit: int) -> Dictionary:
 	var request = HTTPRequest.new()
