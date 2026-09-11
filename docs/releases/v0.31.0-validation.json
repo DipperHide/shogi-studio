@@ -607,7 +607,6 @@
   "prior_evidence": {
     "release": "0.30.0",
     "source_commit": "af9a688",
-    "full_rules_and_history_rerun": false,
     "unchanged_sources": [
       {
         "path": "godot/scripts/shogi_accuracy_chart.gd",
@@ -1046,7 +1045,8 @@
       }
     ],
     "report": "docs/releases/v0.30.0-validation.json",
-    "report_sha256": "598b028d204be9b8604684b784c5145859e59c6f02ed85f621469596fd60121d"
+    "report_sha256": "598b028d204be9b8604684b784c5145859e59c6f02ed85f621469596fd60121d",
+    "local_full_rules_and_history_rerun": false
   },
   "android_device_tested": false,
   "github_published": true,
@@ -1074,5 +1074,6 @@
     "shogi_import_job": "c994d9c50cb3474c806ea70f38b4704c38195eaa261f86fb24138d2955bf792c",
     "shogi_rendered_tween": "6aa1968ac75d423552dabc57766d0d9f03b356d837dcf7a9b3e907159d16a7d7"
   },
-  "first_board_frame_ms": 2365
+  "first_board_frame_ms": 2365,
+  "remote_ci_passed": true
 }

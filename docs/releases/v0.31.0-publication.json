@@ -1,6 +1,6 @@
 {
   "version": "0.31.0",
-  "checked_utc": "2026-09-11T01:55:24.131316+00:00",
+  "checked_utc": "2026-09-11T02:00:31.734705+00:00",
   "published": true,
   "repository": {
     "defaultBranchRef": {
@@ -60,18 +60,18 @@
       "workflowName": "Update tournament catalog"
     },
     {
-      "conclusion": "",
+      "conclusion": "success",
       "databaseId": 34552392479,
       "headSha": "8b882e0675404e0fe2ca9e6fa57d93820f2eafa2",
-      "status": "in_progress",
+      "status": "completed",
       "url": "https://github.com/DipperHide/shogi-studio/actions/runs/34552392479",
       "workflowName": "Tests"
     },
     {
-      "conclusion": "",
+      "conclusion": "success",
       "databaseId": 34552392087,
       "headSha": "8b882e0675404e0fe2ca9e6fa57d93820f2eafa2",
-      "status": "in_progress",
+      "status": "completed",
       "url": "https://github.com/DipperHide/shogi-studio/actions/runs/34552392087",
       "workflowName": "Tests"
     }
@@ -83,5 +83,137 @@
     "updated_utc": "2026-09-11T01:53:12.933615+00:00",
     "sha256": "457e90052f67b95568d22d0ee7dea4c562de34f2bc7a5fbaa59f5ee59c6b481e",
     "same_games_as_release": true
+  },
+  "remote_evidence": {
+    "run_url": "https://github.com/DipperHide/shogi-studio/actions/runs/34552392479",
+    "log_sha256": "3b5d90864613655c63b8fdf47c2e6f3b3759780bef3f4c70d14bbfd4308e7dd6",
+    "script_errors": false,
+    "rules_checks": 671,
+    "full_historic_games": 195,
+    "full_historic_plies": 23115,
+    "artifacts": [
+      {
+        "path": "chessis20/historic-validation.json",
+        "sha256": "87e57d4facdb647d016125e84f40b76a4b67fbd1b767ed2a3fa5c61a6afd9e08",
+        "games": 195,
+        "plies": 23115,
+        "failures": []
+      },
+      {
+        "path": "chessis20/report12_test/metrics.json",
+        "sha256": "475b95a08ec263098ba801f555dc3dcf315eea597d0465a23c1077869848da98",
+        "checks": 35,
+        "failures": []
+      },
+      {
+        "path": "chessis20/rules-oracle.json",
+        "sha256": "e89e92ac0c299c77c238f08013cc128185ab0a2587e93e15fa4e537c2544206f",
+        "positions": 280,
+        "legal_moves_compared": 8932,
+        "failures": []
+      },
+      {
+        "path": "chessis20/story-core.json",
+        "sha256": "1d55b1fa6765460962ae6ba671e635c3e7a14b50163d070c3b8c3d2a4cb63cbc",
+        "checks": 68,
+        "failures": []
+      },
+      {
+        "path": "chessis20/tournament-sync-tests.json",
+        "sha256": "7cae616f8cfdf7a17e98d71f2cb99a7b4839dca2194cc5cf48fff3407786fe52",
+        "checks": 38,
+        "failures": []
+      },
+      {
+        "path": "chessis22/chart-core.json",
+        "sha256": "11d865c609abadca39e2d3cc6dcea8694d8f48b4d9aaedc051db3f41708be47f",
+        "checks": 2175,
+        "failures": []
+      },
+      {
+        "path": "chessis23/quality-core.json",
+        "sha256": "f53440d645b12a757192d667b2d3591769b517b85a748fb84fbbfce8658686e9",
+        "checks": 235,
+        "failures": []
+      },
+      {
+        "path": "chessis24/candidate/ui-tests.json",
+        "sha256": "0a31ceacd64c1e8ae4f68851831f344e7892c77032fe33b84c947a246ab9c5b4",
+        "checks": 5109,
+        "failures": []
+      },
+      {
+        "path": "chessis25/portable-ui/ui-tests.json",
+        "sha256": "9a1cc6a4e1fb5dc6dabf369de0d8143bf7dbf96d544d56b5f5ffbe893aee9970",
+        "checks": 103,
+        "failures": []
+      },
+      {
+        "path": "chessis25/variation-core.json",
+        "sha256": "0ca5cb0d7d49494c533969275d8f49ac8421166bb5c7f0341cec50f7f2fd8fcf",
+        "checks": 67,
+        "failures": []
+      },
+      {
+        "path": "chessis26/evaluation-core.json",
+        "sha256": "b968ab36630da9f9f4a4c2094d7622ca3b4827356815aab4006e7a4a7a36b5a3",
+        "checks": 51,
+        "failures": []
+      },
+      {
+        "path": "chessis27/editor-core.json",
+        "sha256": "f5e4df2161d75a5b65b8a3ad23bb98613d58335e5b9ab4f0a816daa6281e5731",
+        "checks": 33,
+        "failures": []
+      },
+      {
+        "path": "chessis28/motion-clock-core.json",
+        "sha256": "e60f1e98b04c815ee246531fb1878c0a6b23bff4d6a09198226ebd0869bd7a3e",
+        "checks": 17,
+        "failures": []
+      },
+      {
+        "path": "chessis29/openings-core.json",
+        "sha256": "f4dc29eb5d0a793b71bdcfcab97bb5525ad3e04d10cdf9a98140cb3a7507ed38",
+        "checks": 80,
+        "failures": []
+      },
+      {
+        "path": "chessis29/ui/ui-tests.json",
+        "sha256": "e0267ca2c20a188626380febbfff84301129a2ac173c3837390ccb2d7cebd7c3",
+        "checks": 267,
+        "failures": []
+      },
+      {
+        "path": "chessis30/import-core.json",
+        "sha256": "c410367ec4d18c9ec2e3e4b7e9e06a6610e0e3c9a1041c00dae473aee827bf67",
+        "checks": 28,
+        "failures": []
+      },
+      {
+        "path": "chessis30/java-decoder.json",
+        "sha256": "27270849952db26dc37fca7d3ce2747815f9f9c448a276db2598e357f7857382",
+        "checks": 14,
+        "failures": []
+      },
+      {
+        "path": "chessis30/ui/ui-tests.json",
+        "sha256": "21d6fb6cac6a6e3336f1d94ef509b6758b58bae922af3da39e05690b2621c425",
+        "checks": 129,
+        "failures": []
+      },
+      {
+        "path": "chessis31/tournament-core.json",
+        "sha256": "02d3a4b83c5a538fdbc1f23eec68ac3f04714b57dcfa22a3f31afa0093273c59",
+        "checks": 57,
+        "failures": []
+      },
+      {
+        "path": "chessis31/ui/ui-tests.json",
+        "sha256": "039b72891bae724b3d97009ffffcfbea7b124a37ca18e16385128ba626d2ee30",
+        "checks": 171,
+        "failures": []
+      }
+    ]
   }
 }
