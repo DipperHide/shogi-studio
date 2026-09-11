@@ -14,4 +14,6 @@
 
 运行 `./scripts/test_chessis32.ps1`；CI 也加入提示核心和虚拟显示器测试。云端实际状态与发布文件核验见 [发布记录](releases/v0.32.0-publication.json)，不计入上面的本地总数。
 
+本版源码的 [云端完整回归](https://github.com/DipperHide/shogi-studio/actions/runs/34566144330) 已通过；其中提示核心 242 项、提示界面 179 项，并全量验证 195 局／23,115 手历史棋谱。云端结果独立记录，不并入本地总数。
+
 [使用说明](PROMOTION-HINTS.md) · [机器可读证据](releases/v0.32.0-validation.json) · [完整复刻差距](CHESSIS-PARITY.md)

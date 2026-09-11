@@ -48,10 +48,16 @@ unchanged = [item for item in prior['runtime_sources'] if item['path'] in ['godo
 for item in unchanged: assert sha(ROOT / item['path']) == item['sha256']
 for source, target in [('hint-wood-normal-393.png', 'promotion32-wood.png'), ('hint-en.png', 'promotion32-english.png'), ('practice-keep.png', 'promotion32-practice.png')]:
     shutil.copy2(OUT / 'ui' / source, ROOT / 'docs/images' / target)
+publication_path = ROOT / 'docs/releases/v0.32.0-publication.json'
+publication = read(publication_path) if publication_path.exists() else {}
+cloud_runs = [run for run in publication.get('runs', []) if run['workflowName'] == 'Tests' and run['headSha'] == publication.get('release_source_commit')]
+cloud_passed = bool(cloud_runs) and bool(publication.get('remote_evidence')) and all(run['conclusion'] == 'success' for run in cloud_runs)
+cloud_text = ('本版源码的 [云端完整回归](' + publication['remote_evidence']['run_url'] + ') 已通过；其中提示核心 242 项、提示界面 179 项，并全量验证 195 局／23,115 手历史棋谱。云端结果独立记录，不并入本地总数。') if cloud_passed else '云端执行结果将独立记录在发布记录中。'
 validation = {'version': release['version'], 'functional_checks': counts, 'functional_total': sum(counts.values()), 'failures': [],
     'evidence': evidence, 'packaged_hint_modules': compiled, 'promotion_hints': probe['promotion_hints'], 'promotion_preview_frames': frames,
     'unchanged_rules_and_codec': unchanged, 'first_board_frame_ms': probe['first_board_frame_ms'], 'artifacts': release['artifacts'],
     'android_device_tested': False, 'rendering_stalls_resolved': False, 'intermittent_filter_close_resolved': False,
+    'github_published': publication.get('published', False), 'remote_ci_passed': cloud_passed,
     'early_test_fixture_errors': ['Knight non-promotion on the final two ranks is illegal; optional fixture moved one rank back.', 'UI expected simplified 步 while the notation deliberately uses Japanese 歩.'],
     'publication_report': 'docs/releases/v0.32.0-publication.json'}
 encoded = json.dumps(validation, ensure_ascii=False, indent=2) + '\n'
@@ -73,6 +79,8 @@ text = f'''# 0.32 升变提示验证
 规则、着手解析和棋局模型与 0.31 的哈希一致；本地没有重复执行全量历史棋谱或完整规则基准。本次改动没有解决此前的 Windows 绘制停顿和筛选面板关闭偶发失败。Android 未连接真机，因此成品交互检查在 Windows 上执行，APK 检查不等于 Android 真机验证。
 
 运行 `./scripts/test_chessis32.ps1`；CI 也加入提示核心和虚拟显示器测试。云端实际状态与发布文件核验见 [发布记录](releases/v0.32.0-publication.json)，不计入上面的本地总数。
+
+{cloud_text}
 
 [使用说明](PROMOTION-HINTS.md) · [机器可读证据](releases/v0.32.0-validation.json) · [完整复刻差距](CHESSIS-PARITY.md)
 '''

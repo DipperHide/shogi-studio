@@ -151,6 +151,8 @@
   "android_device_tested": false,
   "rendering_stalls_resolved": false,
   "intermittent_filter_close_resolved": false,
+  "github_published": true,
+  "remote_ci_passed": true,
   "early_test_fixture_errors": [
     "Knight non-promotion on the final two ranks is illegal; optional fixture moved one rank back.",
     "UI expected simplified 步 while the notation deliberately uses Japanese 歩."
