@@ -1,0 +1,159 @@
+{
+  "version": "0.32.0",
+  "functional_checks": {
+    "hint-core.json": 242,
+    "ui/ui-tests.json": 179,
+    "package/windows-package-probe.json": 136,
+    "package/verification.json": 61
+  },
+  "functional_total": 618,
+  "failures": [],
+  "evidence": [
+    {
+      "path": "hint-core.json",
+      "sha256": "bf5ff4a6ed071d50fb6567514751cd3fc0dd8ed471c53fd2f178565e712abd20"
+    },
+    {
+      "path": "ui/ui-tests.json",
+      "sha256": "9de0cb84d30be06b07a0a7481051ba7f1d78173fb29a486f22a32cb8f485d91d"
+    },
+    {
+      "path": "package/windows-package-probe.json",
+      "sha256": "6d09de24f7559d4949e17c444115d2d4c6ec888f621e38f6311c2b42a1f1d41c"
+    },
+    {
+      "path": "package/verification.json",
+      "sha256": "c3634ee920bc3ac37596c16d94f9481157a6ab1d7c903ec5b6d28fb65dd1b670"
+    }
+  ],
+  "packaged_hint_modules": {
+    "shogi_move_hint": "86201d76c146c57d1cafb9f905ca36c2ab167d7a28232c19e3f4c98e7e29437c",
+    "shogi_pv_row": "2cb40b26e745a7adfa1c5479885c7d8753d4aec3cf2a4449581d44bc3e71ecae",
+    "shogi_board_view": "9d52c64b561e610b537e7170b7bb69750444399b1a309d31b62e769a4938c880",
+    "shogi_mistake_practice": "dd4c263dc004497ecdcaab33fa0002dff1fcb7324bb30a58249e9e6b68ba3f57",
+    "shogi_chessis_menu": "5739a59c650911df440c33d38e2d6bc021c565bbc25cc827d27da0289218e1d0",
+    "shogi_app": "1b291f5ac8a5f84b93f4c669b8c8d59aa10cb8cfa379129606d621cf05bce97b"
+  },
+  "promotion_hints": [
+    {
+      "choice": "升变",
+      "line": 1,
+      "text": "1 成",
+      "to": 13
+    },
+    {
+      "choice": "不升变",
+      "line": 2,
+      "text": "2 不成",
+      "to": 13
+    }
+  ],
+  "promotion_preview_frames": [
+    {
+      "elapsed_ms": 4.752,
+      "progress": 0.0
+    },
+    {
+      "elapsed_ms": 9.135,
+      "progress": 3.42950001730458e-09
+    },
+    {
+      "elapsed_ms": 10.786,
+      "progress": 3.70199522876646e-05
+    },
+    {
+      "elapsed_ms": 23.499,
+      "progress": 0.00180551316589117
+    },
+    {
+      "elapsed_ms": 40.17,
+      "progress": 0.0142422029748559
+    },
+    {
+      "elapsed_ms": 56.867,
+      "progress": 0.0475428029894829
+    },
+    {
+      "elapsed_ms": 73.931,
+      "progress": 0.112933278083801
+    },
+    {
+      "elapsed_ms": 90.013,
+      "progress": 0.219740137457848
+    },
+    {
+      "elapsed_ms": 106.503,
+      "progress": 0.378108203411102
+    },
+    {
+      "elapsed_ms": 123.416,
+      "progress": 0.587868928909302
+    },
+    {
+      "elapsed_ms": 140.001,
+      "progress": 0.757062971591949
+    },
+    {
+      "elapsed_ms": 156.594,
+      "progress": 0.872470319271088
+    },
+    {
+      "elapsed_ms": 173.373,
+      "progress": 0.944051146507263
+    },
+    {
+      "elapsed_ms": 190.012,
+      "progress": 0.981849730014801
+    },
+    {
+      "elapsed_ms": 206.698,
+      "progress": 0.997107326984406
+    },
+    {
+      "elapsed_ms": 223.233,
+      "progress": 0.999988734722137
+    },
+    {
+      "elapsed_ms": 240.675,
+      "progress": 1.0
+    }
+  ],
+  "unchanged_rules_and_codec": [
+    {
+      "path": "godot/scripts/shogi_game.gd",
+      "bytes": 12581,
+      "sha256": "1f17511df9cb2e8ba61318120666e9df2889ab8f97c7657182be91376fa43b84"
+    },
+    {
+      "path": "godot/scripts/shogi_rules.gd",
+      "bytes": 8136,
+      "sha256": "1e918dc87886e2b868f991ac2f611762c433b9d539bed2cc87c860547f2dd598"
+    },
+    {
+      "path": "godot/scripts/shogi_usi_codec.gd",
+      "bytes": 4905,
+      "sha256": "1915e25f78a43b745de840fb20796004676471dad0a74894fa18cc176cf0d6f0"
+    }
+  ],
+  "first_board_frame_ms": 2838,
+  "artifacts": [
+    {
+      "path": "builds/Shogi-0.32.0-windows-x64.zip",
+      "bytes": 150303114,
+      "sha256": "2dcf95b4b089310c39397c56073e6b3f0c3ca83424685ce11cc7ae08e079928f"
+    },
+    {
+      "path": "builds/Shogi-0.32.0-android-arm64.apk",
+      "bytes": 136285942,
+      "sha256": "70011843e9bc877c614f9192dc23688350d75dc6c31a087c73fd43aff6406a5d"
+    }
+  ],
+  "android_device_tested": false,
+  "rendering_stalls_resolved": false,
+  "intermittent_filter_close_resolved": false,
+  "early_test_fixture_errors": [
+    "Knight non-promotion on the final two ranks is illegal; optional fixture moved one rank back.",
+    "UI expected simplified 步 while the notation deliberately uses Japanese 歩."
+  ],
+  "publication_report": "docs/releases/v0.32.0-publication.json"
+}

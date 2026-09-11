@@ -58,6 +58,7 @@ func run(owner_node) -> void:
 	verify(historic_game != null and historic_game.moves.size() > 60 and not historic_game.result.is_empty(), "packaged historic game replays to a verified result")
 	await probe_tournament_archive(historic)
 	app.ui.close()
+	await probe_promotion_hints()
 	var frame_times: Array[float] = []
 	for frame in range(90):
 		var tick = Time.get_ticks_usec()
@@ -374,6 +375,27 @@ func observe_motion(scenario: String, reader: Callable = Callable()) -> bool:
 	if not report.has("motion_frames"): report.motion_frames = {}
 	report.motion_frames[scenario] = frames
 	return intermediate and not frames.is_empty() and frames.back().progress >= 1
+
+func probe_promotion_hints() -> void:
+	var previous = app.review_game; var previous_ply = app.replay_index
+	var source = app.Game.new()
+	verify(source.set_initial("k8/9/4P4/9/9/9/9/9/8K b - 1"), "packaged promotion fixture is legal")
+	source.mode = "local"; app.review_game = source; app.replay_index = 0; app._refresh()
+	app.ui.clear_pv_rows(); app.ui.live_details.clear(); app.ui.live_enabled = true; app.ui.live_key = source.position.key()
+	app.ui.receive_info({"multipv":1,"score":100,"pv":["5c5b+","9a9b"]})
+	app.ui.receive_info({"multipv":2,"score":50,"pv":["5c5b","9a9b"]})
+	await capture("promotion-hints")
+	verify(app.board_view.hint_badges.size()==2, "packaged arrows show both promotion choices")
+	verify(app.ui.pv_rows[1].hint_label.text=="1 升变" and app.ui.pv_rows[2].hint_label.text=="2 不升变", "packaged candidates explicitly identify promotion")
+	verify(app.ui.pv_rows[2].move_label.text.contains("歩不成"), "packaged PV retains declined promotion")
+	if app.board_view.hint_badges.size()==2:
+		verify(not app.board_view.hint_badges[0].rect.intersects(app.board_view.hint_badges[1].rect), "packaged same-square labels remain distinct")
+	report.promotion_hints = app.board_view.hint_badges.map(func(item): return {"text":item.text,"choice":item.choice,"line":item.line,"to":item.to})
+	app.ui.preview_pv(1); app.ui.autoplay_on = false; app._set_replay(1)
+	verify(await observe_motion("promotion-preview"), "packaged promotion preview has intermediate painted frames")
+	verify(app._display_position().board[app.Codec.parse_square("5b")]==9, "packaged preview executes the promoted alternative")
+	app.ui.stop_pv(false); app.ui.live_enabled = false; app.ui.live_details.clear(); app.ui.clear_pv_rows(); app.ui.arrows.clear()
+	app.review_game = previous; app.replay_index = previous_ply; app._refresh()
 
 func probe_accuracy_insight() -> void:
 	app.ui.show_accuracy_insight(1)

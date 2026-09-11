@@ -1,6 +1,8 @@
 extends Control
 ## Minimal renderer and the shared, language-aware board overlay.
 var app
+const Hint = preload("res://scripts/shogi_move_hint.gd")
+var hint_badges: Array = []
 var avatar = preload("res://assets/brand/ai-icon.png")
 const FACE_NAMES = ["", "Fu", "Kyosha", "Keima", "Ginsho", "Kinsho", "Kakugyo", "Hisha", "Gyokusho", "Tokin", "Narikyo", "Narikei", "Narigin", "", "Uma", "Ryu"]
 var faces: Dictionary = {}
@@ -247,6 +249,7 @@ func motion_value(track: Dictionary) -> int:
 	return track.get("visual_value", track.before.value) if app.motion_progress < 0.5 else track.after.value
 
 func workbench_overlays(position, viewed, ply: int, p: Dictionary) -> void:
+	hint_badges.clear()
 	if app.ui.page != null and not app.ui.sheet: return
 	if app._practice_active():
 		var practice = app.ui.practice
@@ -254,7 +257,9 @@ func workbench_overlays(position, viewed, ply: int, p: Dictionary) -> void:
 			var move: Dictionary = practice.entry().best
 			var area: Rect2 = app.square_rect(move.from) if move.from >= 0 else app.hand_slot(position.turn, move.drop)
 			corners(area, Color("75c7ff"))
-			if practice.hint_level >= 2: arrow(area.get_center(), app.square_rect(move.to).get_center(), Color("75c7ff"), app.cell * 0.1)
+			if practice.hint_level >= 2:
+				arrow(area.get_center(), app.square_rect(move.to).get_center(), Color("75c7ff"), app.cell * 0.1)
+				hint_badge(position, move, 0, Color("75c7ff"))
 		return
 	if app.preferences.studio.threats:
 		for square in range(81):
@@ -267,9 +272,13 @@ func workbench_overlays(position, viewed, ply: int, p: Dictionary) -> void:
 		for index in range(app.ui.arrows.size()):
 			var move: Dictionary = app.ui.arrows[index]
 			var from: Vector2 = app.square_rect(move.from).get_center() if move.from >= 0 else app.hand_slot(position.turn, move.drop).get_center()
-			var color = [Color("8cc65c"), Color("58a6ff"), Color("dca34c"), Color("b898e2"), Color("e27880")][index % 5]
+			var color = Hint.color(int(move.get("hint_line", index + 1)))
 			color.a = 0.72
 			arrow(from, app.square_rect(move.to).get_center(), color, app.cell * 0.1)
+		for index in range(app.ui.arrows.size()):
+			var move: Dictionary = app.ui.arrows[index]
+			var line = int(move.get("hint_line", index + 1))
+			hint_badge(position, move, line, Hint.color(line))
 	var marks = viewed.annotations.get(str(ply), [])
 	if marks is Array:
 		for mark in marks.slice(0, 64):
@@ -280,3 +289,16 @@ func workbench_overlays(position, viewed, ply: int, p: Dictionary) -> void:
 			var to: Vector2 = app.square_rect(int(mark[1])).get_center()
 			if from == to: draw_arc(from, app.cell * 0.4, 0, TAU, 40, Color("72be4d"), 3, true)
 			else: arrow(from, to, Color(0.4, 0.75, 0.25, 0.78), app.cell * 0.11)
+
+func hint_badge(position, move: Dictionary, line: int, color: Color) -> void:
+	var decision = Hint.choice(position, move)
+	if decision.is_empty(): return
+	var caption = Hint.short_label(decision, line, app.i18n.language)
+	var extent = Vector2(maxf(24, app.text_font.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x + 10), 20)
+	var target: Rect2 = app.square_rect(move.to)
+	var area = Hint.badge_rect(target, app.board_rect, extent, hint_badges.map(func(item): return item.rect))
+	hint_badges.append({"rect":area, "text":caption, "choice":decision, "line":line, "to":move.to, "color":color})
+	draw_line(area.get_center(), target.get_center(), Color(color, 1.0), 1.5, true)
+	draw_style_box(app.Design.box(Color("182018"), 4, 0), area.grow(1))
+	draw_style_box(app.Design.box(Color(color, 1.0), 3, 0), area)
+	text(caption, area, 12, Color("182018"))

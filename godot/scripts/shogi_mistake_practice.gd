@@ -180,7 +180,9 @@ func hint() -> void:
 		var kind = move.drop if move.drop > 0 else absi(exercise.position.board[move.from])
 		message = ("考虑打入%s；再点提示查看落点。" if move.drop > 0 else "考虑移动这枚%s；再点提示查看完整着手。") % app.GLYPHS[kind]
 	else:
-		message = "建议：" + exercise.position.notation(move)
+		var hint = preload("res://scripts/shogi_move_hint.gd")
+		var decision = hint.choice(exercise.position, move)
+		message = "建议：" + hint.notation(exercise.position, move) + (" · " + app.t(decision) if not decision.is_empty() else "")
 	update()
 
 func reveal() -> void:

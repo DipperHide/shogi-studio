@@ -611,7 +611,9 @@ func update_pv_arrows() -> void:
 		var detail: Dictionary = live_details.get(index, {})
 		if detail.get("pv", []).is_empty(): continue
 		var move = app.Codec.parse_move(detail.pv[0], app._display_position())
-		if not move.is_empty(): arrows.append(move)
+		if not move.is_empty():
+			move.hint_line = int(index)
+			arrows.append(move)
 	app._redraw()
 
 func preview_pv(index: int) -> void:
