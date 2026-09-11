@@ -140,11 +140,12 @@
         "file": "final-more-dismissed.png",
         "sha256": "cfc6f007bc4189df02d5563de56bb4c8eadf6cf4a435ded74dfc1572741b5df5"
       }
-    ]
+    ],
+    "installed_apk_sha256": "059544cdd2efb01b814ac42c9956cdf42a0ab67da85b8da7984e2eeec1087c90"
   },
   "rendering_stalls_resolved": false,
   "all_ui_translated": false,
   "full_chessis_parity": false,
-  "github_published": false,
+  "github_published": true,
   "publication_report": "docs/releases/v0.34.0-publication.json"
 }

@@ -1,0 +1,40 @@
+{
+  "version": "0.34.0",
+  "checked_utc": "2026-09-11T08:13:39.842756+00:00",
+  "published": true,
+  "repository": "https://github.com/DipperHide/shogi-studio",
+  "release_url": "https://github.com/DipperHide/shogi-studio/releases/tag/v0.34.0",
+  "release_published_utc": "2026-09-11T08:12:42Z",
+  "release_source_commit": "9577c5f933d743031754ae8df1c0c44ed2fd40f2",
+  "artifacts": [
+    {
+      "name": "SHA256SUMS-0.34.0.txt",
+      "bytes": 194,
+      "sha256": "7e7485042447b3e9ce760e23c5f43b36f65b591b27f44fdaca8695e52b0e8777",
+      "github_digest": "sha256:7e7485042447b3e9ce760e23c5f43b36f65b591b27f44fdaca8695e52b0e8777",
+      "url": "https://github.com/DipperHide/shogi-studio/releases/download/v0.34.0/SHA256SUMS-0.34.0.txt"
+    },
+    {
+      "name": "Shogi-0.34.0-android-arm64.apk",
+      "bytes": 136298236,
+      "sha256": "059544cdd2efb01b814ac42c9956cdf42a0ab67da85b8da7984e2eeec1087c90",
+      "github_digest": "sha256:059544cdd2efb01b814ac42c9956cdf42a0ab67da85b8da7984e2eeec1087c90",
+      "url": "https://github.com/DipperHide/shogi-studio/releases/download/v0.34.0/Shogi-0.34.0-android-arm64.apk"
+    },
+    {
+      "name": "Shogi-0.34.0-windows-x64.zip",
+      "bytes": 150388472,
+      "sha256": "e58e18062db7d2b57691eed11a87e402e1ded1eec342469de424e54ddd899ff0",
+      "github_digest": "sha256:e58e18062db7d2b57691eed11a87e402e1ded1eec342469de424e54ddd899ff0",
+      "url": "https://github.com/DipperHide/shogi-studio/releases/download/v0.34.0/Shogi-0.34.0-windows-x64.zip"
+    }
+  ],
+  "cloud_checks": [
+    {
+      "conclusion": "",
+      "headSha": "9577c5f933d743031754ae8df1c0c44ed2fd40f2",
+      "status": "in_progress",
+      "url": "https://github.com/DipperHide/shogi-studio/actions/runs/34577948690"
+    }
+  ]
+}
