@@ -1,6 +1,6 @@
 {
   "version": "0.34.1",
-  "checked_utc": "2026-09-11T08:31:57.393090+00:00",
+  "checked_utc": "2026-09-11T08:33:24.700752+00:00",
   "functional_checks": {
     "fonts-hints": 90,
     "board-hud": 755,
@@ -102,6 +102,6 @@
       }
     ]
   },
-  "github_published": false,
+  "github_published": true,
   "all_lessons_translated": false
 }
