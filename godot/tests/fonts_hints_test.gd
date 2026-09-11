@@ -38,6 +38,11 @@ func run(instance) -> void:
 	check(not app.ui.tutorial.books.is_empty(), "tutorial courses load")
 	app.ui.tutorial.show_book(app.ui.tutorial.books[0])
 	await capture("japanese-tutorial-chapters")
+	# Linux CI has no packaged Windows/Android engine. Keep its typography
+	# checks separate from the full local real-engine acceptance run.
+	if "--fonts-only" in OS.get_cmdline_user_args():
+		await finish()
+		return
 	app._start_match("local", 1, 2, "basic"); app.ui.close()
 	var original = app.RecordChanges.game_signature(app.game)
 	app.ui.toolbar.get_child(2).name = "SearchHint"
