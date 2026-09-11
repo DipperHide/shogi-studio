@@ -33,6 +33,24 @@ func run(owner_node) -> void:
 	await capture("drawer")
 	var exchange = preload("res://scripts/shogi_exchange.gd").new()
 	verify(exchange.parse("position startpos moves 7g7f 3c3d") != null, "packaged interchange parser available")
+	app.ui.show_openings("四間")
+	var openings = app.ui.opening_view
+	verify(openings.visible_entries.size() == 1, "packaged opening search finds Japanese aliases")
+	openings.show_info(openings.visible_entries[0])
+	var opening_preview = openings.preview
+	verify(opening_preview.ply == 5 and opening_preview.board.tokens.size() == 40, "packaged mini board loads a complete legal opening")
+	verify(app.review_game == null and app.game.moves.is_empty(), "packaged preview preserves main game until explicit load")
+	opening_preview.seek(2)
+	verify(await observe_motion("opening-preview", func(): return opening_preview.board.motion), "packaged opening mini board displays intermediate motion")
+	opening_preview.board.flip_board()
+	verify(opening_preview.board.flipped, "packaged mini board flips independently")
+	await capture("opening-preview")
+	openings.load_preview()
+	verify(app.ui.page == null and app.replay_index == 2 and app.review_game.moves.size() == 5, "packaged opening load keeps chosen cursor and full continuation")
+	# Visibility is derived by the normal menu process; inspect its painted state.
+	await RenderingServer.frame_post_draw
+	verify(app.ui.continue_button.visible, "packaged opening can continue from chosen move")
+	app.ui.close()
 	var historic = preload("res://scripts/shogi_historic_games.gd").new()
 	verify(historic.entries().size() == 195, "195 complete tournament records packaged")
 	var historic_game = historic.game_for(historic.entries()[1])
@@ -273,7 +291,7 @@ func probe_classification_verification() -> void:
 	await probe_accuracy_insight()
 	app.ui.close()
 
-func observe_motion(scenario: String) -> bool:
+func observe_motion(scenario: String, reader: Callable = Callable()) -> bool:
 	# Observe displayed frames, not a timer that may resume after the animation.
 	# Keep wall-clock gaps as evidence; no tween stepping or timing overrides.
 	var began = Time.get_ticks_usec()
@@ -281,13 +299,13 @@ func observe_motion(scenario: String) -> bool:
 	var intermediate = false
 	while Time.get_ticks_usec() - began < 3000000:
 		await RenderingServer.frame_post_draw
-		var progress: float = app.motion_progress
+		var progress: float = reader.call() if reader.is_valid() else app.motion_progress
 		frames.append({"elapsed_ms": (Time.get_ticks_usec() - began) / 1000.0, "progress": progress})
 		if progress > 0 and progress < 1: intermediate = true
 		if progress >= 1: break
 	if not report.has("motion_frames"): report.motion_frames = {}
 	report.motion_frames[scenario] = frames
-	return intermediate and app.motion_progress >= 1
+	return intermediate and not frames.is_empty() and frames.back().progress >= 1
 
 func probe_accuracy_insight() -> void:
 	app.ui.show_accuracy_insight(1)

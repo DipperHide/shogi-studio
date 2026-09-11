@@ -1,0 +1,946 @@
+{
+  "version": "0.29.0",
+  "functional_checks": {
+    "openings-core.json": 80,
+    "ui/ui-tests.json": 267,
+    "chessis25/ui-tests.json": 108,
+    "chessis11/ui-tests.json": 95,
+    "package/windows-package-probe.json": 108,
+    "package/verification.json": 59,
+    "interchange-core": 37
+  },
+  "functional_total": 754,
+  "failures": [],
+  "ui_motion": [
+    {
+      "scenario": "start-jump",
+      "values": [
+        0.0,
+        0.00639943731948733,
+        0.0391053259372711,
+        0.0972064062952995,
+        0.179005041718483,
+        0.27775701880455,
+        0.389646649360657,
+        0.508174896240234,
+        0.625229954719543,
+        0.736239790916443,
+        0.83366584777832,
+        0.911770343780518,
+        0.966980993747711,
+        0.996014297008514,
+        1.0
+      ]
+    },
+    {
+      "scenario": "multi-ply-forward",
+      "values": [
+        0.0,
+        0.0077854604460299,
+        0.0423449017107487,
+        0.102298349142075,
+        0.185049518942833,
+        0.285341799259186,
+        0.397809445858002,
+        0.516440451145172,
+        0.633574903011322,
+        0.743250846862793,
+        0.839421391487122,
+        0.916479051113129,
+        0.969901084899902,
+        0.996935665607452,
+        1.0
+      ]
+    },
+    {
+      "scenario": "capture-promotion-reverse",
+      "values": [
+        0.0,
+        2.31201215683541e-06,
+        0.000679108023177832,
+        0.0138943586498499,
+        0.0490876622498035,
+        0.103873498737812,
+        0.175739660859108,
+        0.261648893356323,
+        0.358562737703323,
+        0.460958391427994,
+        0.565782189369202,
+        0.668097317218781,
+        0.762229025363922,
+        0.845080196857452,
+        0.912988543510437,
+        0.962411999702454,
+        0.991822481155396,
+        1.0
+      ]
+    },
+    {
+      "scenario": "capture-promotion-forward",
+      "values": [
+        0.0,
+        0.00528731243684888,
+        0.0312707312405109,
+        0.0777586251497269,
+        0.142422392964363,
+        0.222899660468102,
+        0.315447121858597,
+        0.417014211416245,
+        0.521061301231384,
+        0.624673545360565,
+        0.721840918064117,
+        0.810192942619324,
+        0.884903967380524,
+        0.942834675312042,
+        0.98143345117569,
+        0.998972296714783,
+        1.0
+      ]
+    },
+    {
+      "scenario": "promoted-piece-captured",
+      "values": [
+        0.0,
+        0.00597629509866238,
+        0.0325740240514278,
+        0.121478296816349,
+        0.14981135725975,
+        0.195520162582397,
+        0.285098671913147,
+        0.383660882711411,
+        0.486949920654297,
+        0.59168267250061,
+        0.6912881731987,
+        0.783193290233612,
+        0.862818837165833,
+        0.926630973815918,
+        0.971538722515106,
+        0.995811700820923,
+        1.0
+      ]
+    },
+    {
+      "scenario": "hand-drop",
+      "values": [
+        0.0,
+        0.00390102225355804,
+        0.0276865921914577,
+        0.0721151158213615,
+        0.135274916887283,
+        0.214629456400871,
+        0.306825429201126,
+        0.406840175390244,
+        0.510982096195221,
+        0.615127503871918,
+        0.713673889636993,
+        0.802716493606567,
+        0.878832638263702,
+        0.938416421413422,
+        0.978910267353058,
+        0.998535096645355,
+        1.0
+      ]
+    }
+  ],
+  "package_motion": {
+    "cached-report": [
+      {
+        "elapsed_ms": 9.502,
+        "progress": 0.0
+      },
+      {
+        "elapsed_ms": 14.649,
+        "progress": 2.78545253529217e-09
+      },
+      {
+        "elapsed_ms": 18.081,
+        "progress": 6.06102839810774e-05
+      },
+      {
+        "elapsed_ms": 28.422,
+        "progress": 0.00184104847721756
+      },
+      {
+        "elapsed_ms": 45.264,
+        "progress": 0.0145315788686275
+      },
+      {
+        "elapsed_ms": 62.178,
+        "progress": 0.0478987880051136
+      },
+      {
+        "elapsed_ms": 79.211,
+        "progress": 0.113642774522305
+      },
+      {
+        "elapsed_ms": 96.665,
+        "progress": 0.222605928778648
+      },
+      {
+        "elapsed_ms": 111.816,
+        "progress": 0.379309237003326
+      },
+      {
+        "elapsed_ms": 129.45,
+        "progress": 0.58977198600769
+      },
+      {
+        "elapsed_ms": 148.499,
+        "progress": 0.761718690395355
+      },
+      {
+        "elapsed_ms": 161.979,
+        "progress": 0.873471319675446
+      },
+      {
+        "elapsed_ms": 179.249,
+        "progress": 0.944003582000732
+      },
+      {
+        "elapsed_ms": 194.99,
+        "progress": 0.98192435503006
+      },
+      {
+        "elapsed_ms": 211.388,
+        "progress": 0.997114837169647
+      },
+      {
+        "elapsed_ms": 227.804,
+        "progress": 0.999988079071045
+      },
+      {
+        "elapsed_ms": 244.513,
+        "progress": 1.0
+      }
+    ],
+    "opening-preview": [
+      {
+        "elapsed_ms": 47.072,
+        "progress": 0.0
+      },
+      {
+        "elapsed_ms": 61.729,
+        "progress": 7.83367158874171e-06
+      },
+      {
+        "elapsed_ms": 75.039,
+        "progress": 0.0113704800605774
+      },
+      {
+        "elapsed_ms": 488.177,
+        "progress": 0.0400771126151085
+      },
+      {
+        "elapsed_ms": 495.741,
+        "progress": 0.134897723793983
+      },
+      {
+        "elapsed_ms": 498.903,
+        "progress": 0.172081261873245
+      },
+      {
+        "elapsed_ms": 509.115,
+        "progress": 0.224501386284828
+      },
+      {
+        "elapsed_ms": 525.25,
+        "progress": 0.330184012651443
+      },
+      {
+        "elapsed_ms": 543.286,
+        "progress": 0.447038382291794
+      },
+      {
+        "elapsed_ms": 559.219,
+        "progress": 0.564666867256165
+      },
+      {
+        "elapsed_ms": 577.646,
+        "progress": 0.680574893951416
+      },
+      {
+        "elapsed_ms": 592.955,
+        "progress": 0.785058379173279
+      },
+      {
+        "elapsed_ms": 609.877,
+        "progress": 0.874528288841248
+      },
+      {
+        "elapsed_ms": 626.154,
+        "progress": 0.941854238510132
+      },
+      {
+        "elapsed_ms": 643.372,
+        "progress": 0.984499454498291
+      },
+      {
+        "elapsed_ms": 659.112,
+        "progress": 0.999967634677887
+      },
+      {
+        "elapsed_ms": 675.357,
+        "progress": 1.0
+      }
+    ],
+    "practice-answer": [
+      {
+        "elapsed_ms": 2.819,
+        "progress": 0.0
+      },
+      {
+        "elapsed_ms": 6.926,
+        "progress": 1.29337018872633e-09
+      },
+      {
+        "elapsed_ms": 10.163,
+        "progress": 2.8432374165277e-05
+      },
+      {
+        "elapsed_ms": 20.757,
+        "progress": 0.0017745578661561
+      },
+      {
+        "elapsed_ms": 37.407,
+        "progress": 0.0140560567378998
+      },
+      {
+        "elapsed_ms": 54.555,
+        "progress": 0.0472960732877254
+      },
+      {
+        "elapsed_ms": 71.434,
+        "progress": 0.111914753913879
+      },
+      {
+        "elapsed_ms": 88.436,
+        "progress": 0.218536376953125
+      },
+      {
+        "elapsed_ms": 104.833,
+        "progress": 0.377938538789749
+      },
+      {
+        "elapsed_ms": 121.234,
+        "progress": 0.586933016777039
+      },
+      {
+        "elapsed_ms": 137.438,
+        "progress": 0.756497919559479
+      },
+      {
+        "elapsed_ms": 154.445,
+        "progress": 0.872245252132416
+      },
+      {
+        "elapsed_ms": 170.762,
+        "progress": 0.943380296230316
+      },
+      {
+        "elapsed_ms": 187.661,
+        "progress": 0.981656193733215
+      },
+      {
+        "elapsed_ms": 204.297,
+        "progress": 0.997081339359283
+      },
+      {
+        "elapsed_ms": 220.74,
+        "progress": 0.999987483024597
+      },
+      {
+        "elapsed_ms": 238.116,
+        "progress": 1.0
+      }
+    ],
+    "replay": [
+      {
+        "elapsed_ms": 9.847,
+        "progress": 0.0
+      },
+      {
+        "elapsed_ms": 16.4,
+        "progress": 5.25827292818803e-09
+      },
+      {
+        "elapsed_ms": 19.833,
+        "progress": 0.000115019553049933
+      },
+      {
+        "elapsed_ms": 30.203,
+        "progress": 0.00180262583307922
+      },
+      {
+        "elapsed_ms": 47.129,
+        "progress": 0.0141457607969642
+      },
+      {
+        "elapsed_ms": 64.967,
+        "progress": 0.0477248504757881
+      },
+      {
+        "elapsed_ms": 82.163,
+        "progress": 0.11278161406517
+      },
+      {
+        "elapsed_ms": 97.615,
+        "progress": 0.220395028591156
+      },
+      {
+        "elapsed_ms": 126.61,
+        "progress": 0.380342423915863
+      },
+      {
+        "elapsed_ms": 138.421,
+        "progress": 0.59061998128891
+      },
+      {
+        "elapsed_ms": 149.068,
+        "progress": 0.758560001850128
+      },
+      {
+        "elapsed_ms": 166.091,
+        "progress": 0.873351216316223
+      },
+      {
+        "elapsed_ms": 181.743,
+        "progress": 0.943883121013641
+      },
+      {
+        "elapsed_ms": 199.525,
+        "progress": 0.981879591941834
+      },
+      {
+        "elapsed_ms": 225.034,
+        "progress": 0.997102499008179
+      },
+      {
+        "elapsed_ms": 236.899,
+        "progress": 0.999990701675415
+      },
+      {
+        "elapsed_ms": 246.808,
+        "progress": 1.0
+      }
+    ]
+  },
+  "reference_evidence": [
+    {
+      "path": "res/layout/dialog_opening_list.xml",
+      "sha256": "23de63f05f0f1669ce25331387a6f17bb304d4fd8bb22e7da5bd54dc63f0bfa5"
+    },
+    {
+      "path": "res/layout/dialog_opening_list_item.xml",
+      "sha256": "64d730dd13b5b839974f3e7fcfb3120c4a5e85053058e0f4b4c7fbf782996758"
+    },
+    {
+      "path": "res/layout/dialog_opening_info.xml",
+      "sha256": "c66b75fec861735257312dfa04e67534788dd5ce1c0433f8e5fd95731dddb591"
+    },
+    {
+      "path": "java/sources/p167W2/C1501b.java",
+      "sha256": "021758d4165397eb9a30422b60a7d949c77d031da9114d5a1ce86bfad564d85c"
+    },
+    {
+      "path": "java/sources/p159V2/C1447i.java",
+      "sha256": "8da8a2825c0d2f225dbbf344e7cdd65800bc8be38cc734f1621d7d675843b6b6"
+    },
+    {
+      "path": "java/sources/p159V2/ViewOnLongClickListenerC1441c.java",
+      "sha256": "db0d1279393bb60cc0e5cc7dfa2bfaecd07b3dc3dbc6b8585b9899907bc3d16e"
+    },
+    {
+      "path": "java/sources/p159V2/ViewOnClickListenerC1439a.java",
+      "sha256": "009370f831911d8cc4f2365c97c65092b7ad5b85dc77a898dc54a8225e7f6c83"
+    }
+  ],
+  "source_apk_sha256": "14df01b58e777a130aee977c51a9b7823c8c8ada31479843b2f01b765b49f111",
+  "initial_attempts": [
+    {
+      "directory": "first-attempt",
+      "failures": [
+        "search updates on editing without recreating focused field",
+        "native previous move selects exactly one earlier position",
+        "native flip reverses coordinates",
+        "close detail restores exact filtered list"
+      ]
+    },
+    {
+      "directory": "second-attempt",
+      "failures": [
+        "native previous move selects exactly one earlier position",
+        "native flip reverses coordinates"
+      ]
+    }
+  ],
+  "initial_test_fixture_errors": [
+    "missing inherited practice object",
+    "programmatic LineEdit insertion emitted no user text-change signal",
+    "initial logical viewport differed from native event coordinates"
+  ],
+  "initial_package_attempt": {
+    "checks": 108,
+    "failures": [
+      "packaged opening can continue from chosen move"
+    ],
+    "executable_sha256": "c97d678c483c7e6d64618858fb304fe991ee2d33fca801915978aadee81258a9",
+    "viewport": {
+      "density_dpi": 144,
+      "logical_size": [
+        1045.0,
+        760.0
+      ],
+      "window_size": [
+        1100,
+        800
+      ]
+    }
+  },
+  "prior_evidence": {
+    "release": "0.28.0",
+    "source_commit": "94e088d",
+    "rerun": false,
+    "unchanged_sources": [
+      {
+        "path": "godot/scripts/shogi_accuracy_chart.gd",
+        "bytes": 3350,
+        "sha256": "241f1fcc7be1082d0da9b092dde77adfa5ef02d68667e19b87dc58e40f6565ec"
+      },
+      {
+        "path": "godot/scripts/shogi_accuracy_insight.gd",
+        "bytes": 2808,
+        "sha256": "f5cc59fb07ee79da02cf410e7ff27dcd761b88e0ffdcb0c53ddf19da54123344"
+      },
+      {
+        "path": "godot/scripts/shogi_accuracy_insight_view.gd",
+        "bytes": 5983,
+        "sha256": "063e78953336971db371ff4a66423d27d4ebcf5b8e3bebcf1391770a07ba9500"
+      },
+      {
+        "path": "godot/scripts/shogi_action_row.gd",
+        "bytes": 1953,
+        "sha256": "d6f4c7b7849601b96d416e4aab5671ec1eb6c1f5401044d1b0bddf81ecbbe5de"
+      },
+      {
+        "path": "godot/scripts/shogi_ai.gd",
+        "bytes": 2432,
+        "sha256": "c477774dbd6a4edb0119ef6c3a5c4fcbee541d2899a4dca6a9137012055da760"
+      },
+      {
+        "path": "godot/scripts/shogi_backup.gd",
+        "bytes": 4132,
+        "sha256": "9f25d8e3035022e9ff0f5cbbe77a5dd233d9097945ec5265203714c3a91d0951"
+      },
+      {
+        "path": "godot/scripts/shogi_board_view.gd",
+        "bytes": 18034,
+        "sha256": "8b0af04537e1e2c45352a1fa304086e42c19d0f2a7d73487375cd551d5eecd03"
+      },
+      {
+        "path": "godot/scripts/shogi_brand_banner.gd",
+        "bytes": 1916,
+        "sha256": "a290a29d2dd7ad6027f3bf02ba7baff3569f8e25499cc5ca509f1552e649f7f5"
+      },
+      {
+        "path": "godot/scripts/shogi_clock.gd",
+        "bytes": 3551,
+        "sha256": "df87312d3a65f3ecd3b9bb00c46484ef571168df8e0e37eb1453a12054523c71"
+      },
+      {
+        "path": "godot/scripts/shogi_coach.gd",
+        "bytes": 5230,
+        "sha256": "ca4500ccd6fab5597082bfcecf5164a3b06357457ac6aa85cb5ece1f0902681a"
+      },
+      {
+        "path": "godot/scripts/shogi_contact_shadow.gd",
+        "bytes": 2267,
+        "sha256": "a26ff5c5cb1256ce1f4a591c407fe77fb14bd86ab864ecdcf34114c2928abaff"
+      },
+      {
+        "path": "godot/scripts/shogi_design.gd",
+        "bytes": 4092,
+        "sha256": "3e075f020f30e3185917f91b368bf23b13b5189893cc8913d094fc0e5ac738b1"
+      },
+      {
+        "path": "godot/scripts/shogi_editor_analysis.gd",
+        "bytes": 2985,
+        "sha256": "110873cbc8838580dfce1fdac87bed0b9c78e3303c7a1d337ea1d1b3aad6fa54"
+      },
+      {
+        "path": "godot/scripts/shogi_editor_cell.gd",
+        "bytes": 2543,
+        "sha256": "f9856eb90b545070e05470d8948b7c3bc797cc24f0efd58feee3f243d86a2c85"
+      },
+      {
+        "path": "godot/scripts/shogi_editor_eval_bar.gd",
+        "bytes": 3065,
+        "sha256": "f48e7bc6ef3efadd95b46dd8116c44ff14e476e3b220c4d98ca3038b2b3ecd54"
+      },
+      {
+        "path": "godot/scripts/shogi_editor_history.gd",
+        "bytes": 2139,
+        "sha256": "b91826de66e72bbfef3ca674aebbd331adc4424a373d13b18807535c4e18ac57"
+      },
+      {
+        "path": "godot/scripts/shogi_editor_input.gd",
+        "bytes": 3545,
+        "sha256": "a225bd55722bf63370b4112c2d987aa1051e045f32110566933e7af000a8a9d4"
+      },
+      {
+        "path": "godot/scripts/shogi_editor_layout.gd",
+        "bytes": 7226,
+        "sha256": "88115343d79ae90558b1b619fc1de620463eaf319730684b896ab86a4b275225"
+      },
+      {
+        "path": "godot/scripts/shogi_evaluation_bar.gd",
+        "bytes": 7917,
+        "sha256": "abc917c46c8c15ad31b34ae70e36121d32fc8d37ba82f8bb6911b619b6925219"
+      },
+      {
+        "path": "godot/scripts/shogi_exchange.gd",
+        "bytes": 9713,
+        "sha256": "c383a2fff73a9e00371fda07f170db98b3c9d91ba1cb299aeb4ca1af51be8631"
+      },
+      {
+        "path": "godot/scripts/shogi_game.gd",
+        "bytes": 12581,
+        "sha256": "1f17511df9cb2e8ba61318120666e9df2889ab8f97c7657182be91376fa43b84"
+      },
+      {
+        "path": "godot/scripts/shogi_hand_layout.gd",
+        "bytes": 1527,
+        "sha256": "0e00a11a7c4d8b918711d06bf0bbadac07c839af0b8775f6aa0cb9d2c6275eb2"
+      },
+      {
+        "path": "godot/scripts/shogi_historic_games.gd",
+        "bytes": 2408,
+        "sha256": "579f3e1e0a1d2992170d0af045b8160621b1f88e125866e946fd5d65421dacf2"
+      },
+      {
+        "path": "godot/scripts/shogi_history_motion.gd",
+        "bytes": 2988,
+        "sha256": "5ab0f703dd825320cc6d661893dac026caeffea3cda265507d76f0ce8f82a4ab"
+      },
+      {
+        "path": "godot/scripts/shogi_home_card.gd",
+        "bytes": 444,
+        "sha256": "6f024c34090cc7279e7c257b9a352f3fc7b83aa64176bf2998a789f9294b5e9e"
+      },
+      {
+        "path": "godot/scripts/shogi_home_stage.gd",
+        "bytes": 8223,
+        "sha256": "ef7135de346f814d5c122f74496a49a357595d46f7638ad6113d2ee131d454c1"
+      },
+      {
+        "path": "godot/scripts/shogi_i18n.gd",
+        "bytes": 1313,
+        "sha256": "d378445397d98fe43cd113c4d762d77cccfe7f11f8a17f797c64f9e53e9527a2"
+      },
+      {
+        "path": "godot/scripts/shogi_interface.gd",
+        "bytes": 20633,
+        "sha256": "421222cf678d18de30b6ea2b06b6519476104a8a16d374b5c039cc24f46e06b0"
+      },
+      {
+        "path": "godot/scripts/shogi_kif_download.gd",
+        "bytes": 3737,
+        "sha256": "d93d16e95fd4e29153527d8140f9338d61bf082d15566cc44eba1342fca40684"
+      },
+      {
+        "path": "godot/scripts/shogi_link.gd",
+        "bytes": 5291,
+        "sha256": "88547ed2d880bbd04aa13887a5f1b8b57a36647ffd31ac6966f6ea61d23517f5"
+      },
+      {
+        "path": "godot/scripts/shogi_match_session.gd",
+        "bytes": 15044,
+        "sha256": "df205eba3ed9108dfefa2630aee3189271ce81bbeed8ad697c74fd474968354d"
+      },
+      {
+        "path": "godot/scripts/shogi_menu.gd",
+        "bytes": 50449,
+        "sha256": "6b12585fd9b6727b4df1324eccd828eddb092f8ae9c98c4c42d2c3a1107fd732"
+      },
+      {
+        "path": "godot/scripts/shogi_messages.gd",
+        "bytes": 452,
+        "sha256": "6df6eb9f29d35779cfeded2c9f94c235a2cfaee2bfc9d356be90b204e95b7989"
+      },
+      {
+        "path": "godot/scripts/shogi_minimal.gd",
+        "bytes": 120,
+        "sha256": "87b41475e82534122cf961baf77f77965427f1132ffe61c11e6a3de26fbadcc4"
+      },
+      {
+        "path": "godot/scripts/shogi_minimal_menu.gd",
+        "bytes": 39,
+        "sha256": "ba687875e30aab8b403c8f90b5f69cf212985be7b9217f017ce48cb5bd4ceb1b"
+      },
+      {
+        "path": "godot/scripts/shogi_mistake_practice.gd",
+        "bytes": 10441,
+        "sha256": "edeaea20a2e40fc47f694c56153a13240db9a28bbcbfbb10f606b8f65fe89034"
+      },
+      {
+        "path": "godot/scripts/shogi_motion_clock.gd",
+        "bytes": 716,
+        "sha256": "8e45d858c13935e644f5a1e142bf4450b38a1a5bb955639b563b5d806937361d"
+      },
+      {
+        "path": "godot/scripts/shogi_move_classification.gd",
+        "bytes": 8638,
+        "sha256": "4aa7046e22d0df3bf0e995338616619a9e58e144ab2e2f81c776ad94f1d0acaa"
+      },
+      {
+        "path": "godot/scripts/shogi_network_store.gd",
+        "bytes": 3272,
+        "sha256": "4081321dbe5edd81f01c517784eb70878e3888d78a318af953baf7130ac0b5aa"
+      },
+      {
+        "path": "godot/scripts/shogi_page_scroll.gd",
+        "bytes": 799,
+        "sha256": "58bb7c4474553114acc07673a70ec71a8da92ad5a557d66cfd2354520aef45e8"
+      },
+      {
+        "path": "godot/scripts/shogi_peer_probe.gd",
+        "bytes": 6578,
+        "sha256": "799387d3668c4ec4cfd97e1feb8f06851a4d22c1552681075aa18ae235cb63ca"
+      },
+      {
+        "path": "godot/scripts/shogi_phase_accuracy_view.gd",
+        "bytes": 5858,
+        "sha256": "0ac88762a13d7a9d56c545aff98842cdab4cdeef95557da18602acbcb67ec6df"
+      },
+      {
+        "path": "godot/scripts/shogi_position_editor.gd",
+        "bytes": 9036,
+        "sha256": "26384d62246a07ab4fd0ad1799b77a81534b541bf05599359c0ad36a034e3b63"
+      },
+      {
+        "path": "godot/scripts/shogi_preferences.gd",
+        "bytes": 4381,
+        "sha256": "ad58d71282b0a3c31766a0df52c5fbf29183d15be7ccc59c82bef8b14f5ee5d8"
+      },
+      {
+        "path": "godot/scripts/shogi_pv_row.gd",
+        "bytes": 2678,
+        "sha256": "d1e9930cc76fe3d00427f6de4ec73aba84bb30d751ac663689df29c4fb79182c"
+      },
+      {
+        "path": "godot/scripts/shogi_records.gd",
+        "bytes": 3788,
+        "sha256": "03fe8f16c91fe0d64484a5a783243a1c6fd942581cdf35d60c4edcd229df1f67"
+      },
+      {
+        "path": "godot/scripts/shogi_rendered_tween.gd",
+        "bytes": 2822,
+        "sha256": "6e47197eef81a59dfc2c741a6ebd1c54028f844faf6d3bf060a46a45438b0c65"
+      },
+      {
+        "path": "godot/scripts/shogi_report.gd",
+        "bytes": 10587,
+        "sha256": "1119272f9454b6aede3b07a921447f13859c78929ba30c90c1f3fac9c524bcf8"
+      },
+      {
+        "path": "godot/scripts/shogi_report_chart.gd",
+        "bytes": 5845,
+        "sha256": "519219a2800f7107ca4a8d50d60e74cfd98c41a34c271fd32a6cda657672aab2"
+      },
+      {
+        "path": "godot/scripts/shogi_report_chart_model.gd",
+        "bytes": 2882,
+        "sha256": "a3e3742ada3570feeee3bbe800c1612df8f9aacc52f60cf50e4866f1ee1c88e3"
+      },
+      {
+        "path": "godot/scripts/shogi_report_eval_marker.gd",
+        "bytes": 748,
+        "sha256": "c50aaa394fde4107d4e6c7ccdfcb57ab681da70a757d513494640d93a091307f"
+      },
+      {
+        "path": "godot/scripts/shogi_report_metrics.gd",
+        "bytes": 6844,
+        "sha256": "7fb3892638b8a3fa1bfec5ba189735fd2338b432c1a5680a3523e17cd6b6a2e2"
+      },
+      {
+        "path": "godot/scripts/shogi_report_move.gd",
+        "bytes": 1791,
+        "sha256": "3a1587c0bb28640bd41a63f54be3872ac73db10f68cbcc1f1969ba63adfce641"
+      },
+      {
+        "path": "godot/scripts/shogi_report_move_card.gd",
+        "bytes": 4767,
+        "sha256": "60199b8d3f18f278983082b64cf6550b384c842a6d52b4810b8fe365434e1d6e"
+      },
+      {
+        "path": "godot/scripts/shogi_report_phase_story.gd",
+        "bytes": 7389,
+        "sha256": "7eeed98498a12cdf488969ebfc0a14692cff981cee367ecaac122768dbb7a58a"
+      },
+      {
+        "path": "godot/scripts/shogi_report_phases.gd",
+        "bytes": 13768,
+        "sha256": "c1eccbe3757333d2811e022f9a43d52eb2977d8ec092418f4af0333580bfef90"
+      },
+      {
+        "path": "godot/scripts/shogi_report_pie.gd",
+        "bytes": 7178,
+        "sha256": "849f7d0ba4f1d9c31917b21c24994cb2dae35a95da7ffe7d7ac338c9cca1cd95"
+      },
+      {
+        "path": "godot/scripts/shogi_report_quality.gd",
+        "bytes": 1654,
+        "sha256": "4f0e224cedf6e7e056fd919f6de073be11db7ead08f99120510dea15c70a542e"
+      },
+      {
+        "path": "godot/scripts/shogi_report_settings.gd",
+        "bytes": 2406,
+        "sha256": "8c8bf74c2522e4ed03497be3c5db8861e68a6638adcbab5d7845391d894329a7"
+      },
+      {
+        "path": "godot/scripts/shogi_report_settings_view.gd",
+        "bytes": 4751,
+        "sha256": "f4d51643ffe51f5b2a1c1cb2d19fa11548c509bbb2b56d481fc28f56a0147129"
+      },
+      {
+        "path": "godot/scripts/shogi_report_statistics.gd",
+        "bytes": 7385,
+        "sha256": "8e8fa0422773168a402095ac71deda400b7fe4ca80b5c5d45d830a2f5c16cd0a"
+      },
+      {
+        "path": "godot/scripts/shogi_report_story.gd",
+        "bytes": 13301,
+        "sha256": "3b32ff9d4258fc857f6d36ed4a3ebaa28e3f4a90c0ec3d985e8ceeeccb785ae4"
+      },
+      {
+        "path": "godot/scripts/shogi_report_story_view.gd",
+        "bytes": 6008,
+        "sha256": "09ecc6c32c4c86dae14c00b4c641c42479d40a76d29534e274d724dc7f422a44"
+      },
+      {
+        "path": "godot/scripts/shogi_report_tactics.gd",
+        "bytes": 4716,
+        "sha256": "ecca72f2b0701d2d451f9d90a2c179d0dc1110d3bbb1c1073d8021d5cac638d8"
+      },
+      {
+        "path": "godot/scripts/shogi_rules.gd",
+        "bytes": 8136,
+        "sha256": "1e918dc87886e2b868f991ac2f611762c433b9d539bed2cc87c860547f2dd598"
+      },
+      {
+        "path": "godot/scripts/shogi_scene_layout.gd",
+        "bytes": 668,
+        "sha256": "46cf8144b8ebbac6149778a2e8d5e86f97c541ced08f0028cc1d9efa79fba850"
+      },
+      {
+        "path": "godot/scripts/shogi_tournament_sync.gd",
+        "bytes": 7124,
+        "sha256": "1d91d704846419c4d7f7951f9bc988fbeed43a82708b6da79ccfd19d365a326c"
+      },
+      {
+        "path": "godot/scripts/shogi_tutorial.gd",
+        "bytes": 19095,
+        "sha256": "8af9a1ff919ae54e2b6458092e66f2e0c843b4a26517aaa49d20936645b007f8"
+      },
+      {
+        "path": "godot/scripts/shogi_tutorial_board.gd",
+        "bytes": 9075,
+        "sha256": "d79de640af53ab63766bbf21ec55119b7a4fffcbe602d892037e694732b59282"
+      },
+      {
+        "path": "godot/scripts/shogi_tutorial_model.gd",
+        "bytes": 6791,
+        "sha256": "64bcde142d28c224fc5773dead7090e8d39e64297229938aa135809b13f81e8c"
+      },
+      {
+        "path": "godot/scripts/shogi_tutorial_progress.gd",
+        "bytes": 5747,
+        "sha256": "82d374cfabbea65d3eca1d45ae46416ce8505847dc322060740afddd4a5d28a7"
+      },
+      {
+        "path": "godot/scripts/shogi_tutorial_rules.gd",
+        "bytes": 844,
+        "sha256": "0b421593dfebfdee66bd2da2806ea93af93898859a351bf23f00e7fbc00d1abf"
+      },
+      {
+        "path": "godot/scripts/shogi_usi_codec.gd",
+        "bytes": 4905,
+        "sha256": "1915e25f78a43b745de840fb20796004676471dad0a74894fa18cc176cf0d6f0"
+      },
+      {
+        "path": "godot/scripts/shogi_usi_engine.gd",
+        "bytes": 10122,
+        "sha256": "785a0df9672da10c3489aabfca4eb553a2de664c3772a7ebc13d965928c10205"
+      },
+      {
+        "path": "godot/scripts/shogi_variation_study.gd",
+        "bytes": 8527,
+        "sha256": "207fe456216470e39df95cf6b9e303f771497aa0b9a991eaa75d7917b3f3c783"
+      },
+      {
+        "path": "godot/scripts/shogi_variation_tree.gd",
+        "bytes": 7676,
+        "sha256": "73bc7a21e7722bf7e7e387213728be2d991b87b981d0f482c06ee8219485e6e2"
+      },
+      {
+        "path": "godot/scripts/shogi_variation_view.gd",
+        "bytes": 10802,
+        "sha256": "273eb7f386d5a649d097e096c4192d2be65e1b25346153c197f7d945f604b5df"
+      },
+      {
+        "path": "godot/scripts/shogi_wood_view.gd",
+        "bytes": 19996,
+        "sha256": "733f411adf65f0255950ae8cb85ec2ad94992ed4b8741fd119a42109c1f88fcb"
+      },
+      {
+        "path": "godot/assets/data/historic-games.json",
+        "bytes": 1140775,
+        "sha256": "cd5e67a982a7eebcc64d7d143a45ccac6ff9e0b8e652f5570d07b6c68ff51437"
+      },
+      {
+        "path": "godot/assets/data/tournament-index.json",
+        "bytes": 23573,
+        "sha256": "85752d0aeb8d94ad06c9a040bd6714719f7e8e89369e8db481e93622175428f2"
+      },
+      {
+        "path": "godot/assets/data/cp932.txt",
+        "bytes": 33898,
+        "sha256": "d42e32e6e2c75449156747721e103e3d4df167dd96b54b7ea99e1af654fcaa6a"
+      },
+      {
+        "path": "godot/config/tournaments.json",
+        "bytes": 174,
+        "sha256": "864f8d458628d878043b3c1e641cd2b22876b5fa5675e0e69c442113b362ba0d"
+      }
+    ],
+    "report": "docs/releases/v0.28.0-validation.json",
+    "report_sha256": "2087fee449516837801962ca344b5e29a3dd379cde93c1132e8027c8d35195b1"
+  },
+  "tournaments": {
+    "checked_utc": "2026-09-11T00:26:31.454380+00:00",
+    "games": 26,
+    "same_games_as_bundled": true
+  },
+  "android_device_tested": false,
+  "github_published": false,
+  "rendering_stalls_resolved": false,
+  "artifacts": [
+    {
+      "path": "builds/Shogi-0.29.0-windows-x64.zip",
+      "bytes": 150263917,
+      "sha256": "6e96a2cb19656228a1c641bf25a407ad428707e62e56b6f3ee1b955e54bfe539"
+    },
+    {
+      "path": "builds/Shogi-0.29.0-android-arm64.apk",
+      "bytes": 136237961,
+      "sha256": "d85817c3e228b22b0372a7d1826b1341c93e57f6e939fa61b11ab44d878eb223"
+    }
+  ],
+  "packaged_opening_modules": {
+    "shogi_opening_view": "0190e9539107e7004b232d1a37ab7f206f81a077f3cafce8986caf66b4b22633",
+    "shogi_opening_preview": "149130071a1515fb97a0dbfdd6f96b81389c24410fe9f3d0154bd7aaae936084",
+    "shogi_opening_board": "97b2a94f654f9cd1299b8a5e1136c0a93fa853841a42aef8777f20796a518f89",
+    "shogi_openings": "b6f781c14d0f07c64de0c53f9c8b1dfd899ec886092cb6dd02e2df2e28e9e129",
+    "shogi_rendered_tween": "6aa1968ac75d423552dabc57766d0d9f03b356d837dcf7a9b3e907159d16a7d7"
+  },
+  "first_board_frame_ms": 2224
+}

@@ -2,7 +2,7 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
 
-A free shogi app for Android and Windows, built with Godot 4.7.2 and a local YaneuraOu engine. Current version: **0.28.0**. **All existing features are free: no membership, purchase screen or paid unlock.**
+A free shogi app for Android and Windows, built with Godot 4.7.2 and a local YaneuraOu engine. Current version: **0.29.0**. **All existing features are free: no membership, purchase screen or paid unlock.**
 
 ![Wooden board](docs/images/board-0.20.png)
 
@@ -10,9 +10,9 @@ A free shogi app for Android and Windows, built with Godot 4.7.2 and a local Yan
 
 Local packages are built. The GitHub repository and Release are not published yet; the maintainer must restore local GitHub authentication first.
 
-Download `Shogi-0.28.0-android-arm64.apk` from [Releases](https://github.com/DipperHide/shogi-studio/releases) for ARM64 Android devices. On Windows, extract `Shogi-0.28.0-windows-x64.zip`, run `Shogi.exe` and keep the `engines` folder beside it.
+Download `Shogi-0.29.0-android-arm64.apk` from [Releases](https://github.com/DipperHide/shogi-studio/releases) for ARM64 Android devices. On Windows, extract `Shogi-0.29.0-windows-x64.zip`, run `Shogi.exe` and keep the `engines` folder beside it.
 
-Android package: `org.shogistudio.artpreview`, versionCode 46. This build uses the release template with the previous development signing key for upgrade compatibility. Private keys are excluded. Back up your games before installing a build with a different signer.
+Android package: `org.shogistudio.artpreview`, versionCode 47. This build uses the release template with the previous development signing key for upgrade compatibility. Private keys are excluded. Back up your games before installing a build with a different signer.
 
 ## Features
 
@@ -29,8 +29,9 @@ Android package: `org.shogistudio.artpreview`, versionCode 46. This build uses t
 - Version 0.26 adds a ticked evaluation bar with score/depth, smart/left/bottom placement and continuous animation. Report replay preserves mate distance, with continuation available in the side layout.
 - Version 0.27 adds private editor evaluation, pause, piece dragging, per-setup undo/redo, saved setups and SFEN clipboard controls, with fixed Cancel/Done buttons and hand inputs that fit narrow screens.
 - Version 0.28 displays the starting pose before advancing piece animations through actual rendered frames. Stalls no longer skip the remaining movement. Playback may take longer on slow devices; Windows rendering stalls remain unresolved.
+- Version 0.29 adds category/side filters, multilingual aliases and separate animated opening previews. The original game stays intact until loading; the selected move is retained and landscape shows the full board. The catalog remains nine teaching examples without master-game statistics.
 
-[Variation guide](docs/VARIATIONS.md) · [0.28 test results](docs/TESTING-0.28.md) (Chinese) · [Evaluation bar / 評価バー / 评价条](docs/EVALUATION-BAR.md) · [Position editor / 局面編集 / 局面编辑](docs/POSITION-EDITOR.md) · [Animation clock / 駒の動き / 动画计时](docs/ANIMATION-CLOCK.md)
+[Variation guide](docs/VARIATIONS.md) · [0.29 test results](docs/TESTING-0.29.md) (Chinese) · [Evaluation bar / 評価バー / 评价条](docs/EVALUATION-BAR.md) · [Position editor / 局面編集 / 局面编辑](docs/POSITION-EDITOR.md) · [Opening preview / 戦法プレビュー / 开局预览](docs/OPENING-PREVIEW.md)
 
 Advanced screens and lessons are mainly in Chinese. Basic navigation supports Chinese, English and Japanese; these READMEs do not imply a fully translated UI.
 
@@ -52,13 +53,13 @@ Use Windows, Python 3.11+, Godot **4.7.2** with matching export templates, JDK 1
 python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -r requirements-dev.txt
 ./scripts/build_android.ps1
-./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.28.0
+./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.29.0
 ./scripts/test_chessis20.ps1
 ./scripts/test_chessis20.ps1 -CoreOnly -Network
 ./scripts/test_chessis23.ps1
 ./scripts/test_chessis24.ps1
-./scripts/test_chessis28.ps1 -CoreOnly
-./scripts/test_chessis28.ps1
+./scripts/test_chessis29.ps1 -CoreOnly
+./scripts/test_chessis29.ps1
 ```
 
 Open `godot/project.godot` in Godot for desktop development. Runtime assets, engines and NNUE are included; builds restore engine source from its packaged archive. For a release APK, set `GODOT_ANDROID_KEYSTORE_RELEASE_PATH`, `GODOT_ANDROID_KEYSTORE_RELEASE_USER` and `GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD` locally, then run `./scripts/build_android.ps1 -Release`. Never commit signing credentials.

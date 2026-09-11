@@ -79,6 +79,7 @@ var practice_panel: VBoxContainer
 var retry_from_report: bool = false
 var study
 var variation_ui
+var opening_view
 var study_bar: HBoxContainer
 
 func initialize(owner_node) -> void:
@@ -87,6 +88,8 @@ func initialize(owner_node) -> void:
 	study.app = app
 	variation_ui = preload("res://scripts/shogi_variation_view.gd").new()
 	variation_ui.ui = self
+	opening_view = preload("res://scripts/shogi_opening_view.gd").new()
+	opening_view.ui = self
 	tournaments = preload("res://scripts/shogi_tournament_sync.gd").new()
 	add_child(tournaments)
 	tournaments.initialize(ProjectSettings.globalize_path("res://../.work/tournaments-ui-test") if app.testing else "user://tournaments", not app.testing)
@@ -241,6 +244,7 @@ func initialize(owner_node) -> void:
 	layout()
 
 func _page(title: String, name: String, use_sheet: bool = false) -> VBoxContainer:
+	if opening_view != null: opening_view.stop_preview()
 	if practice_active() and name not in ["promotion", "confirm-move"]: practice.stop(false)
 	if not pv_context.is_empty(): stop_pv(false)
 	var column = super._page(title, name, use_sheet)
@@ -264,6 +268,7 @@ func banner(parent: Control, _compact: bool = false) -> void:
 	parent.add_child(strip)
 
 func close() -> void:
+	if opening_view != null: opening_view.stop_preview()
 	var practicing = practice_active()
 	var studying = study_active()
 	var practice_view = app.review_game
@@ -333,6 +338,13 @@ func layout() -> void:
 	if page != null and page_name == "editor":
 		page.position = safe.position
 		page.size = safe.size - Vector2(0, keyboard_height)
+	if page != null and page_name == "openings":
+		page.position = safe.position
+		page.size = safe.size - Vector2(0, keyboard_height)
+	if page != null and page_name == "opening-info":
+		page.size = Vector2(safe.size.x if safe.size.x > safe.size.y else minf(560, safe.size.x), safe.size.y)
+		page.position = safe.position + Vector2((safe.size.x - page.size.x) / 2, 0)
+		if opening_view != null and is_instance_valid(opening_view.preview): opening_view.preview.layout_preview()
 	if page != null and page_name in ["report-phase", "report-accuracy", "report-metric-info"]: fit_wood_dialog()
 	if page != null and page_name in ["report-settings", "report-value", "retry-settings", "report-classifications", "report-story-info", "report-move"]:
 		var available = safe
@@ -351,6 +363,7 @@ func apply_theme() -> void:
 	super.apply_theme()
 	for item in report_colors: item.add_theme_color_override("font_color", report_colors[item])
 	if page_name == "editor" and is_instance_valid(editor): editor.apply_theme()
+	if page_name in ["openings", "opening-info"] and opening_view != null: opening_view.apply_theme()
 	if toolbar == null: return
 	for item in toolbar.get_children():
 		item.add_theme_stylebox_override("normal", Design.box(Color(0, 0, 0, 0.12), 5, 4))
@@ -660,6 +673,7 @@ func show_menu() -> void:
 	if app.session != null: column.add_child(button("当前联机", show_connection))
 
 func back() -> void:
+	if page_name == "opening-info": opening_view.show_list(); return
 	if page_name == "editor" and is_instance_valid(editor) and editor.interaction.pointer_id != -2: editor.interaction.cancel(); return
 	if page_name == "evaluation-options": _board_keep(); return
 	if page_name in ["variations", "variation-move", "variation-policy"]: _board_keep(); return
@@ -1062,25 +1076,8 @@ func consume_board_input(event: InputEvent) -> bool:
 		return true
 	return event is InputEventMouseMotion or event is InputEventScreenDrag
 
-func show_openings(query: String = "") -> void:
-	var column = _page("开局与练习", "openings")
-	var search = field(column, "搜索开局", query)
-	search.text_submitted.connect(func(value): show_openings(value))
-	column.add_child(button("搜索", func(): show_openings(search.text)))
-	column.add_child(button("互动练习与复习", tutorial.show_catalog))
-	for line in Openings.LINES:
-		if not query.is_empty() and not (line.name + line.group + line.description).contains(query): continue
-		var opening: Dictionary = line
-		column.add_child(action_row(line.name + " · " + line.group, line.description, "learn", func():
-			var next = Openings.game_for(opening)
-			if next == null: show_message("开局谱无效。"); return
-			next.metadata["棋战"] = opening.name
-			app.review_game = next
-			app.review_path = ""
-			app.replay_index = 0
-			_board_keep()
-			live_text.text = opening.description
-		))
+func show_openings(query: Variant = null) -> void:
+	opening_view.show_list(query)
 
 func start_report(deep: bool) -> void:
 	if not pv_context.is_empty(): stop_pv(false)
