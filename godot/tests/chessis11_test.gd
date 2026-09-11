@@ -6,6 +6,15 @@ func capture(name: String) -> void:
 	app.get_viewport().get_texture().get_image().save_png(output.path_join(name + ".png"))
 	screenshots.append(name)
 
+func displayed_motion(reader: Callable = Callable()) -> bool:
+	var deadline = Time.get_ticks_msec() + 3000
+	while Time.get_ticks_msec() < deadline:
+		await RenderingServer.frame_post_draw
+		var progress: float = reader.call() if reader.is_valid() else app.motion_progress
+		if progress > 0 and progress < 1: return true
+		if progress >= 1: return false
+	return false
+
 func run(instance) -> void:
 	app = instance
 	output = ProjectSettings.globalize_path("res://../review/app/chessis11/ui")
@@ -20,6 +29,7 @@ func run(instance) -> void:
 	if "--chessis16-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis16/coach-replay-ui")
 	if "--chessis20-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis20/chessis11_test")
 	if "--chessis17-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis17/coach-replay-ui")
+	if "--chessis28-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis28/chessis11_test")
 	DirAccess.make_dir_recursive_absolute(output)
 	app.records.root = output.path_join("records")
 	app.ui.tutorial.progress_path = output.path_join("learning.json")
@@ -42,11 +52,11 @@ func run(instance) -> void:
 		for ply in [4, 3, 2, 3, 4, 5]:
 			app.ui.show_history(ply)
 			check(app.motion_progress < 1 and not app.transition.is_empty(), style + " replay starts motion " + str(ply))
-			await settle(0.09)
-			check(app.motion_progress > 0 and app.motion_progress < 1, style + " replay has intermediate frame " + str(ply))
+			check(await displayed_motion(), style + " replay has intermediate frame " + str(ply))
 			if ply == 2: await capture(style + "-capture-reverse-motion")
-			await settle(0.45)
-			check(app.motion_progress == 1, style + " replay settles " + str(ply))
+			# A render stall may extend visible movement; completion is an event,
+			# while actual frame-time limits are checked by the motion probes.
+			check(await until(func(): return app.motion_progress == 1, 3), style + " replay settles " + str(ply))
 		app.ui.show_menu()
 		app.ui.show_history(1)
 		check(app.ui.page == null and app.motion_progress < 1, style + " close dialog does not cancel replay")
@@ -108,16 +118,14 @@ func tutorials() -> void:
 	await capture("tutorial-board")
 	var move = app.Codec.parse_move(tutorial.model.step.moves[0], tutorial.model.position)
 	tutorial._select_move([move])
-	await settle(0.08)
-	check(tutorial.board.motion > 0 and tutorial.board.motion < 1 and tutorial.model.cursor == 1, "interactive exercise move animates and advances")
+	check(await displayed_motion(func(): return tutorial.board.motion) and tutorial.model.cursor == 1, "interactive exercise move animates and advances")
 	await settle(0.5)
 	tutorial.model.reveal()
 	tutorial._refresh_answer()
 	await settle(0.5)
 	check(tutorial.replay_positions.size() > 1, "lesson builds actual answer replay")
 	tutorial._show_replay(1)
-	await settle(0.07)
-	check(tutorial.board.motion > 0 and tutorial.board.motion < 1, "tutorial replay interpolates pieces")
+	check(await displayed_motion(func(): return tutorial.board.motion), "tutorial replay interpolates pieces")
 	await capture("tutorial-motion")
 	await settle(0.5)
 	tutorial._show_replay(0)

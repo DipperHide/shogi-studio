@@ -30,6 +30,7 @@ func run(instance) -> void:
 	app = instance
 	output = ProjectSettings.globalize_path("res://../review/app/chessis27/ui")
 	if "--editor-controls-only" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis27/controls")
+	if "--chessis28-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis28/editor")
 	DirAccess.make_dir_recursive_absolute(output)
 	app.records.root = output.path_join("records")
 	app.save_path = output.path_join("active-test.json")

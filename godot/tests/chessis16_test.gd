@@ -18,6 +18,7 @@ func run(instance) -> void:
 	if "--chessis18-regression" in OS.get_cmdline_user_args(): output=ProjectSettings.globalize_path("res://../review/app/chessis18/selection-ui")
 	if "--chessis19-regression" in OS.get_cmdline_user_args(): output=ProjectSettings.globalize_path("res://../review/app/chessis19/selection-ui")
 	if "--chessis20-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis20/chessis16_test")
+	if "--chessis28-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis28/chessis16_test")
 	DirAccess.make_dir_recursive_absolute(output)
 	app.records.root=output.path_join("records")
 	app.ui.tutorial.progress_path=output.path_join("learning-test.json")

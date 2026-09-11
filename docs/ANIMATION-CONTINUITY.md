@@ -21,3 +21,7 @@ godot --path godot --rendering-method mobile --rendering-driver vulkan --script 
 ```
 
 其中 `godot` 为本机 Godot 4.7.2 控制台程序路径。渲染后端选项见 [Godot 官方项目设置](https://docs.godotengine.org/en/4.5/classes/class_projectsettings.html#class-projectsettings-property-rendering-gl-compatibility-driver-windows)。本次功能测试入口是 `scripts/test_chessis24.ps1`；GitHub CI 增加了虚拟显示上的确定性姿态回归，发布前仍需另行确认远程 CI 的实际结果。
+
+## 0.28 补充
+
+[动画计时](ANIMATION-CLOCK.md)进一步保证先画出起点，再推进剩余移动。绘制停顿会延长实际播放时间，仍不等于消除渲染停顿；原有中断姿态测试继续保留。

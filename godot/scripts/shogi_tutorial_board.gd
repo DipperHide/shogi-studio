@@ -22,7 +22,7 @@ var tokens: Array = []
 var from_tokens: Array = []
 var from_rects: Array = []
 var motion: float = 1.0
-var motion_tween: Tween
+var motion_tween
 
 func hand_rect(side: int, kind: int) -> Rect2:
 	var slot = (board_rect.size.x - 36) / 7.0
@@ -42,14 +42,16 @@ func animate_to(next: Array) -> void:
 	if tokens == next: return
 	var starts: Array = []
 	for i in range(tokens.size()): starts.append(visual_rect(i))
-	if motion_tween != null: motion_tween.kill()
+	if is_instance_valid(motion_tween): motion_tween.kill()
 	from_tokens = tokens.duplicate(true)
 	tokens = next.duplicate(true)
 	from_rects = starts
 	if starts.is_empty() or starts.size() != tokens.size(): motion = 1; queue_redraw(); return
 	motion = 0
-	motion_tween = create_tween()
-	motion_tween.tween_method(func(value): motion = value; queue_redraw(), 0.0, 1.0, maxf(0.12, app.preferences.studio.animation)).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	queue_redraw()
+	motion_tween = preload("res://scripts/shogi_rendered_tween.gd").new()
+	add_child(motion_tween)
+	motion_tween.begin(self, maxf(0.12, app.preferences.studio.animation), func(value): motion = value; queue_redraw(), Callable(), Tween.TRANS_SINE)
 
 func _piece(value: int, slot: Rect2, colors: Dictionary) -> void:
 	var edge = minf(slot.size.x, slot.size.y)

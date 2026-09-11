@@ -96,6 +96,7 @@ func _initialize() -> void:
 	check(Analysis.Game.position_error(mate).is_empty() and mate.legal_moves().is_empty(), "legal terminal setup is accepted with no playable moves")
 	analysis.free()
 	var output = ProjectSettings.globalize_path("res://../review/app/chessis27")
+	if "--chessis28-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis28")
 	DirAccess.make_dir_recursive_absolute(output)
 	FileAccess.open(output.path_join("editor-core.json"), FileAccess.WRITE).store_string(JSON.stringify({"checks": checks, "failures": failures}, "  "))
 	print("EDITOR 27: ", checks, " checks; ", failures)

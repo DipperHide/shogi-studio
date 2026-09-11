@@ -123,6 +123,7 @@ func run(instance) -> void:
 	if "--chessis26-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis26/animation")
 	if "--chessis27-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis27/animation")
 	if "--chessis25-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis25/animation")
+	if "--chessis28-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis28/animation")
 	DirAccess.make_dir_recursive_absolute(output)
 	app.records.root = output.path_join("records")
 	app.save_path = output.path_join("active-test.json")

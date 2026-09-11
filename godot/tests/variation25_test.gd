@@ -32,6 +32,7 @@ func data_game(tree, source):
 func _initialize() -> void:
 	if "--chessis26-regression" in OS.get_cmdline_user_args(): output = "res://../review/app/chessis26"
 	if "--chessis27-regression" in OS.get_cmdline_user_args(): output = "res://../review/app/chessis27"
+	if "--chessis28-regression" in OS.get_cmdline_user_args(): output = ProjectSettings.globalize_path("res://../review/app/chessis28")
 	output = ProjectSettings.globalize_path(output)
 	DirAccess.make_dir_recursive_absolute(output)
 	var source = Game.new()

@@ -83,7 +83,7 @@ var dark: bool = true
 var audio_player: AudioStreamPlayer
 var transition: Array = []
 var motion_progress: float = 1.0
-var motion_tween: Tween
+var motion_tween
 var visual_tokens: Array = []
 var ai_started_at: int = 0
 var ai_due_at: int = 0
@@ -160,7 +160,7 @@ func _ready() -> void:
 		test_runner = load("res://scripts/shogi_package_probe.gd").new()
 		test_runner.run.call_deferred(self)
 	elif "--unified-test" in args or "--unified-peer" in args:
-		test_runner = load("res://tests/chessis27_test.gd" if "--chessis27" in args else "res://tests/chessis26_test.gd" if "--chessis26" in args else "res://tests/chessis25_test.gd" if "--chessis25" in args else "res://tests/chessis24_test.gd" if "--chessis24" in args else "res://tests/chessis23_test.gd" if "--chessis23" in args else "res://tests/chessis22_test.gd" if "--chessis22" in args else "res://tests/chessis21_test.gd" if "--chessis21" in args else "res://tests/chessis20_test.gd" if "--chessis20" in args else "res://tests/chessis19_test.gd" if "--chessis19" in args else "res://tests/chessis18_test.gd" if "--chessis18" in args else "res://tests/chessis17_test.gd" if "--chessis17" in args else "res://tests/chessis16_test.gd" if "--chessis16" in args else "res://tests/chessis15_test.gd" if "--chessis15" in args else "res://tests/chessis14_test.gd" if "--chessis14" in args else "res://tests/chessis13_test.gd" if "--chessis13" in args else "res://tests/chessis12_test.gd" if "--chessis12" in args else "res://tests/chessis11_test.gd" if "--chessis11" in args else "res://tests/chessis_motion_test.gd" if "--motion-probe" in args else "res://tests/chessis10_test.gd" if "--chessis10" in args else "res://tests/chessis09_test.gd" if "--chessis09" in args else "res://tests/chessis_ui_test.gd" if "--chessis" in args else "res://tests/ui08_test.gd" if "--ui08" in args else "res://tests/ui07_test.gd" if "--ui07" in args else "res://tests/unified_peer_test.gd" if "--unified-peer" in args else "res://tests/unified_test.gd").new()
+		test_runner = load("res://tests/chessis28_test.gd" if "--chessis28" in args else "res://tests/chessis27_test.gd" if "--chessis27" in args else "res://tests/chessis26_test.gd" if "--chessis26" in args else "res://tests/chessis25_test.gd" if "--chessis25" in args else "res://tests/chessis24_test.gd" if "--chessis24" in args else "res://tests/chessis23_test.gd" if "--chessis23" in args else "res://tests/chessis22_test.gd" if "--chessis22" in args else "res://tests/chessis21_test.gd" if "--chessis21" in args else "res://tests/chessis20_test.gd" if "--chessis20" in args else "res://tests/chessis19_test.gd" if "--chessis19" in args else "res://tests/chessis18_test.gd" if "--chessis18" in args else "res://tests/chessis17_test.gd" if "--chessis17" in args else "res://tests/chessis16_test.gd" if "--chessis16" in args else "res://tests/chessis15_test.gd" if "--chessis15" in args else "res://tests/chessis14_test.gd" if "--chessis14" in args else "res://tests/chessis13_test.gd" if "--chessis13" in args else "res://tests/chessis12_test.gd" if "--chessis12" in args else "res://tests/chessis11_test.gd" if "--chessis11" in args else "res://tests/chessis_motion_test.gd" if "--motion-probe" in args else "res://tests/chessis10_test.gd" if "--chessis10" in args else "res://tests/chessis09_test.gd" if "--chessis09" in args else "res://tests/chessis_ui_test.gd" if "--chessis" in args else "res://tests/ui08_test.gd" if "--ui08" in args else "res://tests/ui07_test.gd" if "--ui07" in args else "res://tests/unified_peer_test.gd" if "--unified-peer" in args else "res://tests/unified_test.gd").new()
 		test_runner.run.call_deferred(self)
 	elif testing:
 		test_runner = load("res://tests/network_ui_test.gd" if "--network-ui-test" in args else "res://tests/complete_ui_test.gd" if "--complete-test" in args else "res://tests/minimal_test.gd").new()
@@ -1038,7 +1038,7 @@ func _continue_review() -> bool:
 	return true
 
 func _cancel_motion() -> void:
-	if motion_tween != null: motion_tween.kill()
+	if is_instance_valid(motion_tween): motion_tween.kill()
 	motion_progress = 1.0
 	transition.clear()
 
@@ -1065,16 +1065,18 @@ func _present_transition(before: Array, sound: bool = true, visual_start: Dictio
 	# A layout refresh must never expose the final position before this pose.
 	if wood_view != null: wood_view.animate_tracks(transition, 0.0)
 	_redraw()
-	motion_tween = create_tween()
-	motion_tween.tween_method(func(value): motion_progress = value; _redraw(); if wood_view != null: wood_view.animate_tracks(transition, value), 0.0, 1.0, preferences.studio.animation).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-	motion_tween.tween_callback(func():
-		transition.clear()
-		if sound: _play_sound()
-		if game.mode == "local" and session == null and preferences.auto_flip and replay_index < 0:
-			flipped = game.position.turn == -1
-			_layout()
-		if wood_view != null: wood_view.sync()
-		_redraw()
+	motion_tween = preload("res://scripts/shogi_rendered_tween.gd").new()
+	add_child(motion_tween)
+	motion_tween.begin(self, preferences.studio.animation,
+		func(value): motion_progress = value; _redraw(); if wood_view != null: wood_view.animate_tracks(transition, value),
+		func():
+			transition.clear()
+			if sound: _play_sound()
+			if game.mode == "local" and session == null and preferences.auto_flip and replay_index < 0:
+				flipped = game.position.turn == -1
+				_layout()
+			if wood_view != null: wood_view.sync()
+			_redraw()
 	)
 
 func _play_sound(preview: bool = false) -> void:

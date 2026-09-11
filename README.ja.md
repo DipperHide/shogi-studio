@@ -2,7 +2,7 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
 
-Android・Windows 向けの無料将棋アプリです。Godot 4.7.2 と、やねうら王のローカル解析エンジンを使用します。現在のバージョンは **0.27.0**。**既存の機能はすべて無料で、会員制度・購入画面・有料解除はありません。**
+Android・Windows 向けの無料将棋アプリです。Godot 4.7.2 と、やねうら王のローカル解析エンジンを使用します。現在のバージョンは **0.28.0**。**既存の機能はすべて無料で、会員制度・購入画面・有料解除はありません。**
 
 ![木製の将棋盤](docs/images/board-0.20.png)
 
@@ -10,9 +10,9 @@ Android・Windows 向けの無料将棋アプリです。Godot 4.7.2 と、や�
 
 ローカルの配布ファイルは作成済みです。GitHub リポジトリと Release は未公開で、管理者のローカル GitHub 認証の復旧が必要です。
 
-[Releases](https://github.com/DipperHide/shogi-studio/releases) から `Shogi-0.27.0-android-arm64.apk` をダウンロードしてください。ARM64 対応 Android 端末向けの完全な APK です。Windows は `Shogi-0.27.0-windows-x64.zip` を展開し、`Shogi.exe` を実行します。`engines` フォルダーは同じ場所に置いてください。
+[Releases](https://github.com/DipperHide/shogi-studio/releases) から `Shogi-0.28.0-android-arm64.apk` をダウンロードしてください。ARM64 対応 Android 端末向けの完全な APK です。Windows は `Shogi-0.28.0-windows-x64.zip` を展開し、`Shogi.exe` を実行します。`engines` フォルダーは同じ場所に置いてください。
 
-Android のパッケージ名は `org.shogistudio.artpreview`、versionCode は 45 です。release テンプレートで書き出し、上書き更新のため従来の開発用署名を継続しています。秘密鍵は含めません。異なる署名のビルドを入れる前に棋譜をバックアップしてください。
+Android のパッケージ名は `org.shogistudio.artpreview`、versionCode は 46 です。release テンプレートで書き出し、上書き更新のため従来の開発用署名を継続しています。秘密鍵は含めません。異なる署名のビルドを入れる前に棋譜をバックアップしてください。
 
 ## 主な機能
 
@@ -28,8 +28,9 @@ Android のパッケージ名は `org.shogistudio.artpreview`、versionCode は 
 - 0.25 では入れ子の変化、二段の指し手欄、長押しによる本譜への昇格、削除の取り消し、変化ごとの注釈に対応します。本譜を残すか自動で置き換えるかを選べます。全変化の保存・出力・バックアップには JSON を使用します。
 - 0.26 では目盛り・評価値・深度付き評価バー、自動・左側・下部配置、連続アニメーションを追加しました。棋譜再生で詰み手数を保持し、左側表示でも選択局面から対局を再開できます。
 - 0.27 では局面編集に独立した評価値、停止、駒のドラッグ、局面ごとの取り消し・やり直し、保存局面選択、SFEN 操作を追加しました。取消・完了を下部に固定し、持駒入力のはみ出しを修正しました。
+- 0.28 は駒の開始位置を描画してから移動を進め、描画遅延による残りの動きの飛ばしを防ぎます。低フレームレート時には再生時間が延びます。Windows の描画停止自体は未解決です。
 
-[変化の使い方](docs/VARIATIONS.md) · [0.27 の検証結果](docs/TESTING-0.27.md)（中国語） · [Evaluation bar / 評価バー / 评价条](docs/EVALUATION-BAR.md) · [Position editor / 局面編集 / 局面编辑](docs/POSITION-EDITOR.md)
+[変化の使い方](docs/VARIATIONS.md) · [0.28 の検証結果](docs/TESTING-0.28.md)（中国語） · [Evaluation bar / 評価バー / 评价条](docs/EVALUATION-BAR.md) · [Position editor / 局面編集 / 局面编辑](docs/POSITION-EDITOR.md) · [Animation clock / 駒の動き / 动画计时](docs/ANIMATION-CLOCK.md)
 
 高度な画面とレッスン本文は主に中国語です。基本ナビゲーションは中・英・日文に対応しますが、三言語 README はアプリ全体の翻訳完了を意味しません。
 
@@ -51,13 +52,13 @@ Windows、Python 3.11 以降、Godot **4.7.2** と対応テンプレート、JDK
 python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -r requirements-dev.txt
 ./scripts/build_android.ps1
-./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.27.0
+./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.28.0
 ./scripts/test_chessis20.ps1
 ./scripts/test_chessis20.ps1 -CoreOnly -Network
 ./scripts/test_chessis23.ps1
 ./scripts/test_chessis24.ps1
-./scripts/test_chessis27.ps1 -CoreOnly
-./scripts/test_chessis27.ps1
+./scripts/test_chessis28.ps1 -CoreOnly
+./scripts/test_chessis28.ps1
 ```
 
 開発時は Godot で `godot/project.godot` を開きます。実行用素材、エンジン、NNUE は同梱し、対応するエンジンソースはビルド時に同梱アーカイブから展開します。release APK にはローカルで `GODOT_ANDROID_KEYSTORE_RELEASE_PATH`、`GODOT_ANDROID_KEYSTORE_RELEASE_USER`、`GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD` を設定し、`./scripts/build_android.ps1 -Release` を実行します。署名情報をコミットしないでください。
