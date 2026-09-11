@@ -2,17 +2,17 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
 
-0.34.2 clarifies Play from Here after rewinding. Returning to replay preserves the selected position, while confirming continuation restores board input. See [validation](docs/TESTING-0.34.2.md).
+0.35.0 refreshes the flat board, pieces, and light/dark colors. Returning to the latest move automatically resumes play and undo; undo also works while viewing your match history. See [validation](docs/TESTING-0.35.0.md).
 
-A free shogi app for Android and Windows, built with Godot 4.7.2 and a local YaneuraOu engine. Current version: **0.34.2**. **All existing features are free: no membership, purchase screen or paid unlock.**
+A free shogi app for Android and Windows, built with Godot 4.7.2 and a local YaneuraOu engine. Current version: **0.35.0**. **All existing features are free: no membership, purchase screen or paid unlock.**
 
 ![Wooden board](docs/images/board-0.20.png)
 
 ## Install
 
-Source and packages are public: [0.34.2 Release](https://github.com/DipperHide/shogi-studio/releases/tag/v0.34.2). Daily tournament updates are enabled, and the first cloud refresh completed successfully.
+Source and packages are public: [0.35.0 Release](https://github.com/DipperHide/shogi-studio/releases/tag/v0.35.0). Daily tournament updates are enabled, and the first cloud refresh completed successfully.
 
-Download `Shogi-0.34.2-android-arm64.apk` from [Releases](https://github.com/DipperHide/shogi-studio/releases) for ARM64 Android devices. On Windows, extract `Shogi-0.34.2-windows-x64.zip`, run `Shogi.exe` and keep the `engines` folder beside it.
+Download `Shogi-0.35.0-android-arm64.apk` from [Releases](https://github.com/DipperHide/shogi-studio/releases) for ARM64 Android devices. On Windows, extract `Shogi-0.35.0-windows-x64.zip`, run `Shogi.exe` and keep the `engines` folder beside it.
 
 Android package: `org.shogistudio.artpreview`, versionCode 53. This build uses the release template with the previous development signing key for upgrade compatibility. Private keys are excluded. Back up your games before installing a build with a different signer.
 
@@ -61,7 +61,7 @@ Use Windows, Python 3.11+, Godot **4.7.2** with matching export templates, JDK 1
 python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -r requirements-dev.txt
 ./scripts/build_android.ps1
-./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.34.2
+./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.35.0
 ./scripts/test_chessis20.ps1
 ./scripts/test_chessis20.ps1 -CoreOnly -Network
 ./scripts/test_chessis23.ps1

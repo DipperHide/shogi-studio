@@ -13,6 +13,13 @@ static func box(color: Color, radius: int = 16, margin: int = 16) -> StyleBoxFla
 	style.set_content_margin_all(margin)
 	return style
 
+static func flat_palette(dark: bool) -> Dictionary:
+	# Surrounding colors deliberately stay shared with the 3D board.
+	return {"board": Color("bfa782") if dark else Color("e2cca7"),
+		"board_line": Color("796747") if dark else Color("a38d68"),
+		"piece": Color("f6e5c2") if dark else Color("fff2d5"),
+		"piece_ink": Color("302b22"), "last": Color("b3c4a0"), "selected": Color("81b09d")}
+
 static var weighted_fonts: Dictionary = {}
 static func font_with_weight(base: Font, weight: float) -> FontVariation:
 	var key = str([base.get_instance_id(), weight])

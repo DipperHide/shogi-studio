@@ -7,11 +7,12 @@ var hint_badges: Array = []
 var avatar = preload("res://assets/brand/ai-icon.png")
 const FACE_NAMES = ["", "Fu", "Kyosha", "Keima", "Ginsho", "Kinsho", "Kakugyo", "Hisha", "Gyokusho", "Tokin", "Narikyo", "Narikei", "Narigin", "", "Uma", "Ryu"]
 var faces: Dictionary = {}
-var mincho = preload("res://assets/fonts/NotoSerifJP.ttf")
+var mincho: Font = preload("res://assets/fonts/NotoSerifJP.ttf")
 var workbench_background = preload("res://assets/reference-ui/wood_dark.png")
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	mincho = app.Design.font_with_weight(mincho, 600.0)
 	for name in FACE_NAMES + ["Ousho"]:
 		if not name.is_empty(): faces[name] = load("res://assets/glyphs/" + name + ".svg")
 
@@ -36,17 +37,22 @@ func glyph(value: int, rect: Rect2, color: Color, held: bool = false) -> void:
 	var inverted: bool = (value < 0) != app.flipped
 	if app.preferences.appearance == "anime2d" or (held and app.preferences.appearance == "wood"):
 		var p: Dictionary = app.palette()
-		var half = rect.size * Vector2(0.39, 0.43)
+		var half = rect.size * Vector2(0.405, 0.435)
 		var points = PackedVector2Array([Vector2(0, -half.y), Vector2(half.x * 0.72, -half.y * 0.62), Vector2(half.x, half.y), Vector2(-half.x, half.y), Vector2(-half.x * 0.72, -half.y * 0.62)])
-		draw_set_transform(rect.get_center() + Vector2(0, 1.4), PI if inverted else 0)
-		draw_colored_polygon(points, Color(0.1, 0.08, 0.05, 0.22))
+		draw_set_transform(rect.get_center() + Vector2(0, 2.0), PI if inverted else 0)
+		draw_colored_polygon(points, Color(0.14, 0.11, 0.07, 0.20))
+		draw_set_transform(rect.get_center() + Vector2(0, 0.9), PI if inverted else 0)
+		draw_colored_polygon(points, Color("ac8c58"))
 		draw_set_transform(rect.get_center(), PI if inverted else 0)
 		draw_colored_polygon(points, p.piece)
 		points.append(points[0])
-		draw_polyline(points, p.board_line, 0.7, true)
+		draw_polyline(points, Color("ba9c67"), 0.65, true)
+		draw_polyline(PackedVector2Array([points[4] * 0.94, points[0] * 0.94, points[1] * 0.94]), Color(1, 1, 0.95, 0.65), 0.8, true)
 		draw_set_transform(Vector2.ZERO)
 		color = Color("963d35") if absi(value) > 8 else p.piece_ink
 		rect = rect.grow(-rect.size.x * 0.08)
+	elif app.preferences.appearance == "minimal":
+		color = Color("963d35") if absi(value) > 8 else app.palette().piece_ink
 	if app.preferences.piece_font == "ryoko":
 		var name: String = "Ousho" if value == -8 else FACE_NAMES[absi(value)]
 		var texture: Texture2D = faces.get(name)
@@ -60,7 +66,7 @@ func glyph(value: int, rect: Rect2, color: Color, held: bool = false) -> void:
 		draw_set_transform(Vector2.ZERO)
 	else:
 		var name: String = "王" if value == -8 else app.GLYPHS[absi(value)]
-		text(name, rect, int(rect.size.y * (0.46 if name.length() > 1 else 0.64)), color, inverted, mincho)
+		text(name, rect, int(rect.size.y * (0.46 if name.length() > 1 else 0.69)), color, inverted, mincho)
 
 func piece_rect(slot: Rect2) -> Rect2:
 	var edge = minf(slot.size.x, slot.size.y)
@@ -105,13 +111,13 @@ func _draw() -> void:
 			if region.size.x > 0 and region.size.y > 0: draw_texture_rect_region(workbench_background, region, Rect2(region.position / size * workbench_background.get_size(), region.size / size * workbench_background.get_size()))
 	if not wood:
 		draw_rect(Rect2(Vector2.ZERO, size), p.background)
-		if app.dark:
-			draw_texture_rect(workbench_background, Rect2(Vector2.ZERO, size), false)
-		if app.preferences.appearance == "anime2d":
-			draw_style_box(app.Design.box(p.board, 3, 0), app.board_rect.grow(2))
-			for grain in range(45):
-				var x: float = app.board_rect.position.x + (grain + 0.3) * app.board_rect.size.x / 45
-				draw_line(Vector2(x, app.board_rect.position.y), Vector2(x + sin(grain) * 3, app.board_rect.end.y), Color(0.4, 0.24, 0.08, 0.035), 0.8, true)
+		if app.dark: draw_texture_rect(workbench_background, Rect2(Vector2.ZERO, size), false)
+		var frame = app.Design.box(p.board.darkened(0.12), 5, 0)
+		frame.shadow_color = Color(0, 0, 0, 0.16)
+		frame.shadow_size = 4
+		frame.shadow_offset = Vector2(0, 2)
+		draw_style_box(frame, app.board_rect.grow(4))
+		draw_rect(app.board_rect, p.board)
 		for side in [1, -1]:
 			var slot: Rect2 = app.hand_slot(side, 7)
 			var tray = Rect2(app.bottom_player_rect.position.x if app.wide_layout else app.board_rect.position.x, slot.position.y, app.bottom_player_rect.size.x if app.wide_layout else app.board_rect.size.x, 42)
@@ -128,9 +134,11 @@ func _draw() -> void:
 			draw_rect(app.square_rect(square).grow(-1.5), p.danger, false, 2.4)
 		for i in range(10):
 			var offset: float = i * app.cell
-			var width = 1.4 if i in [0, 9] else 0.8
-			draw_line(app.board_rect.position + Vector2(offset, 0), Vector2(app.board_rect.position.x + offset, app.board_rect.end.y), p.board_line if app.preferences.appearance == "anime2d" else p.line, width, true)
-			draw_line(app.board_rect.position + Vector2(0, offset), Vector2(app.board_rect.end.x, app.board_rect.position.y + offset), p.board_line if app.preferences.appearance == "anime2d" else p.line, width, true)
+			var width = 1.1 if i in [0, 9] else 0.65
+			draw_line(app.board_rect.position + Vector2(offset, 0), Vector2(app.board_rect.position.x + offset, app.board_rect.end.y), p.board_line, width, true)
+			draw_line(app.board_rect.position + Vector2(0, offset), Vector2(app.board_rect.end.x, app.board_rect.position.y + offset), p.board_line, width, true)
+		for star in [Vector2(3, 3), Vector2(6, 3), Vector2(3, 6), Vector2(6, 6)]:
+			draw_circle(app.board_rect.position + star * app.cell, maxf(1.2, app.cell * 0.04), p.board_line)
 		if not app.transition.is_empty() and app.motion_progress < 1:
 			var shown_hands: Dictionary = {}
 			for track in app.transition:
@@ -155,7 +163,9 @@ func _draw() -> void:
 				var count: int = position.hands[side][kind]
 				if count > 1:
 					var rect: Rect2 = app.hand_slot(side, kind)
-					text(str(count), Rect2(rect.end - Vector2(20, 19), Vector2(20, 19)), 13, Hud.colors(p, app.preferences.appearance == "anime2d", app.dark).muted)
+					var badge = Rect2(rect.end - Vector2(17, 17), Vector2(16, 16))
+					draw_style_box(app.Design.box(p.soft, 5, 0), badge)
+					text(str(count), badge, 11, p.ink)
 		if app.preferences.hints and app.replay_index < 0:
 			var seen: Dictionary = {}
 			for move in app.legal:
@@ -227,7 +237,11 @@ func _player(side: int, area: Rect2, p: Dictionary, position, viewed) -> void:
 	if area.size.x < 100: return
 	var colors = Hud.colors(p, app.preferences.appearance in ["wood", "anime2d"], app.dark)
 	var layout = Hud.player_layout(area)
-	draw_style_box(app.Design.box(colors.player, 7, 0), Rect2(area.position, Vector2(area.size.x, 40)))
+	var player_style = app.Design.box(colors.player, 9, 0)
+	if app.preferences.appearance != "wood" and side == position.turn:
+		player_style.border_color = Color(p.accent, 0.65)
+		player_style.set_border_width_all(1)
+	draw_style_box(player_style, Rect2(area.position, Vector2(area.size.x, 40)))
 	var local: bool = side == (app.session.local_side if app.session != null else app.game.human_side)
 	if app._practice_active(): local = side == app.ui.practice.exercise.positions[0].turn
 	if not layout.compact:

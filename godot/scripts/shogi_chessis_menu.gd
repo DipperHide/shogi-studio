@@ -424,6 +424,22 @@ func apply_theme() -> void:
 	for item in toolbar.get_children():
 		item.add_theme_stylebox_override("normal", Design.box(Color(0, 0, 0, 0.12), 5, 4))
 		item.add_theme_color_override("font_color", app.palette().ink)
+	if app.preferences.appearance != "wood":
+		var p = app.palette()
+		for item in root.find_children("*", "Button", true, false):
+			if not item.has_meta("reference_icon"): continue
+			for state in ["icon_normal_color", "icon_hover_color", "icon_pressed_color", "icon_focus_color"]: item.add_theme_color_override(state, p.ink)
+			item.add_theme_color_override("icon_disabled_color", Color(p.muted, 0.35))
+		for item in toolbar.get_children():
+			for state in ["normal", "disabled"]: item.add_theme_stylebox_override(state, Design.box(Color.TRANSPARENT, 9, 4))
+			for state in ["hover", "pressed"]: item.add_theme_stylebox_override(state, Design.box(p.soft, 9, 4))
+		if report_buttons != null:
+			for index in range(report_buttons.get_child_count()):
+				var item = report_buttons.get_child(index)
+				if not item is Button: continue
+				item.add_theme_stylebox_override("normal", Design.box(p.accent if index == 0 else p.soft, 8, 4))
+				item.add_theme_color_override("font_color", Color.WHITE if index == 0 else p.ink)
+				item.add_theme_color_override("icon_normal_color", Color.WHITE if index == 0 else p.ink)
 	if live_text != null: live_text.add_theme_color_override("font_color", app.palette().ink)
 
 func handles_point(point: Vector2) -> bool:
@@ -440,7 +456,7 @@ func _process(delta: float) -> void:
 	if toolbar.get_child_count() == 8:
 		set_reference_icon(toolbar.get_child(4), "ic_nav_pause" if autoplay_on else "ic_nav_play")
 		for index in [2, 3, 4, 5]: toolbar.get_child(index).disabled = practice_active() and (index == 2 or practice.stage != "preview")
-		toolbar.get_child(6).disabled = practice.stage in ["wrong", "complete"] if practice_active() else app.game.moves.is_empty() or app.replay_index >= 0 or app.review_game != null or not pv_context.is_empty()
+		toolbar.get_child(6).disabled = practice.stage in ["wrong", "complete"] if practice_active() else app.game.moves.is_empty() or app.review_game != null or not pv_context.is_empty()
 		if study_active(): toolbar.get_child(6).disabled = study.history.is_empty()
 		if practice_active(): set_reference_icon(toolbar.get_child(4), "ic_nav_pause" if practice.preview_playing else "ic_nav_play")
 	if continue_button != null: continue_button.visible = app.replay_index >= 0 and pv_context.is_empty() and app.session == null and not practice_active()
@@ -462,7 +478,7 @@ func _process(delta: float) -> void:
 			if autoplay_elapsed >= app.preferences.studio.autoplay and app.motion_progress >= 1:
 				autoplay_elapsed = 0
 				if app.replay_index >= app._view_game().moves.size(): autoplay_on = false
-				else: seek(1)
+				else: seek(1, true)
 	if evaluation_bar != null: evaluation_bar.synchronize(delta)
 
 func update_ribbon() -> void:
@@ -495,33 +511,40 @@ func reveal_ribbon(instance_id: int) -> void:
 	if is_instance_valid(control) and move_scroll.is_ancestor_of(control): move_scroll.ensure_control_visible(control)
 
 func show_history(ply: int) -> void:
+	_show_history(ply, false)
+
+func _show_history(ply: int, automatic: bool = false) -> void:
 	if practice_active():
 		if practice.stage == "preview": practice.seek(ply - app.replay_index)
 		return
+	if not automatic: autoplay_on = false; autoplay_elapsed = 0
 	# Closing a dialog cancels motion. Close first, then start the replay transition.
 	if page != null: _board_keep()
 	# Retarget the visible animation immediately; the board preserves its pose.
 	app._set_replay(ply)
+	if app.replay_index < 0: autoplay_on = false
 	update_inline_report()
 
 func undo_from_board() -> void:
 	if study_active(): study.undo(); return
 	if practice_active(): practice.retry(); return
-	if app.replay_index >= 0 or app.review_game != null or not pv_context.is_empty(): return
-	live_enabled = false
+	if app.review_game != null or not pv_context.is_empty(): return
+	autoplay_on = false
+	if live_enabled: toggle_live()
 	app._undo_move()
 
-func seek(delta: int) -> void:
+func seek(delta: int, automatic: bool = false) -> void:
 	if practice_active(): practice.seek(delta); return
 	var ply: int = app._view_game().moves.size() if app.replay_index < 0 else app.replay_index
-	show_history(clampi(ply + delta, 0, app._view_game().moves.size()))
+	_show_history(clampi(ply + delta, 0, app._view_game().moves.size()), automatic)
 
 func toggle_autoplay() -> void:
 	if practice_active():
 		if practice.stage == "preview": practice.preview_playing = not practice.preview_playing; update_practice()
 		return
 	autoplay_on = not autoplay_on
-	if autoplay_on and (app.replay_index < 0 or app.replay_index == app._view_game().moves.size()): show_history(0)
+	autoplay_elapsed = 0
+	if autoplay_on and (app.replay_index < 0 or app.replay_index == app._view_game().moves.size()): _show_history(0, true)
 	toolbar.get_child(4).text = "Ⅱ" if autoplay_on else "▷"
 
 func toggle_live() -> void:

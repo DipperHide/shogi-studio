@@ -67,6 +67,8 @@ jobs:
         run: xvfb-run -a Godot_v4.7.2-stable_linux.x86_64 --path godot --audio-driver Dummy --resolution 360x760 -- --unified-test --board-hud --startup-menu
       - name: Japanese typography on a virtual display
         run: xvfb-run -a Godot_v4.7.2-stable_linux.x86_64 --path godot --audio-driver Dummy -- --unified-test --fonts-hints --fonts-only
+      - name: Live replay navigation and flat board appearance
+        run: xvfb-run -a Godot_v4.7.2-stable_linux.x86_64 --path godot --audio-driver Dummy -- --unified-test --live-navigation
       - name: Keep test evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -88,3 +90,4 @@ jobs:
             review/app/chessis33
             review/app/chessis34
             review/app/fonts-hints
+            review/app/live-navigation

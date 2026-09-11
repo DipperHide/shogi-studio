@@ -1,0 +1,70 @@
+{
+  "version": "0.35.0",
+  "checked_utc": "2026-09-11T09:25:32.035483+00:00",
+  "checks": {
+    "live-navigation": 79,
+    "board-hud": 755,
+    "chessis34": 121,
+    "windows-package-probe": 148,
+    "verification": 61
+  },
+  "total": 1164,
+  "failures": [],
+  "artifacts": [
+    {
+      "path": "builds/Shogi-0.35.0-windows-x64.zip",
+      "bytes": 150392001,
+      "sha256": "def60005e94d368a4f9297ca622c95cfd85c2773fcfafc2511c7d937f2889e9b"
+    },
+    {
+      "path": "builds/Shogi-0.35.0-android-arm64.apk",
+      "bytes": 136301912,
+      "sha256": "e12e50a51d69300cfecab8a5bfd7ba263b3f7ceecd0d31fc94477b1a646e7ee0"
+    }
+  ],
+  "android_validation": {
+    "status": "passed",
+    "checked_utc": "2026-09-11T09:25:31.465914+00:00",
+    "version": "0.35.0",
+    "version_code": 55,
+    "platform": "Android 14",
+    "installed_apk_sha256": "e12e50a51d69300cfecab8a5bfd7ba263b3f7ceecd0d31fc94477b1a646e7ee0",
+    "checks": [
+      "Final release APK installed successfully and installed APK hash matches release artifact",
+      "Flat board retains original 3D wood background",
+      "Rewind and forward to latest hides continuation action and retains enabled undo",
+      "Friendly piece can be selected at latest position with legal destination marker",
+      "Selection cleared and saved match preserved"
+    ],
+    "moves_played_on_device": 0,
+    "actual_undo_on_device": false,
+    "full_device_acceptance": false,
+    "evidence": [
+      {
+        "file": "start.png",
+        "sha256": "046e0a048de0c6e008d491f6bf531d44978cee849423cfb2c972ab58abd2c255"
+      },
+      {
+        "file": "flat.png",
+        "sha256": "7bd21aecb587fafffd0000c01ab0fc54693239cef9aea0b2f0da4ce7b368c1b1"
+      },
+      {
+        "file": "rewound.png",
+        "sha256": "9367584d9a8b312750860f9d01289784c0117e899b4e4cc3645f916090dc590f"
+      },
+      {
+        "file": "latest.png",
+        "sha256": "3c916e3e71ac9a6bc28e8777c75dbf5f7f2822729683482052f7150d10190ddd"
+      },
+      {
+        "file": "selected.png",
+        "sha256": "dc8f425b196774f681ad0d96124fdee4740784d4bfa9b18afc9792d15bd957ca"
+      },
+      {
+        "file": "final.png",
+        "sha256": "7bd21aecb587fafffd0000c01ab0fc54693239cef9aea0b2f0da4ce7b368c1b1"
+      }
+    ],
+    "failures": []
+  }
+}
