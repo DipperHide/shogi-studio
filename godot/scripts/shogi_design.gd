@@ -13,14 +13,21 @@ static func box(color: Color, radius: int = 16, margin: int = 16) -> StyleBoxFla
 	style.set_content_margin_all(margin)
 	return style
 
-static var heading_fonts: Dictionary = {}
+static var weighted_fonts: Dictionary = {}
+static func font_with_weight(base: Font, weight: float) -> FontVariation:
+	var key = str([base.get_instance_id(), weight])
+	if not weighted_fonts.has(key):
+		var font: FontVariation = base.duplicate() if base is FontVariation else FontVariation.new()
+		if not base is FontVariation: font.base_font = base
+		font.variation_opentype = {TextServerManager.get_primary_interface().name_to_tag("wght"): weight}
+		var fallbacks: Array[Font] = []
+		for fallback in base.fallbacks: fallbacks.append(font_with_weight(fallback, weight))
+		font.fallbacks = fallbacks
+		weighted_fonts[key] = font
+	return weighted_fonts[key]
+
 static func heading_font(base: FontVariation) -> FontVariation:
-	var key = base.get_instance_id()
-	if not heading_fonts.has(key):
-		var font = base.duplicate()
-		font.variation_opentype = {TextServerManager.get_primary_interface().name_to_tag("wght"): 600.0}
-		heading_fonts[key] = font
-	return heading_fonts[key]
+	return font_with_weight(base, 600.0)
 
 static func checked_squares(position) -> Array[int]:
 	var result: Array[int] = []

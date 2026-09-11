@@ -227,7 +227,9 @@ func initialize(owner_node) -> void:
 		item.add_theme_color_override("font_color", Color.WHITE if entry[0] == "快速报告" else app.palette().ink)
 		reports.add_child(item)
 	reports.add_child(compact_button("⚙", show_report_settings, 32))
-	reports.add_child(compact_button("好棋线路", show_good_line, 32))
+	var good_line = compact_button("好棋线路", show_good_line, 32)
+	good_line.name = "BestLine"
+	reports.add_child(good_line)
 	report = preload("res://scripts/shogi_report.gd").new()
 	add_child(report)
 	report.changed.connect(report_changed)
@@ -524,6 +526,8 @@ func toggle_live() -> void:
 	if not live_enabled:
 		app._pause_search()
 		arrows.clear()
+		live_details.clear()
+		clear_pv_rows()
 		live_text.text = app.t("分析已暂停")
 		app._redraw()
 	engine_toggle.text = "Ⅱ" if live_enabled else "▷"
@@ -537,10 +541,10 @@ func show_good_line() -> void:
 	if app.session != null: return
 	if not pv_context.is_empty(): stop_pv(false)
 	if page != null: _board_keep()
-	live_enabled = true
-	live_key = ""
-	live_text.text = app.t("正在寻找好棋线路… 点击候选着手右侧播放按钮，可逐手查看。")
-	live_text.show()
+	toggle_live()
+	if live_enabled:
+		live_text.text = app.t("正在寻找好棋线路… 点击候选着手右侧播放按钮，可逐手查看。")
+		live_text.show()
 
 func evaluation() -> Dictionary:
 	if practice_active(): return {}

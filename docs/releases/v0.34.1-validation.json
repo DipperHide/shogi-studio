@@ -1,0 +1,107 @@
+{
+  "version": "0.34.1",
+  "checked_utc": "2026-09-11T08:31:57.393090+00:00",
+  "functional_checks": {
+    "fonts-hints": 90,
+    "board-hud": 755,
+    "chessis32": 179,
+    "chessis34": 76,
+    "windows-package-probe": 148,
+    "verification": 61
+  },
+  "functional_total": 1309,
+  "failures": [],
+  "evidence": [
+    {
+      "path": "review/app/fonts-hints/test.log",
+      "sha256": "e092007e4eb785e9f987dafbff2c1633f2ed74add0eb9b78e01fec0ba922a92b"
+    },
+    {
+      "path": "review/app/chessis341/board-hud.log",
+      "sha256": "9622b9cb37364aeec10ccb54e7c9f89a4ef208688daa3ddb4b09d7055568236c"
+    },
+    {
+      "path": "review/app/chessis341/chessis32.log",
+      "sha256": "869e560625d2a099284524b207c11d785fa8da918c89dbf39cc47e86c589bba3"
+    },
+    {
+      "path": "review/app/chessis341/chessis34.log",
+      "sha256": "2af4b4929ec749e5ecb37d0ed18b5f7ff563b16f9f5062e76bd0cbc7af026cd5"
+    },
+    {
+      "path": "review/app/chessis341/package/windows-package-probe.json",
+      "sha256": "de074cc69e58dddd72fad888939a58f353c9ed04b13b6f4dc659b2f24d3fd8ed"
+    },
+    {
+      "path": "review/app/chessis341/package/verification.json",
+      "sha256": "95a00588433611091bc5c0cb267365e3c6675be2b1ed1921cf0b74b60a4cd317"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "builds/Shogi-0.34.1-windows-x64.zip",
+      "bytes": 150389269,
+      "sha256": "89880ff9c842d4173191b9f86864ae8b59dddc6f05175dd885ac13f7b1004890"
+    },
+    {
+      "path": "builds/Shogi-0.34.1-android-arm64.apk",
+      "bytes": 136299300,
+      "sha256": "01f75af5c50e9f3b0959c79ba8285d5025f01f57e1d8123e879d613f4cb15b07"
+    }
+  ],
+  "android_device_tested": true,
+  "android_validation": {
+    "checked_utc": "2026-09-11T08:31:56.940857+00:00",
+    "version": "0.34.1",
+    "version_code": 53,
+    "status": "passed",
+    "platform": "Android 14",
+    "apk_sha256": "01f75af5c50e9f3b0959c79ba8285d5025f01f57e1d8123e879d613f4cb15b07",
+    "installed_apk_sha256": "01f75af5c50e9f3b0959c79ba8285d5025f01f57e1d8123e879d613f4cb15b07",
+    "full_device_acceptance": false,
+    "checks_performed": [
+      "Successful authorized installation retry and cold launch",
+      "Japanese menu typography and translated labels visually checked",
+      "Tutorial catalog and chapter typography visually checked",
+      "Best Line enabled real engine analysis and displayed arrows and candidate rows",
+      "Second Best Line tap stopped analysis and removed arrows and candidate rows",
+      "Original 16-move position retained; board and hands pixels unchanged"
+    ],
+    "board_comparison_crop": [
+      0,
+      450,
+      1080,
+      1620
+    ],
+    "board_pixels_unchanged": true,
+    "failures": [],
+    "evidence": [
+      {
+        "file": "board.png",
+        "sha256": "26e6173976e6aa110ce0fec8339d103b9594d8eaf5287c1a9df88a5190ae5abc"
+      },
+      {
+        "file": "chapters.png",
+        "sha256": "e5a40e0c67fd7e9e4d8f11fe4d777a175fcecfe05c70af00640d00c395991506"
+      },
+      {
+        "file": "hints-off.png",
+        "sha256": "4de0db373b6245e3264ac4518eed7ea8ec3c900f55c18a6b7ffcd502c6541145"
+      },
+      {
+        "file": "hints-on.png",
+        "sha256": "279c341cf8a27da1b4532f9b46115aa7c8dcdcc052ee2138a5a6d74c71549858"
+      },
+      {
+        "file": "menu.png",
+        "sha256": "2c98bd6b6c3c47ae2282de7879bf814fbe5c18b1df95a8904cfed996cdb4faec"
+      },
+      {
+        "file": "tutorial.png",
+        "sha256": "3518b95045d0f408ce6d4a5fb78412a46ecb18de2b716654302e346c770f84fe"
+      }
+    ]
+  },
+  "github_published": false,
+  "all_lessons_translated": false
+}

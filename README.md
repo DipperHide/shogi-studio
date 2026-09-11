@@ -2,17 +2,19 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
 
-面向 Android 和 Windows 的免费将棋对弈、复盘与学习应用，使用 Godot 4.7.2 和 YaneuraOu 本地引擎。当前版本 **0.34.0**，**所有功能免费开放，没有会员、购买入口或付费解锁**。
+0.34.1 修正日文菜单、教程中的字体粗细混用；“推荐好手”再次点击可关闭，与搜索按钮共用开关。见 [验证记录](docs/TESTING-0.34.1.md)。
+
+面向 Android 和 Windows 的免费将棋对弈、复盘与学习应用，使用 Godot 4.7.2 和 YaneuraOu 本地引擎。当前版本 **0.34.1**，**所有功能免费开放，没有会员、购买入口或付费解锁**。
 
 ![木制棋盘](docs/images/board-0.20.png)
 
 ## 安装
 
-源码和安装包已公开：[0.34.0 Release](https://github.com/DipperHide/shogi-studio/releases/tag/v0.34.0)。每日棋谱更新已启用，并已完成首次云端更新。
+源码和安装包已公开：[0.34.1 Release](https://github.com/DipperHide/shogi-studio/releases/tag/v0.34.1)。每日棋谱更新已启用，并已完成首次云端更新。
 
-从 [Releases](https://github.com/DipperHide/shogi-studio/releases) 下载 `Shogi-0.34.0-android-arm64.apk`，适用于 ARM64 Android 设备。Windows 下载 `Shogi-0.34.0-windows-x64.zip`，解压后运行 `Shogi.exe`，保留同目录的 `engines` 文件夹。
+从 [Releases](https://github.com/DipperHide/shogi-studio/releases) 下载 `Shogi-0.34.1-android-arm64.apk`，适用于 ARM64 Android 设备。Windows 下载 `Shogi-0.34.1-windows-x64.zip`，解压后运行 `Shogi.exe`，保留同目录的 `engines` 文件夹。
 
-Android 包名 `org.shogistudio.artpreview`，versionCode 52。使用 release 导出模板，沿用前版开发签名以便覆盖升级；私钥不在仓库中。安装不同签名的构建前请导出备份。
+Android 包名 `org.shogistudio.artpreview`，versionCode 53。使用 release 导出模板，沿用前版开发签名以便覆盖升级；私钥不在仓库中。安装不同签名的构建前请导出备份。
 
 ## 功能
 
@@ -59,7 +61,7 @@ Android 包名 `org.shogistudio.artpreview`，versionCode 52。使用 release �
 python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -r requirements-dev.txt
 ./scripts/build_android.ps1
-./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.34.0
+./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.34.1
 ```
 
 用 Godot 打开 `godot/project.godot` 可开发桌面版。运行素材、引擎和 NNUE 已包含；构建脚本会从同梱源码包恢复引擎源码目录。release APK 需在本机设置 `GODOT_ANDROID_KEYSTORE_RELEASE_PATH`、`GODOT_ANDROID_KEYSTORE_RELEASE_USER`、`GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD` 后运行 `./scripts/build_android.ps1 -Release`。不要提交 keystore 或密码。
@@ -77,7 +79,7 @@ python -m venv .venv
 ./scripts/test_chessis32.ps1
 ./scripts/test_chessis33.ps1
 ./scripts/test_chessis34.ps1 -Probes board-hud,chessis34
-./scripts/test_package.ps1 -ReportDirectory review/app/chessis34/package -Executable builds/windows-0.34.0/Shogi.exe
+./scripts/test_package.ps1 -ReportDirectory review/app/chessis34/package -Executable builds/windows-0.34.1/Shogi.exe
 ```
 
 [CI](.github/workflows/ci.yml) 在 push／PR 时运行核心测试。本地另测四种尺寸、两个方向、明暗模式、持驹、吃子／升变／打入动画和实际引擎。结果见 [0.23 分类统计验证](docs/TESTING-0.23.md) 和 [0.20 棋盘／赛事验证](docs/TESTING-0.20.md)。测试降低已覆盖场景的回归风险，不能保证绝对没有 bug；已连接 Android 14 手机并验证启动、目录与二维／3D 回放；数据见 [实机记录](docs/ANDROID-DEVICE-BASELINE.md)。蓝牙双机仍未验收。

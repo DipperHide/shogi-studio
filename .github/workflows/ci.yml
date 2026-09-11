@@ -65,6 +65,8 @@ jobs:
         run: xvfb-run -a Godot_v4.7.2-stable_linux.x86_64 --path godot --audio-driver Dummy -- --unified-test --board-hud
       - name: Menu touch before the first move on a portrait startup
         run: xvfb-run -a Godot_v4.7.2-stable_linux.x86_64 --path godot --audio-driver Dummy --resolution 360x800 -- --unified-test --board-hud --startup-menu
+      - name: Japanese typography and best-line toggle with the real engine
+        run: xvfb-run -a Godot_v4.7.2-stable_linux.x86_64 --path godot --audio-driver Dummy -- --unified-test --fonts-hints
       - name: Keep test evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -85,3 +87,4 @@ jobs:
             review/app/chessis32
             review/app/chessis33
             review/app/chessis34
+            review/app/fonts-hints

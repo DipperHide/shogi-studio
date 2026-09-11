@@ -723,6 +723,10 @@ func apply_theme() -> void:
 			toolbar.get_child(index).text = app.t(["悔棋", "棋谱", "更多"][index])
 			toolbar.get_child(index).icon = Design.icon(["undo", "history", "more"][index], p.ink)
 	for item in root.find_children("*", "Label", true, false):
+		if item.has_theme_font_override("font"):
+			var font = item.get_theme_font("font")
+			if font is FontVariation and font.variation_opentype.get(TextServerManager.get_primary_interface().name_to_tag("wght"), 0) == 600.0:
+				item.add_theme_font_override("font", Design.heading_font(app.text_font))
 		if item.has_theme_color_override("font_color"): item.add_theme_color_override("font_color", p.muted)
 	backdrop.color = p.background
 	if page != null:
