@@ -19,6 +19,10 @@ func run(instance) -> void:
 	app.save_path = output.path_join("active.json")
 	app.ui.tutorial.progress_path = output.path_join("learning.json")
 	app.get_tree().create_timer(180).timeout.connect(func(): app.get_tree().quit(2))
+	if "--replay-continuation" in OS.get_cmdline_user_args():
+		await replay_continuation()
+		await finish()
+		return
 	await resize(Vector2i(393, 852))
 	app._start_match("local", 1, 2, "basic"); app.ui.close()
 	app.preferences.studio.animation = 0.22
@@ -149,5 +153,65 @@ func run(instance) -> void:
 		check(app.safe_rect().encloses(app.ui.page.get_global_rect()), "save decision fits " + str(dimensions))
 		await capture("save-study-" + str(dimensions.x))
 		await press("DiscardStudyChanges")
+	await replay_continuation()
 	app.ui.live_enabled = false; app._pause_search()
 	await finish()
+
+func replay_continuation() -> void:
+	await resize(Vector2i(393, 852))
+	app._start_match("local", 1, 2, "basic"); app.ui.close()
+	for value in ["7g7f", "3c3d", "8h2b+", "3a2b", "B*4e"]:
+		check(app.game.play(app.Codec.parse_move(value, app.game.position)), "continuation fixture " + value)
+	app._refresh()
+	var original_game = app.game
+	var original_signature = app.RecordChanges.game_signature(original_game)
+	app.ui.toolbar.get_child(3).name = "ReplayPrevious"
+	await press("ReplayPrevious")
+	await press("ReplayPrevious")
+	check(app.replay_index == 3, "toolbar rewind selects the promoted position")
+	await press("ContinueFromPosition")
+	check(app.ui.page_name == "replace-game", "rewound live game offers original record saving")
+	check(app.ui.page.find_child("CancelMatchExit", true, false).text == app.t("返回回放"), "cancel clearly returns to replay")
+	await capture("replay-continuation-dialog")
+	await press("CancelMatchExit")
+	check(app.replay_index == 3 and app.game == original_game and app.ui.page == null, "cancel preserves chosen replay position and original match")
+	await press("ContinueFromPosition")
+	await press("DiscardMatchChanges")
+	check(app.replay_index == -1 and app.review_game == null and not app.ui.autoplay_on, "continuation leaves replay and autoplay")
+	check(app.game.moves.size() == 3 and app.game.position.key() == original_game.positions[3].key(), "continuation uses exact rewind position")
+	check(app._can_play(), "rewound position accepts board input")
+	var move = app.Codec.parse_move("3a2b", app.game.position)
+	check(not move.is_empty(), "continuation move is legal")
+	if move.is_empty(): return
+	await tap(app.square_rect(move.from).get_center())
+	await tap(app.square_rect(move.to).get_center())
+	await settle(0.3)
+	check(app.game.moves.size() == 4 and app.game.position.key() == original_game.positions[4].key(), "actual board touch can continue from replay")
+	check(app.RecordChanges.game_signature(original_game) == original_signature, "continuation does not mutate original record")
+	var saved_source = app.RecordChanges.game_signature(app.game)
+	var archive_count = app.records.list_all().size()
+	for language in ["zh", "ja", "en"]:
+		app.set_preference("language", language)
+		await press("ReplayPrevious")
+		app.ui.autoplay_elapsed = 0
+		app.ui.autoplay_on = true
+		await press("ContinueFromPosition")
+		check(not app.ui.autoplay_on, "continuation pauses automatic replay")
+		await settle(0.2)
+		check(app.ui.page != null and app.safe_rect().encloses(app.ui.page.get_global_rect()), "continuation decision fits " + language)
+		await capture("replay-continuation-" + language)
+		await press("CancelMatchExit")
+		check(app.replay_index == 3 and app.ui.continue_button.is_visible_in_tree(), "return to replay keeps selected position in " + language)
+		app.ui.show_history(4)
+	app.ui.show_history(3)
+	await press("ContinueFromPosition")
+	app.testing = false
+	await press("SaveMatchChanges")
+	app.testing = true
+	check(app.records.list_all().size() == archive_count + 1, "save and continue archives original once")
+	check(app.replay_index == -1 and app.game.moves.size() == 3 and app._can_play(), "save and continue also restores playable selected position")
+	var found = false
+	for entry in app.records.list_all():
+		var stored = app.records.read(entry.path)
+		if stored != null and app.RecordChanges.game_signature(stored) == saved_source: found = true
+	check(found, "saved record includes the original later move")

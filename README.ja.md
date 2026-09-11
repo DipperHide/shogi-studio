@@ -2,17 +2,17 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
 
-0.34.1 では日本語メニューと学習画面のフォントの太さを修正しました。「推奨手順」は再タップで候補表示を終了し、検索ボタンと状態を共有します。[検証記録](docs/TESTING-0.34.1.md)。
+0.34.2 では棋譜を戻した後の「ここから指す」を明確にしました。再生に戻ると選んだ局面が維持され、対局の続行を選ぶと指せる状態に戻ります。[検証記録](docs/TESTING-0.34.2.md)。
 
-Android・Windows 向けの無料将棋アプリです。Godot 4.7.2 と、やねうら王のローカル解析エンジンを使用します。現在のバージョンは **0.34.1**。**既存の機能はすべて無料で、会員制度・購入画面・有料解除はありません。**
+Android・Windows 向けの無料将棋アプリです。Godot 4.7.2 と、やねうら王のローカル解析エンジンを使用します。現在のバージョンは **0.34.2**。**既存の機能はすべて無料で、会員制度・購入画面・有料解除はありません。**
 
 ![木製の将棋盤](docs/images/board-0.20.png)
 
 ## インストール
 
-ソースと配布ファイルを公開しました：[0.34.1 Release](https://github.com/DipperHide/shogi-studio/releases/tag/v0.34.1)。棋譜一覧の毎日更新が有効になり、クラウドでの初回更新も成功しました。
+ソースと配布ファイルを公開しました：[0.34.2 Release](https://github.com/DipperHide/shogi-studio/releases/tag/v0.34.2)。棋譜一覧の毎日更新が有効になり、クラウドでの初回更新も成功しました。
 
-[Releases](https://github.com/DipperHide/shogi-studio/releases) から `Shogi-0.34.1-android-arm64.apk` をダウンロードしてください。ARM64 対応 Android 端末向けの完全な APK です。Windows は `Shogi-0.34.1-windows-x64.zip` を展開し、`Shogi.exe` を実行します。`engines` フォルダーは同じ場所に置いてください。
+[Releases](https://github.com/DipperHide/shogi-studio/releases) から `Shogi-0.34.2-android-arm64.apk` をダウンロードしてください。ARM64 対応 Android 端末向けの完全な APK です。Windows は `Shogi-0.34.2-windows-x64.zip` を展開し、`Shogi.exe` を実行します。`engines` フォルダーは同じ場所に置いてください。
 
 Android のパッケージ名は `org.shogistudio.artpreview`、versionCode は 52 です。release テンプレートで書き出し、上書き更新のため従来の開発用署名を継続しています。秘密鍵は含めません。異なる署名のビルドを入れる前に棋譜をバックアップしてください。
 
@@ -61,7 +61,7 @@ Windows、Python 3.11 以降、Godot **4.7.2** と対応テンプレート、JDK
 python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -r requirements-dev.txt
 ./scripts/build_android.ps1
-./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.34.1
+./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.34.2
 ./scripts/test_chessis20.ps1
 ./scripts/test_chessis20.ps1 -CoreOnly -Network
 ./scripts/test_chessis23.ps1

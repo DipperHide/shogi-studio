@@ -1,0 +1,58 @@
+{
+  "version": "0.34.2",
+  "checked_utc": "2026-09-11T08:57:27.930364+00:00",
+  "checks": {
+    "saving_and_replay_continuation": 121,
+    "windows-package-probe": 148,
+    "verification": 61
+  },
+  "total": 330,
+  "failures": [],
+  "artifacts": [
+    {
+      "path": "builds/Shogi-0.34.2-windows-x64.zip",
+      "bytes": 150389922,
+      "sha256": "d5f18fabc5705a2d37575c74e7f58c8d46da492dc4831f0999584de2bd1d1483"
+    },
+    {
+      "path": "builds/Shogi-0.34.2-android-arm64.apk",
+      "bytes": 136300052,
+      "sha256": "a43a57f9cac2dfeec0fb84438af52efc6f5dd84ec094c8dd5515d3c7e95eec4a"
+    }
+  ],
+  "android_validation": {
+    "status": "passed",
+    "checked_utc": "2026-09-11T08:57:27.515446+00:00",
+    "version": "0.34.2",
+    "version_code": 54,
+    "platform": "Android 14",
+    "installed_apk_sha256": "a43a57f9cac2dfeec0fb84438af52efc6f5dd84ec094c8dd5515d3c7e95eec4a",
+    "scope": [
+      "Successful installation and cold launch",
+      "Toolbar rewind selects move 87",
+      "Highlighted Play from Here opens contextual continuation confirmation",
+      "Return to replay retains move 87 and identical board and hands pixels"
+    ],
+    "full_device_acceptance": false,
+    "moves_played_on_device": 0,
+    "failures": [],
+    "evidence": [
+      {
+        "file": "confirmation.png",
+        "sha256": "ee1f145f884737fc474358be9e7281c09fa96660504df9ab64b2e8648a68f2fc"
+      },
+      {
+        "file": "returned.png",
+        "sha256": "b679ad7ce607bd359f1c35c7f09fc9f9af94246c09de1b4caf078d22cd30169a"
+      },
+      {
+        "file": "selected.png",
+        "sha256": "f205f14610a5bda6e83d3b61c73f8f1a0edeb850f553802562ac282c6069d38b"
+      },
+      {
+        "file": "start.png",
+        "sha256": "666a0e39a64fa1ba0dd058e2420f34afaaa050fd1c229d27424ce9945d38c118"
+      }
+    ]
+  }
+}

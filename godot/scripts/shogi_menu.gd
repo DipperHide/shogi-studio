@@ -1022,21 +1022,24 @@ func _import_text(text: String) -> void:
 	if saved.is_empty(): show_message(app.records.error)
 	else: show_record_details(saved)
 
-func replace_game(action: Callable) -> void:
-	if has_method("finish_study") and not call("finish_study", false, func(): replace_game(action)): return
+func replace_game(action: Callable, from_replay: bool = false) -> void:
+	if has_method("finish_study") and not call("finish_study", false, func(): replace_game(action, from_replay)): return
 	if not app._has_archive_changes() and app.session == null:
 		action.call()
 		return
 	confirmation_callback = action
-	var column = _page(app.t("开始新的对局？"), "replace-game")
-	column.add_child(label(app.t("是否将当前棋谱保存到棋谱库？联机对局会断开连接。"), 16))
+	var column = _page(app.t("从这里继续下棋？" if from_replay else "开始新的对局？"), "replace-game")
+	column.add_child(label(app.t("将从选中的局面继续，后续着手不会带入。是否先保存完整的原棋谱？" if from_replay else "是否将当前棋谱保存到棋谱库？联机对局会断开连接。"), 16))
 	var problem = label("", 14); column.add_child(problem); problem.hide()
-	var save = button(app.t("保存并继续"), func():
+	var save = button(app.t("保存原棋谱并从这里下" if from_replay else "保存并继续"), func():
 		if app._archive_game(): action.call()
 		else: problem.text = app.notice; problem.show()
 	)
 	save.name = "SaveMatchChanges"; column.add_child(save)
-	var discard = button(app.t("不保存并继续"), action)
+	var discard = button(app.t("不保存，直接从这里下" if from_replay else "不保存并继续"), action)
 	discard.name = "DiscardMatchChanges"; column.add_child(discard)
-	var cancel = button(app.t("继续对局"), close)
+	var cancel = button(app.t("返回回放" if from_replay else "继续对局"), func():
+		if from_replay and has_method("_board_keep"): call("_board_keep")
+		else: close()
+	)
 	cancel.name = "CancelMatchExit"; column.add_child(cancel)

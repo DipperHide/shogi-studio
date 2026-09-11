@@ -403,6 +403,11 @@ func apply_theme() -> void:
 	if page != null and page_name in WOOD_REPORT_PAGES:
 		for item in page.find_children("*", "Label", true, false): report_colors[item] = item.get_theme_color("font_color")
 	super.apply_theme()
+	if continue_button != null:
+		continue_button.add_theme_stylebox_override("normal", Design.box(app.palette().accent, 6, 4))
+		continue_button.add_theme_stylebox_override("hover", Design.box(app.palette().accent.lightened(0.08), 6, 4))
+		continue_button.add_theme_stylebox_override("pressed", Design.box(app.palette().accent.darkened(0.08), 6, 4))
+		for state in ["font_color", "font_hover_color", "font_pressed_color"]: continue_button.add_theme_color_override(state, Color.WHITE)
 	if display_language != app.preferences.language:
 		display_language = app.preferences.language
 		ribbon_key = ""
@@ -870,6 +875,7 @@ func _adopt_game(next, orientation: Variant = null) -> void:
 
 func branch_here() -> void:
 	if app.session != null: show_message("联机中不能从历史局面创建分支。"); return
+	autoplay_on = false
 	var data: Dictionary = (study.fork_at_cursor(app.replay_index).to_data() if study != null and study.active and app.review_game == study.view else app._view_game().to_data()).duplicate(true)
 	if app.replay_index >= 0: app.Game.truncate_data(data, app.replay_index)
 	for key in ["resigned", "resigned_side", "agreed_draw", "declared_side", "clock"]: data.erase(key)
@@ -885,7 +891,7 @@ func branch_here() -> void:
 		if int(key) > data.moves.size(): data.annotations.erase(key)
 	data.engine_match = false
 	var next = app.Game.from_data(data)
-	if next != null: adopt_game(next)
+	if next != null: replace_game(func(): _adopt_game(next), true)
 
 func show_import_analysis(tab: int = -1) -> void:
 	analysis_import.show(tab)

@@ -1839,6 +1839,26 @@
     "局面編集",
     "Position editor"
   ],
+  "从这里继续下棋？": [
+    "この局面から対局を続けますか？",
+    "Continue playing from here?"
+  ],
+  "将从选中的局面继续，后续着手不会带入。是否先保存完整的原棋谱？": [
+    "選んだ局面から対局を続けます。それ以降の指し手は引き継ぎません。元の棋譜全体を先に保存しますか？",
+    "Continue from the selected position without the later moves. Save the complete original record first?"
+  ],
+  "保存原棋谱并从这里下": [
+    "元の棋譜を保存して対局を続ける",
+    "Save original and play from here"
+  ],
+  "不保存，直接从这里下": [
+    "保存せずに対局を続ける",
+    "Play from here without saving"
+  ],
+  "返回回放": [
+    "棋譜の再生に戻る",
+    "Return to replay"
+  ],
   "关于": [
     "このアプリについて",
     "About"
