@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_utc": "2026-09-15T23:33:12.735601+00:00",
+  "updated_utc": "2026-09-16T23:40:31.136455+00:00",
   "sources": [
     {
       "url": "http://live.shogi.or.jp/oui/",
@@ -8,7 +8,7 @@
     },
     {
       "url": "http://live.shogi.or.jp/ouza/",
-      "pages": 2
+      "pages": 3
     },
     {
       "url": "http://live.shogi.or.jp/kiou/",
@@ -46,7 +46,7 @@
       "id": "ouza202609150101",
       "source": "http://live.shogi.or.jp/ouza/kifu/74/ouza202609150101.html",
       "kif_source": "http://live.shogi.or.jp/ouza/kifu/74/ouza202609150101.kif",
-      "sha256": "f29f7dd785c426aa8f440378715dc960186bc52b38de47aea1c319421272acae"
+      "sha256": "93863bbc95bbe5105c30a039810aa1277963a92ac8567c85f1926a5520cfe359"
     },
     {
       "tags": {
