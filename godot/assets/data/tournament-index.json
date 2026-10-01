@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_utc": "2026-09-11T01:53:12.933615+00:00",
+  "updated_utc": "2026-10-01T00:36:34.442103+00:00",
   "sources": [
     {
       "url": "http://live.shogi.or.jp/oui/",
@@ -8,7 +8,7 @@
     },
     {
       "url": "http://live.shogi.or.jp/ouza/",
-      "pages": 2
+      "pages": 3
     },
     {
       "url": "http://live.shogi.or.jp/kiou/",
@@ -28,6 +28,26 @@
     }
   ],
   "games": [
+    {
+      "tags": {
+        "開始日時": "2026/09/15 09:00",
+        "終了日時": "2026/09/15 20:30",
+        "棋戦": "第74期王座戦五番勝負第２局",
+        "戦型": "角換わりその他",
+        "持ち時間": "5時間",
+        "場所": "愛知県名古屋市「名古屋マリオットアソシアホテル」",
+        "手合割": "平手",
+        "先手": "伊藤匠王座",
+        "後手": "広瀬章人九段"
+      },
+      "plies": 115,
+      "terminal": "116 投了",
+      "moves_sha256": "2964d901759b6cb63f381ca24c0f6ab355234cfb3751fe22c4986be78b81e37b",
+      "id": "ouza202609150101",
+      "source": "http://live.shogi.or.jp/ouza/kifu/74/ouza202609150101.html",
+      "kif_source": "http://live.shogi.or.jp/ouza/kifu/74/ouza202609150101.kif",
+      "sha256": "93863bbc95bbe5105c30a039810aa1277963a92ac8567c85f1926a5520cfe359"
+    },
     {
       "tags": {
         "開始日時": "2026/09/08 09:00",
@@ -106,7 +126,7 @@
       "id": "oui202608180101",
       "source": "http://live.shogi.or.jp/oui/kifu/67/oui202608180101.html",
       "kif_source": "http://live.shogi.or.jp/oui/kifu/67/oui202608180101.kif",
-      "sha256": "152b12d8686b27e36f0b524564801b36ddfd7f876427a7ed16592000c4c2b841"
+      "sha256": "75fd1b04a873f15696ad4875d1fe22cff8612295b0e9094c874512d8e1f0d16e"
     },
     {
       "tags": {
