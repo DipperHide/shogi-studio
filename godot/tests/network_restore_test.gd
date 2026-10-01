@@ -6,6 +6,9 @@ class Harness extends Application:
 	func _ready() -> void:
 		set_process(false)
 		set_process_input(false)
+	# This harness intentionally has no renderer; replay animation has separate UI tests.
+	func _present_transition(_before: Array, _sound: bool = true, _visual_start: Dictionary = {}) -> void:
+		_cancel_motion()
 class QuietUI extends RefCounted:
 	var page_name = ""
 	var sheet = false
