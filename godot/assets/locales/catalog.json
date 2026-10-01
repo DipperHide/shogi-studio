@@ -1,4 +1,16 @@
 {
+  "仅显示你的好棋线路。": [
+    "あなたの好手のみ表示します。",
+    "Only your candidate moves are shown."
+  ],
+  "仅显示你的好棋线路，轮到你时继续分析。": [
+    "あなたの好手のみ表示します。手番が来ると解析を再開します。",
+    "Only your candidate moves are shown. Analysis resumes on your turn."
+  ],
+  "等待你的回合": [
+    "あなたの手番を待っています",
+    "Waiting for your turn"
+  ],
   "菜单": [
     "メニュー",
     "Menu"
@@ -1862,5 +1874,97 @@
   "关于": [
     "このアプリについて",
     "About"
+  ],
+  "随手": [
+    "気まま",
+    "Random"
+  ],
+  "启蒙": [
+    "はじめの一歩",
+    "First steps"
+  ],
+  "新手": [
+    "初心者",
+    "Beginner"
+  ],
+  "基础练习": [
+    "基礎練習",
+    "Basic practice"
+  ],
+  "随机合法走子，轻松熟悉规则": [
+    "合法手をランダムに指してルールに慣れる",
+    "Random legal moves to learn the rules"
+  ],
+  "偶尔寻找有利的吃子": [
+    "ときどき得になる駒取りを選ぶ",
+    "Occasionally finds useful captures"
+  ],
+  "更多地注意子力得失": [
+    "駒の損得をより重視する",
+    "Pays more attention to material"
+  ],
+  "尝试简单的攻防回应": [
+    "簡単な攻防を考える",
+    "Tries simple attacking and defensive replies"
+  ],
+  "进入分析自动启动": [
+    "検討に入ると自動解析",
+    "Start analysis automatically"
+  ],
+  "⋯  分析": [
+    "⋯  検討",
+    "⋯  Analysis"
+  ],
+  "展开": [
+    "展開",
+    "Expand"
+  ],
+  "收起": [
+    "折りたたむ",
+    "Collapse"
+  ],
+  "继续深入": [
+    "さらに深く解析",
+    "Analyze deeper"
+  ],
+  "悔棋重试": [
+    "待ったして再挑戦",
+    "Undo and retry"
+  ],
+  "初步分析": [
+    "暫定解析",
+    "Preliminary analysis"
+  ],
+  "准备分析…": [
+    "解析を準備中…",
+    "Preparing analysis…"
+  ],
+  "初步分析…": [
+    "暫定解析中…",
+    "Initial analysis…"
+  ],
+  "正在深入…": [
+    "深く解析中…",
+    "Analyzing deeper…"
+  ],
+  "正在完善…": [
+    "解析を更新中…",
+    "Refining analysis…"
+  ],
+  "深入完成": [
+    "詳細解析完了",
+    "Deep analysis complete"
+  ],
+  "快速分析": [
+    "簡易解析",
+    "Quick analysis"
+  ],
+  "引擎暂不可用，请点击重试": [
+    "エンジンを利用できません。再試行してください",
+    "Engine unavailable. Tap to retry"
+  ],
+  "重试分析": [
+    "解析を再試行",
+    "Retry analysis"
   ]
 }

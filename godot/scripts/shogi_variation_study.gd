@@ -14,6 +14,9 @@ var metadata: Dictionary = {}
 var original_moves: Array = []
 var original_outcome: Dictionary = {}
 var initial_sfen = ""
+var source_mode = "local"
+var source_human_side = 1
+var source_engine_match = false
 var context: Dictionary = {}
 var record_path = ""
 var title = "变化分析"
@@ -34,6 +37,9 @@ func start(source, ply: int = -1, source_path: String = "") -> bool:
 	context = {"game": app.review_game, "path": app.review_path, "ply": app.replay_index, "live": app.ui.live_enabled}
 	tree = next
 	initial_sfen = source.initial_sfen
+	source_mode = source.mode
+	source_human_side = source.human_side
+	source_engine_match = source.engine_match
 	metadata = source.metadata.duplicate(true)
 	original_moves = source.moves.duplicate(true)
 	original_outcome = {"resigned": source.resigned, "resigned_side": source.resigned_side, "agreed_draw": source.agreed_draw,
@@ -52,13 +58,18 @@ func start(source, ply: int = -1, source_path: String = "") -> bool:
 	saved_signature = Changes.study_signature(tree, metadata)
 	dirty = false
 	app.ui._board_keep()
-	app.ui.live_enabled = not app.testing
+	app.ui.live_enabled = false
+	app.live.enter(true)
 	select(tree.cursor)
 	return true
 
 func game_for(ids: Array):
 	var game = Game.new()
-	game.mode = "local"
+	# The study controller pauses play; retain the seat for own-side analysis
+	# and for saved variations reopened later.
+	game.mode = source_mode
+	game.human_side = source_human_side
+	game.engine_match = source_engine_match
 	game.initial_sfen = initial_sfen
 	game.metadata = metadata.duplicate(true)
 	game.engine_provider = app.engine_provider

@@ -85,6 +85,10 @@ var tournament_view
 var archive_view
 var study_bar: HBoxContainer
 var display_language = ""
+var analysis_panel
+var ribbon
+var ribbon_selection = ""
+var coach_actions: HBoxContainer
 
 func initialize(owner_node) -> void:
 	super.initialize(owner_node)
@@ -139,13 +143,16 @@ func initialize(owner_node) -> void:
 		item.add_theme_stylebox_override("normal", Design.box(Color.TRANSPARENT, 5, 4))
 		item.add_theme_font_size_override("font_size", 13)
 		top_bar.add_child(item)
-	move_scroll = ScrollContainer.new()
+	move_scroll = preload("res://scripts/shogi_gesture_scroll.gd").new()
 	move_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	move_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
 	root.add_child(move_scroll)
 	move_strip = HBoxContainer.new()
 	move_strip.add_theme_constant_override("separation", 3)
 	move_scroll.add_child(move_strip)
+	ribbon = preload("res://scripts/shogi_move_ribbon.gd").new()
+	ribbon.ui = self
+	move_scroll.get_h_scroll_bar().value_changed.connect(func(_v): ribbon.refresh())
 	live_panel = VBoxContainer.new()
 	live_panel.add_theme_constant_override("separation", 4)
 	root.add_child(live_panel)
@@ -194,7 +201,7 @@ func initialize(owner_node) -> void:
 		item.add_theme_font_size_override("font_size", 12)
 		row.add_child(item)
 		if entry[0] == "▷": engine_toggle = item; item.tooltip_text = "开始 / 暂停引擎分析"
-	analysis_scroll = ScrollContainer.new()
+	analysis_scroll = preload("res://scripts/shogi_gesture_scroll.gd").new()
 	analysis_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	analysis_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	live_panel.add_child(analysis_scroll)
@@ -203,8 +210,18 @@ func initialize(owner_node) -> void:
 	pv_column.add_theme_constant_override("separation", 1)
 	analysis_scroll.add_child(pv_column)
 	live_text = label("点击「分析」查看候选着手。", 13)
-	live_text.clip_text = true
 	pv_column.add_child(live_text)
+	live_panel.remove_child(coach_notice)
+	coach_notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	pv_column.add_child(coach_notice)
+	coach_actions = HBoxContainer.new()
+	pv_column.add_child(coach_actions)
+	for entry in [["悔棋重试", retry_coach], ["关闭", dismiss_coach]]:
+		coach_actions.add_child(compact_button(entry[0], entry[1], 30))
+	coach_actions.hide()
+	analysis_panel = preload("res://scripts/shogi_analysis_panel.gd").new()
+	add_child(analysis_panel)
+	analysis_panel.initialize(self)
 	return_line = compact_button("↶ 返回原局", stop_pv, 30)
 	return_line.hide()
 	live_panel.add_child(return_line)
@@ -230,6 +247,16 @@ func initialize(owner_node) -> void:
 	var good_line = compact_button("好棋线路", show_good_line, 32)
 	good_line.name = "BestLine"
 	reports.add_child(good_line)
+	var deepen = compact_button("继续深入", func(): app.live.deepen(), 30)
+	deepen.name = "DeepenAnalysis"
+	live_panel.add_child(deepen)
+	# Only the handle and evaluation row have a fixed height. Everything else
+	# remains reachable by scrolling, including in a short landscape viewport.
+	for control in [study_bar, win_row, return_line, reports, deepen]:
+		live_panel.remove_child(control)
+		pv_column.add_child(control)
+	pv_column.move_child(coach_notice, 0)
+	pv_column.move_child(coach_actions, 1)
 	report = preload("res://scripts/shogi_report.gd").new()
 	add_child(report)
 	report.changed.connect(report_changed)
@@ -360,6 +387,7 @@ func layout() -> void:
 	var y = app.bottom_player_rect.end.y + (54 if app.wide_layout else 7)
 	live_panel.position = Vector2(x, y)
 	live_panel.size = Vector2(app.bottom_player_rect.size.x, maxf(40, safe.end.y - 65 - y))
+	if analysis_panel != null: analysis_panel.fit(Rect2(live_panel.position, live_panel.size))
 	if report_buttons != null: report_buttons.visible = safe.size.y >= 480 and not practice_active()
 	if analysis_scroll != null: analysis_scroll.visible = not practice_active()
 	if practice_scroll != null: practice_scroll.visible = practice_active()
@@ -465,14 +493,7 @@ func _process(delta: float) -> void:
 	if page == null:
 		update_ribbon()
 		refresh_report_board()
-		if live_enabled and pv_context.is_empty() and not app._ai_allowed() and not report.running:
-			var key: String = app._display_position().key()
-			if key != live_key:
-				live_key = key
-				live_details.clear()
-				arrows.clear()
-				clear_pv_rows()
-				app._request_analysis()
+		if pv_context.is_empty() and not app.live.player_turn(): hide_opponent_lines()
 		if autoplay_on:
 			autoplay_elapsed += delta
 			if autoplay_elapsed >= app.preferences.studio.autoplay and app.motion_progress >= 1:
@@ -491,18 +512,14 @@ func update_ribbon() -> void:
 	var key = str([viewed.get_instance_id(), viewed.moves.size(), ply, viewed.comments.size()])
 	if key == ribbon_key: return
 	ribbon_key = key
-	for child in move_strip.get_children(): move_strip.remove_child(child); child.queue_free()
-	var start = maxi(0, ply - 8)
-	for i in range(start, mini(viewed.moves.size() + 1, ply + 6)):
-		var value = i
-		var item = button("起局" if i == 0 else str(i) + ". " + viewed.labels[i - 1] + (" ▪" if viewed.comments.has(str(i)) else ""), func(): show_history(value))
-		item.custom_minimum_size.y = 28
-		item.autowrap_mode = TextServer.AUTOWRAP_OFF
-		item.add_theme_font_size_override("font_size", 12)
-		item.add_theme_stylebox_override("normal", Design.box(app.palette().accent if i == ply else Color.TRANSPARENT, 5, 5))
-		if i == ply: item.add_theme_color_override("font_color", Color.WHITE)
-		move_strip.add_child(item)
-		if i == ply: reveal_ribbon.call_deferred(item.get_instance_id())
+	var items: Array = []
+	for i in range(viewed.moves.size() + 1):
+		var marker = ""
+		if app.coach != null and app.coach.mark_for(viewed, i) >= 7: marker = " ⚠"
+		items.append({"ids": [i], "labels": [app.t("起局") if i == 0 else str(i) + ". " + viewed.labels[i - 1] + marker + (" ▪" if viewed.comments.has(str(i)) else "")], "study": false})
+	var selected_key = str([viewed.get_instance_id(), ply])
+	ribbon.configure(items, ply, selected_key != ribbon_selection)
+	ribbon_selection = selected_key
 	if not live_enabled:
 		live_text.text = str(viewed.comments.get(str(ply), app.t("点击「分析」查看候选着手。")))
 
@@ -521,7 +538,14 @@ func _show_history(ply: int, automatic: bool = false) -> void:
 	# Closing a dialog cancels motion. Close first, then start the replay transition.
 	if page != null: _board_keep()
 	# Retarget the visible animation immediately; the board preserves its pose.
+	ribbon_key = ""; ribbon_selection = ""
 	app._set_replay(ply)
+	if (app.replay_index >= 0 or app.review_game != null) and not report_board_active and pv_context.is_empty():
+		live_details.clear(); arrows.clear(); clear_pv_rows()
+		live_key = app._display_position().key()
+		app.live.enter()
+	elif app.replay_index < 0 and app.review_game == null:
+		live_enabled = false; app.live.invalidate()
 	if app.replay_index < 0: autoplay_on = false
 	update_inline_report()
 
@@ -550,9 +574,11 @@ func toggle_autoplay() -> void:
 func toggle_live() -> void:
 	if practice_active(): practice.hint(); return
 	live_enabled = not live_enabled
+	app.live.manual_paused = not live_enabled
+	app.live.invalidate()
 	live_key = ""
 	if not live_enabled:
-		app._pause_search()
+		app.live.pause()
 		arrows.clear()
 		live_details.clear()
 		clear_pv_rows()
@@ -562,6 +588,7 @@ func toggle_live() -> void:
 
 func show_analysis() -> void:
 	_board_keep()
+	app.live.manual_paused = false
 	live_enabled = true
 	live_key = ""
 
@@ -590,7 +617,7 @@ func evaluation() -> Dictionary:
 
 func update_coach_display() -> void:
 	if win_rate_label == null or app.coach == null: return
-	if practice_active(): win_rate_label.hide(); coach_notice.hide(); return
+	if practice_active(): win_rate_label.hide(); coach_notice.hide(); coach_actions.hide(); return
 	win_rate_label.visible = app.preferences.studio.win_rate and app.session == null and pv_context.is_empty()
 	var details = evaluation()
 	if details.has("score"):
@@ -600,8 +627,9 @@ func update_coach_display() -> void:
 		win_rate_label.text = app.t("胜率估计 · 计算中…" if app.coach.error.is_empty() else "胜率估计 · 引擎暂不可用")
 	var warning: Dictionary = app.coach.warning
 	coach_notice.visible = not warning.is_empty() and app.replay_index < 0 and app.review_game == null and app.session == null
+	coach_actions.visible = coach_notice.visible
 	if coach_notice.visible:
-		coach_notice.text = app.t("第 %d 手可能是失误 · 查看更好线路") % warning.ply
+		coach_notice.text = app.t("第 %d 手可能是失误 · 查看更好线路") % warning.ply + "\n" + app.t("初步分析") + " · " + app.t(warning.get("category", "失误"))
 		coach_notice.tooltip_text = warning.label + app.t(" · 引擎评价损失 %d") % warning.loss
 
 func review_coach() -> void:
@@ -616,6 +644,20 @@ func review_coach() -> void:
 	live_text.text = app.t("这步的更好线路；可播放查看，或从这里重新下。")
 	live_text.show()
 
+func dismiss_coach() -> void:
+	app.coach.warning.clear()
+	update_coach_display()
+
+func retry_coach() -> void:
+	var warning: Dictionary = app.coach.warning.duplicate(true)
+	if not app.coach.valid(warning): return
+	app.live.pause()
+	app._leave_review()
+	# Undo the reply as well, using the same game/clock operation as board undo.
+	while app.game.moves.size() >= warning.ply: app._undo_move()
+	live_key = ""
+	update_coach_display()
+
 func update_analysis(lines: String) -> void:
 	super.update_analysis(lines)
 	# Each PV has its own scroll position and controls; never wrap all PVs together.
@@ -623,6 +665,8 @@ func update_analysis(lines: String) -> void:
 
 func receive_info(details: Dictionary, saved_report: bool = false) -> void:
 	if not pv_context.is_empty(): return
+	if not app.live.player_turn(): hide_opponent_lines(); return
+	if int(details.get("turn", app._display_position().turn)) != app._display_position().turn: return
 	var index = int(details.get("multipv", 1))
 	if not saved_report and index > app.preferences.studio.analysis_lines: return
 	live_details[index] = details
@@ -634,7 +678,7 @@ func receive_info(details: Dictionary, saved_report: bool = false) -> void:
 		pv_column.add_child(pv)
 		pv_rows[index] = pv
 		var keys = pv_rows.keys(); keys.sort()
-		for i in range(keys.size()): pv_column.move_child(pv_rows[keys[i]], i)
+		for i in range(keys.size()): pv_column.move_child(pv_rows[keys[i]], i + 2)
 	pv_rows[index].update_line(details, app._display_position(), app.Codec)
 	live_text.hide()
 	update_pv_arrows()
@@ -682,8 +726,22 @@ func clear_pv_rows() -> void:
 	pv_rows.clear()
 	live_text.show()
 
+func hide_opponent_lines() -> void:
+	var changed = not live_details.is_empty() or not pv_rows.is_empty() or not arrows.is_empty()
+	live_details.clear()
+	arrows.clear()
+	if not pv_rows.is_empty(): clear_pv_rows()
+	if live_enabled or report_board_active:
+		live_text.text = app.t("仅显示你的好棋线路，轮到你时继续分析。")
+		live_text.show()
+		eval_label.text = app.t("等待你的回合")
+	if changed:
+		analysis_scroll.scroll_vertical = 0
+		app._redraw()
+
 func update_pv_arrows() -> void:
 	arrows.clear()
+	if not app.live.player_turn(): app._redraw(); return
 	for index in pv_rows:
 		if not pv_rows[index].eye_button.button_pressed: continue
 		var detail: Dictionary = live_details.get(index, {})
@@ -695,6 +753,7 @@ func update_pv_arrows() -> void:
 	app._redraw()
 
 func preview_pv(index: int) -> void:
+	if not app.live.player_turn(): hide_opponent_lines(); return
 	if not live_details.has(index) or not pv_context.is_empty(): return
 	var next = app.Game.new()
 	if not next.set_initial(app.Codec.sfen(app._display_position())): return
@@ -761,7 +820,14 @@ func show_menu() -> void:
 		column.add_child(item)
 	if app.session != null: column.add_child(button("当前联机", show_connection))
 
+func collapse_analysis() -> bool:
+	if page == null and analysis_panel != null and analysis_panel.mode > 0:
+		analysis_panel.set_mode(0)
+		return true
+	return false
+
 func back() -> void:
+	if collapse_analysis(): return
 	if page_name in archive_view.PAGES:
 		for option in page.find_children("*","OptionButton",true,false):
 			if option.get_popup().visible: option.get_popup().hide(); return
@@ -831,11 +897,10 @@ func show_play() -> void:
 func show_bots() -> void:
 	var column = _page("选择电脑", "bot-picker")
 	column.add_child(label("选择练习搭档", 22))
-	var names = ["小步", "桂风", "银月", "金城", "龙马", "王将"]
-	var hints = ["熟悉每一枚棋子的走法", "练习吃子与持驹打入", "留意对方的下一步", "制定完整的攻守计划", "寻找局面中的关键着手", "挑战完整搜索强度"]
-	for i in range(6):
-		var level = i
-		column.add_child(action_row(names[i] + "  ·  " + app.USI.LEVELS[i].name, hints[i], "play", func(): app.engine_level = level; show_setup(0), true))
+	var hints = ["熟悉每一枚棋子的走法", "练习吃子与持驹打入", "留意对方的下一步", "制定完整的攻守计划", "寻找局面中的关键着手", "挑战完整搜索强度", "随机合法走子，轻松熟悉规则", "偶尔寻找有利的吃子", "更多地注意子力得失", "尝试简单的攻防回应"]
+	for id in app.Difficulty.ORDER:
+		var level: int = id
+		column.add_child(action_row(app.t(app.Difficulty.PROFILES[id].name), app.t(hints[id]), "play", func(): app.engine_level = level; show_setup(0), true))
 
 func show_setup(initial_mode: int = 0) -> void:
 	var column = _page("新对局", "setup")
@@ -843,8 +908,8 @@ func show_setup(initial_mode: int = 0) -> void:
 	var side = choice(column, "我的先后手", ["先手", "后手", "随机"], 0)
 	var engine = choice(column, "电脑", ["YaneuraOu", "基础电脑"], 0 if app.engine_provider == "yaneuraou" else 1)
 	var levels: Array[String] = []
-	for entry in app.USI.LEVELS: levels.append(entry.name)
-	var level = choice(column, "难度", levels, app.engine_level)
+	levels = app.Difficulty.names()
+	var level = choice(column, "难度", levels, app.Difficulty.ORDER.find(app.engine_level))
 	var clocks: Array[String] = []
 	for entry in app.Game.Clock.PRESETS: clocks.append(entry.name)
 	var clock_option = choice(column, "用时", clocks, 0)
@@ -852,7 +917,7 @@ func show_setup(initial_mode: int = 0) -> void:
 	column.add_child(button("开始", func():
 		var mode_index = mode.selected
 		var human = (1 if randi() % 2 == 0 else -1) if side.selected == 2 else (1 if side.selected == 0 else -1)
-		var level_index = level.selected
+		var level_index = app.Difficulty.ORDER[level.selected]
 		var provider = "yaneuraou" if engine.selected == 0 else "basic"
 		var clock_index = clock_option.selected
 		replace_game(func():
@@ -931,7 +996,6 @@ func open_historic(entry: Dictionary) -> void:
 func _open_tournament_game(next) -> void:
 	if not finish_study(true, func(): _open_tournament_game(next)): return
 	if not analysis_import.open_game(next): return
-	live_enabled = false
 	live_details.clear()
 	clear_pv_rows()
 	live_text.text = next.metadata["棋战"] + "\n" + next.metadata["先手"] + "  —  " + next.metadata["后手"]
@@ -1553,6 +1617,9 @@ func show_report_move_details(ply: int, restore_context: bool = false) -> void:
 	var analyzed_ply = maxi(0, ply - 1)
 	column.add_child(label("行棋前 · 第 %d 手后的局面（评分以先手为正）" % analyzed_ply, 13))
 	var alternatives: Array = report.samples[analyzed_ply].get("candidates", [])
+	if not app.live.player_turn(report.game, report.game.positions[analyzed_ply]):
+		alternatives = []
+		column.add_child(label("仅显示你的好棋线路。", 13))
 	for entry in alternatives:
 		var candidate: Dictionary = entry
 		var row = HBoxContainer.new()
@@ -1903,6 +1970,7 @@ func show_sound_settings() -> void:
 func show_engine_settings() -> void:
 	var column = _page("引擎与分析", "engine-settings")
 	column.add_child(label("YaneuraOu · NNUE", 21))
+	extra_toggle(column, "进入分析自动启动", "auto_analysis")
 	for entry in [["线程数", "threads", [1, 2, 4, 8]], ["Hash 内存 (MB)", "hash", [16, 32, 64, 128, 256]], ["候选着手数", "analysis_lines", [1, 2, 3, 4, 5]]]:
 		var values: Array[String] = []
 		for value in entry[2]: values.append(str(value))

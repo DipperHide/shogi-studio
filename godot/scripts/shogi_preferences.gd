@@ -18,6 +18,7 @@ var report: Dictionary = preload("res://scripts/shogi_report_settings.gd").DEFAU
 var studio: Dictionary = {"board_theme": "classic", "custom_color": "ddbc8b", "analysis_lines": 3, "threads": 2, "hash": 64, "arrows": true, "eval_bar": true, "animation": 0.22, "autoplay": 1.0, "threats": false, "username": "你", "drag": true}
 
 func _init() -> void:
+	studio["auto_analysis"] = true
 	studio["bad_move_warning"] = true
 	studio["win_rate"] = true
 	studio["report_cpl"] = false

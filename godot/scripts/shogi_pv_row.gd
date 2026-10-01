@@ -8,7 +8,9 @@ var ui
 var hint_label = Label.new()
 var score_label = Label.new()
 var move_label = Label.new()
-var scroll = ScrollContainer.new()
+var scroll = preload("res://scripts/shogi_gesture_scroll.gd").new()
+var notation_key = ""
+var parse_count = 0
 var play_button = Button.new()
 var eye_button = Button.new()
 
@@ -58,6 +60,10 @@ func setup(number: int, menu) -> void:
 
 func update_line(details: Dictionary, pos, codec) -> void:
 	score_label.text = ("#" + str(details.get("score", "—"))) if details.get("score_type") == "mate" else "%+.2f" % (float(details.get("score", 0)) / 100.0)
+	var key = str([pos.key(), details.get("pv", [])])
+	if key == notation_key: return
+	notation_key = key
+	parse_count += 1
 	var position = pos.copy()
 	var names = PackedStringArray()
 	var decision = ""

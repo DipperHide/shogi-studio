@@ -156,11 +156,11 @@ func _draw() -> void:
 					glyph(position.board[square], app.square_rect(square), p.ink)
 			for side in [1, -1]:
 				for kind in app.hand_rects[side]:
-					if app.pointer_moved and app.drag_drop == kind and side == position.turn: continue
+					if hand_remaining(position, side, kind) == 0: continue
 					glyph(side * kind, app.hand_slot(side, kind), p.ink)
 		for side in [1, -1]:
 			for kind in app.hand_rects[side]:
-				var count: int = position.hands[side][kind]
+				var count: int = hand_remaining(position, side, kind)
 				if count > 1:
 					var rect: Rect2 = app.hand_slot(side, kind)
 					var badge = Rect2(rect.end - Vector2(17, 17), Vector2(16, 16))
@@ -191,9 +191,16 @@ func _draw() -> void:
 			tray_background(tray, app.hand_rects[side].is_empty(), p)
 			for kind in app.hand_rects[side]:
 				var rect: Rect2 = app.hand_slot(side, kind)
+				var count = hand_remaining(position, side, kind)
+				if count == 0: continue
 				if app.selected_drop == kind and position.turn == side: draw_style_box(app.Design.box(p.selected, 8, 0), rect)
 				glyph(side * kind, rect, p.piece_ink, true)
-				if position.hands[side][kind] > 1: text(str(position.hands[side][kind]), Rect2(rect.end - Vector2(16, 16), Vector2(16, 16)), 11, Hud.colors(p, true, app.dark).muted)
+				if count > 1: text(str(count), Rect2(rect.end - Vector2(16, 16), Vector2(16, 16)), 11, Hud.colors(p, true, app.dark).muted)
+		# Captured-piece trays are a 2D HUD in both renderers. Their hidden 3D
+		# models cannot represent a dragged hand piece, so keep it in this layer.
+		if app.pointer_moved and app.drag_drop > 0:
+			var extent = app.hand_slot(position.turn, app.drag_drop).size
+			glyph(position.turn * app.drag_drop, Rect2(app.pointer_current - extent / 2, extent), p.piece_ink, true)
 		for square in app.checked_cells: draw_rect(app.square_rect(square).grow(-1), p.danger, false, 2)
 	# Shared overlays retain identical semantics over either renderer.
 	if wood and app.preferences.last_move and ply > 0:
@@ -232,6 +239,9 @@ func _draw() -> void:
 			text(app.t("查看对局结果"), app.result_rect, 17, p.accent)
 		elif not app.notice.is_empty() and app.notice not in ["轮到你", "等待对手"]:
 			text(app.i18n.message(app.notice), app.result_rect, 13, p.muted)
+
+func hand_remaining(position, side: int, kind: int) -> int:
+	return maxi(0, position.hands[side][kind] - (1 if app.pointer_moved and app.drag_drop == kind and side == position.turn else 0))
 
 func _player(side: int, area: Rect2, p: Dictionary, position, viewed) -> void:
 	if area.size.x < 100: return

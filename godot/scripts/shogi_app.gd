@@ -19,6 +19,7 @@ const LINE = Color("777777")
 var game = Game.new()
 var testing: bool = false
 var coach
+var live
 var test_runner: RefCounted
 var board_rect = Rect2()
 var cell: float = 48.0
@@ -56,7 +57,8 @@ var font_variations: Dictionary = {}
 var ui
 var usi
 var engine_provider: String = "yaneuraou"
-var engine_level: int = 2
+const Difficulty = preload("res://scripts/shogi_difficulty.gd")
+var engine_level: int = Difficulty.DEFAULT
 var engine_request: int = 0
 var engine_context: Dictionary = {}
 var analysis_lines: Dictionary = {}
@@ -152,18 +154,21 @@ func _ready() -> void:
 	coach = preload("res://scripts/shogi_coach.gd").new()
 	add_child(coach)
 	coach.initialize(self)
+	live = preload("res://scripts/shogi_live_analysis.gd").new()
+	add_child(live)
+	live.initialize(self)
 	audio_player = AudioStreamPlayer.new()
 	audio_player.stream = preload("res://assets/audio/wood-place.wav")
 	add_child(audio_player)
 	focus_mode = Control.FOCUS_ALL
-	resized.connect(_layout)
+	resized.connect(func(): _cancel_pointer(); _layout())
 	set_appearance(preferences.appearance)
 	_refresh()
 	if "--package-probe" in args:
 		test_runner = load("res://scripts/shogi_package_probe.gd").new()
 		test_runner.run.call_deferred(self)
 	elif "--unified-test" in args or "--unified-peer" in args:
-		test_runner = load("res://tests/live_navigation_test.gd" if "--live-navigation" in args else "res://tests/fonts_hints_test.gd" if "--fonts-hints" in args else "res://tests/board_hud_test.gd" if "--board-hud" in args else "res://tests/chessis34_test.gd" if "--chessis34" in args else "res://tests/chessis33_test.gd" if "--chessis33" in args else "res://tests/chessis32_test.gd" if "--chessis32" in args else "res://tests/chessis31_test.gd" if "--chessis31" in args else "res://tests/chessis30_test.gd" if "--chessis30" in args else "res://tests/chessis29_test.gd" if "--chessis29" in args else "res://tests/chessis28_test.gd" if "--chessis28" in args else "res://tests/chessis27_test.gd" if "--chessis27" in args else "res://tests/chessis26_test.gd" if "--chessis26" in args else "res://tests/chessis25_test.gd" if "--chessis25" in args else "res://tests/chessis24_test.gd" if "--chessis24" in args else "res://tests/chessis23_test.gd" if "--chessis23" in args else "res://tests/chessis22_test.gd" if "--chessis22" in args else "res://tests/chessis21_test.gd" if "--chessis21" in args else "res://tests/chessis20_test.gd" if "--chessis20" in args else "res://tests/chessis19_test.gd" if "--chessis19" in args else "res://tests/chessis18_test.gd" if "--chessis18" in args else "res://tests/chessis17_test.gd" if "--chessis17" in args else "res://tests/chessis16_test.gd" if "--chessis16" in args else "res://tests/chessis15_test.gd" if "--chessis15" in args else "res://tests/chessis14_test.gd" if "--chessis14" in args else "res://tests/chessis13_test.gd" if "--chessis13" in args else "res://tests/chessis12_test.gd" if "--chessis12" in args else "res://tests/chessis11_test.gd" if "--chessis11" in args else "res://tests/chessis_motion_test.gd" if "--motion-probe" in args else "res://tests/chessis10_test.gd" if "--chessis10" in args else "res://tests/chessis09_test.gd" if "--chessis09" in args else "res://tests/chessis_ui_test.gd" if "--chessis" in args else "res://tests/ui08_test.gd" if "--ui08" in args else "res://tests/ui07_test.gd" if "--ui07" in args else "res://tests/unified_peer_test.gd" if "--unified-peer" in args else "res://tests/unified_test.gd").new()
+		test_runner = load("res://tests/experience36_test.gd" if "--experience36" in args else "res://tests/live_navigation_test.gd" if "--live-navigation" in args else "res://tests/fonts_hints_test.gd" if "--fonts-hints" in args else "res://tests/board_hud_test.gd" if "--board-hud" in args else "res://tests/chessis34_test.gd" if "--chessis34" in args else "res://tests/chessis33_test.gd" if "--chessis33" in args else "res://tests/chessis32_test.gd" if "--chessis32" in args else "res://tests/chessis31_test.gd" if "--chessis31" in args else "res://tests/chessis30_test.gd" if "--chessis30" in args else "res://tests/chessis29_test.gd" if "--chessis29" in args else "res://tests/chessis28_test.gd" if "--chessis28" in args else "res://tests/chessis27_test.gd" if "--chessis27" in args else "res://tests/chessis26_test.gd" if "--chessis26" in args else "res://tests/chessis25_test.gd" if "--chessis25" in args else "res://tests/chessis24_test.gd" if "--chessis24" in args else "res://tests/chessis23_test.gd" if "--chessis23" in args else "res://tests/chessis22_test.gd" if "--chessis22" in args else "res://tests/chessis21_test.gd" if "--chessis21" in args else "res://tests/chessis20_test.gd" if "--chessis20" in args else "res://tests/chessis19_test.gd" if "--chessis19" in args else "res://tests/chessis18_test.gd" if "--chessis18" in args else "res://tests/chessis17_test.gd" if "--chessis17" in args else "res://tests/chessis16_test.gd" if "--chessis16" in args else "res://tests/chessis15_test.gd" if "--chessis15" in args else "res://tests/chessis14_test.gd" if "--chessis14" in args else "res://tests/chessis13_test.gd" if "--chessis13" in args else "res://tests/chessis12_test.gd" if "--chessis12" in args else "res://tests/chessis11_test.gd" if "--chessis11" in args else "res://tests/chessis_motion_test.gd" if "--motion-probe" in args else "res://tests/chessis10_test.gd" if "--chessis10" in args else "res://tests/chessis09_test.gd" if "--chessis09" in args else "res://tests/chessis_ui_test.gd" if "--chessis" in args else "res://tests/ui08_test.gd" if "--ui08" in args else "res://tests/ui07_test.gd" if "--ui07" in args else "res://tests/unified_peer_test.gd" if "--unified-peer" in args else "res://tests/unified_test.gd").new()
 		test_runner.run.call_deferred(self)
 	elif testing:
 		test_runner = load("res://tests/network_ui_test.gd" if "--network-ui-test" in args else "res://tests/complete_ui_test.gd" if "--complete-test" in args else "res://tests/minimal_test.gd").new()
@@ -262,6 +267,7 @@ func _refresh() -> void:
 	_redraw()
 
 func _clear_selection() -> void:
+	_cancel_pointer()
 	pending_move.clear()
 	pending_move_key = ""
 	selection = -1
@@ -391,6 +397,7 @@ func _new_game() -> bool:
 	if ui != null and ui.has_method("finish_study") and not ui.finish_study(false): return false
 	if _practice_active(): ui.practice.stop(false)
 	if coach != null: coach.clear()
+	if live != null: live.manual_paused = false; ui.live_enabled = false; live.invalidate()
 	if not _leave_network(): return false
 	_leave_review()
 	_cancel_motion()
@@ -409,6 +416,15 @@ func _new_game() -> bool:
 	return true
 
 func _input(event: InputEvent) -> void:
+	# A gesture belongs to the surface where it began, including its release.
+	# UI hit testing must not swallow a captured board pointer's final event.
+	if pointer_id != -2:
+		var released = (event is InputEventScreenTouch and event.index == pointer_id and not event.pressed) or (event is InputEventMouseButton and pointer_id == -1 and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed)
+		if released:
+			var over_ui: bool = ui != null and (ui.is_open() or ui.handles_point(event.position))
+			_pointer_up(event.position, over_ui or (event is InputEventScreenTouch and event.canceled))
+			get_viewport().set_input_as_handled()
+			return
 	if classic:
 		return
 	if event is InputEventKey and event.keycode == KEY_ESCAPE:
@@ -465,6 +481,13 @@ func _pointer_down(id: int, point: Vector2) -> void:
 			if hand_hit_rect(playing.position.turn, kind).has_point(point): drag_drop = kind
 	_redraw()
 
+func _cancel_pointer() -> void:
+	pointer_id = -2
+	pointer_moved = false
+	drag_source = -1
+	drag_drop = 0
+	_redraw()
+
 func _pointer_up(point: Vector2, canceled: bool) -> void:
 	pointer_id = -2
 	if not canceled and pointer_moved and preferences.studio.drag and _can_play() and (drag_source >= 0 or drag_drop > 0):
@@ -475,9 +498,7 @@ func _pointer_up(point: Vector2, canceled: bool) -> void:
 		else: _clear_selection()
 	elif not canceled and not pointer_moved:
 		_tap(point)
-	drag_source = -1
-	drag_drop = 0
-	_redraw()
+	_cancel_pointer()
 
 func _key(event: InputEventKey) -> void:
 	var playing = _play_game()
@@ -543,7 +564,7 @@ func _process(_delta: float) -> void:
 		pending_ai = {}
 		_commit(move)
 	if auto_play and thread == null and pending_ai.is_empty() and _ai_allowed():
-		if engine_provider == "yaneuraou":
+		if _uses_usi_opponent():
 			if usi != null and usi.phase == "ready" and engine_context.is_empty():
 				_request_engine("play", game.position, game.moves, false)
 			return
@@ -551,9 +572,9 @@ func _process(_delta: float) -> void:
 		ai_started_at = Time.get_ticks_msec()
 		thread = Thread.new()
 		ai_engine = AI.new()
-		var think_ms: int = [150, 300, 650, 1100, 1800, 3000][engine_level]
+		var think_ms: int = Difficulty.PROFILES[engine_level].basic_ms
 		if game.clock.preset != 0: think_ms = mini(think_ms, maxi(20, game.clock.remaining[game.position.turn] + game.clock.period_left - 150))
-		if thread.start(ai_engine.choose.bind(game.position.copy(), think_ms, [1, 1, 2, 2, 3, 3][engine_level])) != OK:
+		if thread.start(ai_engine.choose_profile.bind(game.position.copy(), engine_level, think_ms)) != OK:
 			thread = null
 			ai_engine = null
 			if not legal.is_empty():
@@ -572,6 +593,7 @@ func _notification(what: int) -> void:
 		_back_requested()
 
 func _back_requested() -> void:
+	if ui != null and ui.has_method("collapse_analysis") and ui.collapse_analysis(): return
 	if ui == null: return
 	if ui.is_open():
 		ui.back()
@@ -605,6 +627,7 @@ func _study_active() -> bool:
 	return ui != null and ui.has_method("study_active") and ui.study_active()
 
 func _load_engine() -> void:
+	if live != null: live.cache.clear()
 	if engine_start_ms < 0: engine_start_ms = Time.get_ticks_msec()
 	_pause_search()
 	if usi == null:
@@ -612,7 +635,7 @@ func _load_engine() -> void:
 		add_child(usi)
 		usi.best_move.connect(_engine_best)
 		usi.analysis.connect(_engine_info)
-		usi.failed.connect(func(message): notice = message; engine_context.clear(); _redraw(); if ui != null: ui.update_analysis(message))
+		usi.failed.connect(func(message): notice = message; engine_context.clear(); _redraw(); if live != null: live.failed())
 		usi.ready_changed.connect(func(ready):
 			if ready:
 				notice = ""
@@ -622,18 +645,24 @@ func _load_engine() -> void:
 				_redraw()
 		)
 	usi.analysis_count = preferences.studio.analysis_lines
+	usi.pv_interval = 100
 	usi.thread_count = preferences.studio.threads
 	usi.hash_size = preferences.studio.hash
 	usi.launch()
 
 func _pause_search() -> void:
+	if live != null: live.invalidate()
 	pending_ai.clear()
 	revision += 1
 	engine_context.clear()
 	if usi != null:
 		usi.cancel()
 
-func _request_engine(kind: String, position: ShogiRules, moves: Array, analyze: bool) -> void:
+func _uses_usi_opponent() -> bool:
+	return engine_provider == "yaneuraou" and not Difficulty.weak(engine_level)
+
+func _request_engine(kind: String, position: ShogiRules, moves: Array, analyze: bool, limits: Dictionary = {}) -> void:
+	if kind == "play" and not _uses_usi_opponent(): return
 	usi.analysis_count = preferences.studio.analysis_lines
 	engine_request += 1
 	if kind == "play": ai_started_at = Time.get_ticks_msec()
@@ -641,45 +670,18 @@ func _request_engine(kind: String, position: ShogiRules, moves: Array, analyze: 
 	var limit_ms = 0
 	if kind == "play" and game.clock.preset != 0:
 		limit_ms = maxi(20, game.clock.remaining[game.position.turn] + game.clock.period_left - 150)
-	if not usi.search(position, moves, engine_request, engine_level, analyze, _view_game().initial_command(), limit_ms):
+	if not usi.search(position, moves, engine_request, engine_level, analyze, _view_game().initial_command(), limit_ms, limits):
 		engine_context.clear()
 
 func _request_analysis() -> void:
-	if usi == null:
-		_load_engine()
-	if not usi.available():
-		ui.update_analysis(usi.last_error if usi.phase == "error" else "引擎准备中…")
-		return
-	analysis_lines.clear()
-	var moves: Array = _view_game().moves.slice(0, replay_index) if replay_index >= 0 else _view_game().moves
-	_request_engine("analysis", _display_position(), moves, true)
-	ui.update_analysis("正在分析…")
+	if live != null: live.request()
 
 func _engine_info(id: int, details: Dictionary) -> void:
 	if engine_context.get("id", -1) != id or engine_context.get("kind") != "analysis":
 		return
 	if engine_context.revision != revision or _display_position().key() != engine_context.key:
 		return
-	if ui.has_method("receive_info"): ui.receive_info(details)
-	var position = _display_position().copy()
-	var names: Array[String] = []
-	for value in details.get("pv", []).slice(0, 5):
-		var move = Codec.parse_move(value, position)
-		if move.is_empty():
-			break
-		names.append(preload("res://scripts/shogi_move_hint.gd").notation(position, move))
-		position = position.after(move)
-	var score = str(details.get("score", "?"))
-	if details.get("score_type") == "mate":
-		score = t("将死") + " " + score
-	else:
-		score = t("评分") + " " + score
-	analysis_lines[details.multipv] = "%d. %s  %s" % [details.multipv, score, " ".join(names)]
-	var lines: Array[String] = [t("评分以当前行棋方为准")]
-	for i in range(1, preferences.studio.analysis_lines + 1):
-		if analysis_lines.has(i):
-			lines.append(analysis_lines[i])
-	ui.update_analysis("\n".join(lines))
+	if live != null: live.receive(details)
 
 func _engine_best(id: int, move: Dictionary, special: String) -> void:
 	if engine_context.get("id", -1) != id:
@@ -688,7 +690,8 @@ func _engine_best(id: int, move: Dictionary, special: String) -> void:
 	engine_context = {}
 	if context.revision != revision:
 		return
-	if context.kind == "play" and _ai_allowed() and game.position.key() == context.key:
+	if context.kind == "analysis" and live != null: live.completed()
+	if context.kind == "play" and _uses_usi_opponent() and _ai_allowed() and game.position.key() == context.key:
 		if not move.is_empty():
 			pending_ai = move
 			ai_revision = revision

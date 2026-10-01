@@ -54,8 +54,9 @@ func bind_long_press(control: Control, id: int) -> void:
 			state.held = event.pressed
 			if event.pressed:
 				state.point = event.position
+				var gesture: int = ui.move_scroll.gesture_generation
 				ui.app.get_tree().create_timer(0.45).timeout.connect(func():
-					if is_instance_valid(control) and state.held and ui.study.effective() and ui.study.tree.nodes.has(id):
+					if is_instance_valid(control) and state.held and gesture == ui.move_scroll.gesture_generation and not ui.move_scroll.dragging and ui.study.effective() and ui.study.tree.nodes.has(id):
 						state.held = false
 						show_move(id)
 				)
@@ -68,29 +69,21 @@ func update_ribbon() -> void:
 	var key = str(["variations", study.tree.get_instance_id(), study.tree.nodes.size(), study.tree.main, study.tree.cursor, study.line_ids])
 	if ui.ribbon_key == key: return
 	ui.ribbon_key = key
-	for child in ui.move_strip.get_children(): ui.move_strip.remove_child(child); child.queue_free()
-	ui.move_strip.add_child(move_button(0, true))
-	var selected: Control
+	var entries: Array = [{"ids": [0], "labels": [ui.app.t("起局")], "study": true}]
+	var selected = 0
 	var length = maxi(study.tree.main.size(), study.line_ids.size())
 	for ply in range(length):
-		var column = VBoxContainer.new()
-		column.add_theme_constant_override("separation", 2)
-		ui.move_strip.add_child(column)
 		var main_id: int = study.tree.main[ply] if ply < study.tree.main.size() else -1
 		var alt_id: int = study.line_ids[ply] if ply < study.line_ids.size() else -1
-		if main_id >= 0:
-			var main = move_button(main_id, true)
-			column.add_child(main)
-			if main_id == study.tree.cursor: selected = main
-		else:
-			var spacer = Control.new()
-			spacer.custom_minimum_size.y = 28
-			column.add_child(spacer)
-		if alt_id >= 0 and alt_id != main_id:
-			var alternative = move_button(alt_id, false)
-			column.add_child(alternative)
-			if alt_id == study.tree.cursor: selected = alternative
-	if selected != null: ui.reveal_ribbon.call_deferred(selected.get_instance_id())
+		if main_id == study.tree.cursor or alt_id == study.tree.cursor: selected = ply + 1
+		var ids = [main_id, alt_id if alt_id != main_id else -1]
+		var labels = []
+		for id in ids:
+			labels.append("" if id < 0 else "%d. %s" % [ply + 1, study.tree.nodes[study.tree.nodes[id].parent].position.notation(study.tree.nodes[id].move)])
+		entries.append({"ids": ids, "labels": labels, "study": true})
+	var selected_key = str([study.tree.get_instance_id(), study.tree.cursor])
+	ui.ribbon.configure(entries, selected, selected_key != ui.ribbon_selection)
+	ui.ribbon_selection = selected_key
 
 func segments() -> Array:
 	var tree = ui.study.tree

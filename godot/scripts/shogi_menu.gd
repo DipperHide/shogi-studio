@@ -346,9 +346,8 @@ func show_setup(initial_mode: int = 0) -> void:
 	var side = choice(column, app.t("我的先后手"), [app.t("先手"), app.t("后手"), app.t("随机")], 0)
 	var engine = choice(column, app.t("电脑"), ["YaneuraOu", app.t("基础电脑")], 0 if app.engine_provider == "yaneuraou" else 1)
 	var levels: Array[String] = []
-	for level in app.USI.LEVELS:
-		levels.append(level.name)
-	var level = choice(column, app.t("难度"), levels, app.engine_level)
+	levels = app.Difficulty.names()
+	var level = choice(column, app.t("难度"), levels, app.Difficulty.ORDER.find(app.engine_level))
 	var clock_names: Array[String] = []
 	for preset in app.Game.Clock.PRESETS: clock_names.append(preset.name)
 	var clock_option = choice(column, app.t("用时"), clock_names, 0)
@@ -357,7 +356,7 @@ func show_setup(initial_mode: int = 0) -> void:
 	column.add_child(button(app.t("开始"), func():
 		var human = (1 if randi() % 2 == 0 else -1) if side.selected == 2 else (1 if side.selected == 0 else -1)
 		var mode_value = "ai" if mode.selected == 0 else "local"
-		var level_value = level.selected
+		var level_value = app.Difficulty.ORDER[level.selected]
 		var provider_value = "yaneuraou" if engine.selected == 0 else "basic"
 		var clock_value = clock_option.selected
 		replace_game(func():
@@ -899,9 +898,9 @@ func show_engine() -> void:
 	if app.usi != null and not app.usi.last_error.is_empty(): column.add_child(label(app.i18n.message(app.usi.last_error)))
 	column.add_child(label(app.t("难度通过搜索深度、局面数和思考时间调整，不代表段位评级。"), 15))
 	var levels: Array[String] = []
-	for level in app.USI.LEVELS: levels.append(level.name)
-	var level = choice(column, app.t("电脑难度"), levels, app.engine_level)
-	level.item_selected.connect(func(index): app.engine_level = index; app._save_settings())
+	levels = app.Difficulty.names()
+	var level = choice(column, app.t("电脑难度"), levels, app.Difficulty.ORDER.find(app.engine_level))
+	level.item_selected.connect(func(index): app.engine_level = app.Difficulty.ORDER[index]; app._save_settings())
 	column.add_child(button(app.t("重新启动引擎"), func(): app._load_engine(); show_engine()))
 	column.add_child(button(app.t("基础电脑"), func(): app.engine_provider = "basic"; app._save_settings(); close()))
 	column.add_child(button("YaneuraOu", func(): app.engine_provider = "yaneuraou"; app._save_settings(); app._load_engine(); close()))

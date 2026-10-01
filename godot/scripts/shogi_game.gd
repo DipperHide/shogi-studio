@@ -12,7 +12,7 @@ var labels: Array[String] = []
 var mode: String = "ai"
 var human_side: int = 1
 var difficulty: int = 1
-var engine_level: int = 2
+var engine_level: int = preload("res://scripts/shogi_difficulty.gd").DEFAULT
 var engine_provider: String = "yaneuraou"
 var result: String = ""
 var result_code: String = ""
@@ -227,7 +227,7 @@ static func from_data(data: Variant) -> ShogiGame:
 	if not data.get("engine_match", false) is bool: return null
 	game.engine_match = data.get("engine_match", false)
 	var level = data.get("engine_level", 2)
-	if (not level is int and not level is float) or not is_finite(float(level)) or level != int(level) or int(level) < 0 or int(level) > 5:
+	if (not level is int and not level is float) or not is_finite(float(level)) or level != int(level) or not preload("res://scripts/shogi_difficulty.gd").valid(int(level)):
 		return null
 	game.engine_level = int(level)
 	if data.get("engine_provider", "yaneuraou") not in ["yaneuraou", "basic"]:

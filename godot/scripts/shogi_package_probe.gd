@@ -156,7 +156,70 @@ func run(owner_node) -> void:
 	verify(app.game.to_data() == before, "packaged lessons preserve the active game")
 	verify(tutorial.progress.error.is_empty() and FileAccess.file_exists(course_probe_path), "packaged tutorial progress writes successfully")
 	app.ui.close()
+	await probe_experience36()
 	finish()
+
+func probe_experience36() -> void:
+	verify(app.Difficulty.ORDER.size() == 10 and app.Game.new().engine_level == 7, "packaged ten grades include weak default")
+	var chooser = preload("res://scripts/shogi_ai.gd").new()
+	for id in range(6, 10):
+		var result = chooser.choose_profile(app.game.position, id, -1, 42)
+		verify(result.has("move") and app.game.position.is_legal_move(result.move), "packaged weak grade returns legal move: %d" % id)
+	var original = app.game
+	var fixture = app.Game.new(); fixture.mode = "local"
+	fixture.set_initial("4k4/9/9/9/9/9/9/9/4K4 b 2P 1")
+	app.game = fixture; app._leave_review(); app._refresh()
+	app._pointer_down(3, app.hand_slot(1,1).get_center())
+	app.pointer_moved = true
+	var up = InputEventScreenTouch.new()
+	up.index = 3; up.position = app.ui.toolbar.get_global_rect().get_center()
+	app._input(up)
+	verify(app.pointer_id == -2 and app.drag_drop == 0 and fixture.position.hands[1][1] == 2, "packaged hand release over toolbar cancels drag")
+	app.game = original
+	app.ui.report_board_active = false
+	app.live.enabled = true
+	app.preferences.studio.analysis_lines = 5
+	var historic = preload("res://scripts/shogi_historic_games.gd").new()
+	var source = historic.game_for(historic.entries()[0])
+	app.ui.analysis_import.open_game(source)
+	var deadline = Time.get_ticks_msec() + 7000
+	while app.live.stage != "done" and Time.get_ticks_msec() < deadline: await app.get_tree().process_frame
+	verify(app.live.stage == "done" and app.ui.live_details.size() == 5, "packaged automatic analysis refines five candidates")
+	verify(app.live.cache.has(app.live.signature()), "packaged analysis retains completed result")
+	verify(app.ui.ribbon.entries.size() == source.moves.size() + 1 and app.ui.move_strip.get_child_count() < 30, "packaged full ribbon uses bounded controls")
+	app.ui.move_scroll.scroll_horizontal = int(app.ui.ribbon.extent)
+	await app.get_tree().process_frame
+	await app.get_tree().process_frame
+	verify(app.ui.ribbon.last == source.moves.size(), "packaged ribbon reaches the final move")
+	app.ui.analysis_panel.set_mode(2)
+	await app.get_tree().process_frame
+	verify(not app.ui.live_panel.get_global_rect().intersects(app.ui.toolbar.get_global_rect()), "packaged expanded analysis leaves navigation accessible")
+	await capture("experience36-expanded")
+	app._back_requested()
+	verify(app.ui.analysis_panel.mode == 0 and app.replay_index == 0, "packaged back collapses analysis without changing position")
+	app.live.pause()
+	app.ui.show_history(1)
+	verify(not app.ui.live_enabled, "packaged manual pause survives navigation")
+	app.live.enabled = false
+	var personal = app.Game.new(); personal.human_side = -1
+	personal.play(app.Codec.parse_move("7g7f", personal.position))
+	app.review_game = personal; app.replay_index = 0; app.ui.live_enabled = true
+	app.ui.receive_info({"multipv":1,"pv":["7g7f"],"turn":1})
+	verify(not app.live.allowed() and app.ui.live_details.is_empty() and app.ui.pv_rows.is_empty() and app.ui.arrows.is_empty(), "packaged review hides computer candidates for a gote player")
+	app.replay_index = 1
+	app.ui.receive_info({"multipv":1,"score":0,"depth":5,"pv":["3c3d","2g2f"],"turn":-1})
+	verify(app.live.allowed() and app.ui.live_details[1].pv.size() == 2, "packaged own-side line includes the full continuation")
+	var requests: int = app.engine_request
+	var level: int = app.engine_level
+	app.engine_level = 7
+	app._request_engine("play", personal.position, personal.moves, false)
+	verify(app.engine_request == requests, "packaged weak opponent cannot take a USI play request")
+	app.engine_level = level
+	app.live.pause()
+	app.ui.live_details.clear(); app.ui.clear_pv_rows(); app.ui.arrows.clear()
+	app.review_game = source; app.replay_index = 1
+	app._cancel_motion()
+	app.ui.close()
 
 func probe_tournament_archive(historic) -> void:
 	var original = app.game
@@ -337,7 +400,7 @@ func probe_classification_verification() -> void:
 	verify(card != null and card.size.y >= 82 and card.size.y <= 170, "packaged selected move uses compact reference card")
 	app.ui.page.find_child("OpenReportMoveBoard", true, false).pressed.emit()
 	verify(app.ui.page == null and app.review_game == app.ui.report.game and app.replay_index == 3, "packaged card opens exact analyzed position")
-	verify(not app.ui.live_enabled and app.ui.live_details[1].pv == app.ui.report.samples[3].candidates[0].pv and app.ui.live_key == app._display_position().key(), "packaged board uses saved candidate lines for current root")
+	verify(not app.ui.live_enabled and app.ui.live_details.is_empty() and app.ui.pv_rows.is_empty() and app.ui.live_key == app._display_position().key(), "packaged personal report hides opponent candidate root")
 	await capture("report-board-snapshot")
 	var animation_deadline = Time.get_ticks_msec() + 3000
 	while app.motion_progress < 1 and Time.get_ticks_msec() < animation_deadline: await app.get_tree().process_frame
@@ -346,12 +409,14 @@ func probe_classification_verification() -> void:
 	verify(app.ui.live_details[1].pv == app.ui.report.samples[2].candidates[0].pv and app.ui.live_key == app._display_position().key(), "packaged replay updates candidate root alongside animation")
 	app.ui.show_report_move_details(2)
 	verify(app.ui.page_name == "report-move" and app.ui.page.find_child("ReportMoveExplanation", true, false) != null, "packaged move details retains full explanation and alternatives")
+	verify(app.ui.page.find_child("ReportCandidatePreview1", true, false) == null, "packaged personal report has no opponent line playback button")
+	app.ui.show_report_move_details(3)
 	app.ui.page.find_child("ReportCandidatePreview1", true, false).pressed.emit()
-	verify(app.ui.pv_context.get("details", false) and app.review_game.initial_sfen == app.Codec.sfen(app.ui.report.game.positions[1]), "packaged detailed line starts before selected move")
+	verify(app.ui.pv_context.get("details", false) and app.review_game.initial_sfen == app.Codec.sfen(app.ui.report.game.positions[2]), "packaged detailed own line starts before selected move")
 	app.ui.stop_pv()
 	await app.get_tree().process_frame
 	await app.get_tree().process_frame
-	verify(app.ui.page_name == "report-move" and app.ui.report_selected_ply == 2, "packaged candidate returns to the same move details")
+	verify(app.ui.page_name == "report-move" and app.ui.report_selected_ply == 3, "packaged candidate returns to the same move details")
 	app.ui.show_report()
 	app.ui.select_report_move(3)
 	app.ui.show_classifications()

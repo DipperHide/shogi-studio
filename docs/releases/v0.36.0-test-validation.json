@@ -1,0 +1,47 @@
+{
+  "version": "0.36.0-test",
+  "created_utc": "2026-09-14T06:46:32.213088+00:00",
+  "checks": {
+    "core": 1611,
+    "new_interaction_and_engine": 81,
+    "existing_ui_regressions": 1065,
+    "windows_package": 161,
+    "apk": 61
+  },
+  "total_checks": 2979,
+  "failures": [],
+  "android_device_tested": false,
+  "android_build_type": "debug",
+  "windows_package_verified": true,
+  "zip_contents_verified": true,
+  "timing": {
+    "baseline": {
+      "first_ms": 432,
+      "total_ms": 1715
+    },
+    "platform": "Windows",
+    "staged": [
+      {
+        "first_ms": 117,
+        "key": "ba7d07a68521ef250b8e9c08a1d782a1e863c705490aa214b68467584d35ae04",
+        "stage": "refine",
+        "total_ms": 2019
+      }
+    ]
+  },
+  "baseline_drag_failure": [
+    "release over toolbar always ends hand drag"
+  ],
+  "artifacts": [
+    {
+      "file": "builds/Shogi-0.36.0-test-android-arm64.apk",
+      "bytes": 141621484,
+      "sha256": "1855aec169e322ad3d84656f1b1e16f13c31a9f3ff7f6e0c74ccfc1956c45632"
+    },
+    {
+      "file": "builds/Shogi-0.36.0-test-windows-x64.zip",
+      "bytes": 150803632,
+      "sha256": "3932d0179ebd9b53e97de989ceae48b5c6594daa3c3181b68294dd67467d64a5"
+    }
+  ]
+}

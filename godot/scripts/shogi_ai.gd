@@ -6,6 +6,21 @@ var deadline: int
 var nodes: int = 0
 var expired: bool = false
 
+func choose_profile(position: ShogiRules, id: int, milliseconds: int = -1, random_seed: int = -1) -> Dictionary:
+	var profile: Dictionary = preload("res://scripts/shogi_difficulty.gd").PROFILES[id]
+	var budget: int = profile.basic_ms if milliseconds < 0 else milliseconds
+	if not profile.has("random"): return choose(position, budget, profile.basic_depth)
+	var rng = RandomNumberGenerator.new()
+	if random_seed < 0: rng.randomize()
+	else: rng.seed = random_seed
+	var options = position.legal_moves()
+	if options.is_empty(): return {}
+	if rng.randf() < profile.random:
+		return {"move": options[rng.randi_range(0, options.size() - 1)], "depth": 0, "nodes": 0, "random": true}
+	var result = choose(position, budget, profile.basic_depth)
+	result["random"] = false
+	return result
+
 func choose(position: ShogiRules, milliseconds: int = 900, max_depth: int = 3) -> Dictionary:
 	nodes = 0
 	expired = false

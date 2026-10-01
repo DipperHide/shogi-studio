@@ -9,14 +9,7 @@ signal failed(message: String)
 
 const Codec = preload("res://scripts/shogi_usi_codec.gd")
 const Rules = preload("res://scripts/shogi_rules.gd")
-const LEVELS = [
-	{"name": "初学", "nodes": 80, "depth": 1, "milliseconds": 250},
-	{"name": "入门", "nodes": 400, "depth": 2, "milliseconds": 400},
-	{"name": "普通", "nodes": 2500, "depth": 4, "milliseconds": 700},
-	{"name": "进阶", "nodes": 20000, "depth": 8, "milliseconds": 1200},
-	{"name": "高手", "nodes": 180000, "depth": 18, "milliseconds": 2500},
-	{"name": "最强", "nodes": 2000000, "depth": 40, "milliseconds": 5000},
-]
+const LEVELS = preload("res://scripts/shogi_difficulty.gd").ORIGINAL
 
 var process: Dictionary = {}
 var phase: String = "closed"
@@ -39,9 +32,10 @@ var pv_interval: int = 300
 var thread_count: int = 2
 var hash_size: int = 64
 var explicit_depth: bool = false
+var analysis_search: bool = false
 
 func available() -> bool:
-	return phase in ["ready", "searching", "stopping"]
+	return phase in ["ready", "searching", "stopping", "resetting"]
 
 static func default_executable() -> String:
 	if OS.get_name() == "Android":
@@ -120,6 +114,16 @@ func cancel(clear_queue: bool = true) -> void:
 		deadline = Time.get_ticks_msec() + 3000
 
 func _begin(job: Dictionary) -> void:
+	# YaneuraOu's isready clears the search hash and worker histories. Wait for
+	# readyok before playing so deep analysis cannot strengthen a limited opponent.
+	# Consecutive analysis stages keep their warm search state.
+	if analysis_search and not job.analyze:
+		queued_search = job
+		phase = "resetting"
+		deadline = Time.get_ticks_msec() + 30000
+		_send("isready")
+		return
+	analysis_search = job.analyze
 	current_request = job.request_id
 	request_position = job.position
 	discard_search = false
@@ -127,7 +131,7 @@ func _begin(job: Dictionary) -> void:
 	var budget: Dictionary = LEVELS[job.level]
 	var thinking_ms: int = 8000 if job.analyze else budget.milliseconds
 	if job.max_ms > 0: thinking_ms = mini(thinking_ms, maxi(20, job.max_ms))
-	_set_option("MultiPV", str(analysis_count) if job.analyze else "1")
+	_set_option("MultiPV", str(clampi(int(job.limits.get("multipv", analysis_count)), 1, 5)) if job.analyze else "1")
 	_send(job.command)
 	explicit_depth = job.limits.has("depth")
 	if explicit_depth:
@@ -205,6 +209,13 @@ func _line(line: String) -> void:
 		_send("isready")
 		phase = "loading"
 		deadline = Time.get_ticks_msec() + 30000
+	elif line == "readyok" and phase == "resetting":
+		analysis_search = false
+		phase = "ready"
+		if not queued_search.is_empty():
+			var job = queued_search
+			queued_search = {}
+			_begin(job)
 	elif line == "readyok" and phase == "loading":
 		_send("usinewgame")
 		phase = "ready"
@@ -256,6 +267,7 @@ func shutdown() -> void:
 	options.clear()
 	phase = "closed"
 	current_request = -1
+	analysis_search = false
 	ready_changed.emit(false)
 
 func _exit_tree() -> void:

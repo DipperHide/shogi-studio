@@ -17,6 +17,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--report-directory', default='review/app/complete/build')
 parser.add_argument('--windows-probe', default='review/app/complete/build/windows-package-probe.json')
 parser.add_argument('--windows-executable', default='builds/windows/Shogi.exe')
+parser.add_argument('--debug-apk', action='store_true', help='Verify a local test APK with debugging enabled')
 arguments = parser.parse_args()
 OUT = ROOT / arguments.report_directory
 OUT.mkdir(parents=True, exist_ok=True)
@@ -62,7 +63,8 @@ for permission in ["READ_PHONE_STATE", "WRITE_EXTERNAL_STORAGE", "READ_EXTERNAL_
     verify(f"android.permission.{permission}" not in manifest_text, f"unneeded permission absent: {permission}")
 verify(bool(re.search(r'android:extractNativeLibs[^\n]*(?:0xffffffff|true)', manifest_text)), "native library extraction configured")
 
-verify(not re.search(r'android:debuggable[^\n]*(?:0xffffffff|true)', manifest_text), "release APK is not debuggable")
+is_debuggable = bool(re.search(r'android:debuggable[^\n]*(?:0xffffffff|true)', manifest_text))
+verify(is_debuggable == arguments.debug_apk, "APK debugging matches requested build type")
 verify("android:networkSecurityConfig" in manifest_text, "scoped official KIF network policy packaged")
 native = []
 stripped_engine = OUT / "expected-libyaneuraou.so"

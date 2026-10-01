@@ -2,6 +2,10 @@ extends Node
 ## Independent, bounded analysis; delayed answers must still belong to this game.
 const EngineBridge = preload("res://scripts/shogi_usi_engine.gd")
 const Codec = preload("res://scripts/shogi_usi_codec.gd")
+const Classification = preload("res://scripts/shogi_move_classification.gd")
+var marks: Dictionary = {}
+var key_cache: Dictionary = {}
+var key_revision = -1
 var app
 var engine
 var queued: Dictionary = {}
@@ -27,14 +31,30 @@ func initialize(owner_app) -> void:
 	enabled = not app.testing
 
 func key_for(source, ply: int) -> String:
-	return "%s:%d:%s" % [source.get_instance_id(), ply, source.positions[ply].key()]
+	if key_revision != app.revision: key_revision = app.revision; key_cache.clear()
+	var stamp = str([source.get_instance_id(), ply, source.moves.size(), source.positions[ply].key()])
+	if not key_cache.has(stamp):
+		key_cache[stamp] = "%s:%d:%s" % [source.get_instance_id(), ply, Codec.history_command(source.moves.slice(0, ply), source.initial_command()).sha256_text()]
+	return key_cache[stamp]
 
 func valid(item: Dictionary) -> bool:
-	return not item.is_empty() and app.session == null and app.game.get_instance_id() == item.owner and app.game.moves.size() >= item.ply and app.game.positions[item.ply].key() == item.key
+	return not item.is_empty() and app.session == null and app.game.get_instance_id() == item.owner and app.game.moves.size() >= item.ply and app.game.positions[item.ply].key() == item.key and key_for(app.game, item.ply) == item.cache_key
+
+func mark_for(source, ply: int) -> int:
+	return int(marks.get(key_for(source, ply), 0))
+
+static func reliable(details: Dictionary) -> bool:
+	return details.has("score") and str(details.get("bound", "")).is_empty() and (int(details.get("depth", 0)) > 0 or details.get("score_type") == "mate")
+
+static func category(before: Dictionary, after: Dictionary) -> int:
+	if not reliable(before) or not reliable(after): return 0
+	# Both engine scores are side-to-move relative; the post-move side is opposite.
+	return Classification.score_category(Classification.candidate_score(before), -Classification.candidate_score(after))
 
 func committed() -> void:
-	if not enabled or not app.preferences.studio.bad_move_warning or app.game.engine_match: return
+	if not enabled or app.session != null or not app.preferences.studio.bad_move_warning or app.game.engine_match: return
 	var ply: int = app.game.moves.size()
+	if ply == 0: return
 	var side: int = app.game.positions[ply - 1].turn
 	if app.game.mode == "ai" and side != app.game.human_side: return
 	warning.clear()
@@ -44,6 +64,7 @@ func committed() -> void:
 	queued["label"] = app.game.labels[ply - 1]
 	queued["move"] = Codec.move_name(app.game.moves[ply - 1])
 	queued["side"] = side
+	queued["before_cache"] = key_for(app.game, ply - 1)
 	if not job.is_empty(): _stop()
 
 func snapshot(source, ply: int) -> Dictionary:
@@ -52,6 +73,7 @@ func snapshot(source, ply: int) -> Dictionary:
 func clear() -> void:
 	queued.clear()
 	warning.clear()
+	marks.clear()
 	_stop()
 
 func _stop() -> void:
@@ -62,7 +84,7 @@ func _stop() -> void:
 func _process(_delta: float) -> void:
 	if app == null: return
 	if not warning.is_empty() and (not valid(warning) or not app.preferences.studio.bad_move_warning): warning.clear()
-	if not enabled or app.session != null or not app.active or app.ui.page != null or app.ui.report.running or not app.ui.pv_context.is_empty() or app._practice_active():
+	if not enabled or app.session != null or not app.active or app.ui.page != null or app.ui.report.running or not app.ui.pv_context.is_empty() or app._practice_active() or app._ai_allowed() or app.engine_context.get("kind") in ["play", "analysis"] or (app.live != null and app.ui.live_enabled and app.live.stage in ["", "quick", "refine", "deep"]):
 		if not job.is_empty():
 			if job.check and valid(job): queued = job.duplicate()
 			_stop()
@@ -91,6 +113,9 @@ func _process(_delta: float) -> void:
 	job = queued
 	queued = {}
 	stage = 0 if job.check else 1
+	if job.check and reliable(cache.get(job.before_cache, {})):
+		job["best"] = cache[job.before_cache].duplicate(true)
+		stage = 1
 	_search()
 
 func _search(expected: int = -1) -> void:
@@ -110,6 +135,7 @@ func _best(id: int, _move: Dictionary, _special: String) -> void:
 	if not latest.has("score"): _stop(); return
 	if stage == 0:
 		job["best"] = latest.duplicate(true)
+		cache[job.before_cache] = latest.duplicate(true)
 		stage = 1
 		_search.call_deferred(generation)
 		return
@@ -120,9 +146,15 @@ func _best(id: int, _move: Dictionary, _special: String) -> void:
 		var best: Dictionary = job.best
 		var pv: Array = best.get("pv", [])
 		var loss = maxi(0, (global_score(best, job.before.turn) - global_score(latest, job.position.turn)) * int(job.side))
-		if loss >= 300 and not pv.is_empty() and pv[0] != job.move:
+		var classification = category(best, latest)
+		if not pv.is_empty() and pv[0] == job.move: classification = 4
+		marks[job.cache_key] = classification
+		if marks.size() > 2000: marks.erase(marks.keys()[0])
+		app.ui.ribbon_key = ""
+		if classification in [8, 9, 10] and not pv.is_empty() and pv[0] != job.move:
 			warning = job.duplicate(true)
 			warning["loss"] = loss
+			warning["category"] = Classification.NAMES[classification]
 	job = {}
 
 func _exit_tree() -> void:

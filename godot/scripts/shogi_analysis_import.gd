@@ -269,7 +269,7 @@ func open_game(game, path: String = "") -> bool:
 	ui.report_selected_ply = -1
 	ui._board_keep()
 	ui.update_inline_report()
-	ui.live_key = ""; ui.live_enabled = true
+	ui.live_key = ""; ui.live_enabled = false; ui.app.live.enter(true)
 	ui.live_text.text = "棋谱已载入，可逐手回放、分析或从这里继续。"
 	return true
 
