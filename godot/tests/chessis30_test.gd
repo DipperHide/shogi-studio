@@ -68,7 +68,7 @@ func run(instance) -> void:
 			await capture("analysis-input-%s-%d" % [mode,dimensions.x])
 	await resize(Vector2i(393,852)); app.set_preference("color_mode","dark")
 	await press("AnalysisTab1")
-	check(app.ui.historic_count.text.begins_with("26"), "second source tab keeps current official tournament catalog")
+	check(not app.ui.tournaments.entries().is_empty() and app.ui.historic_count.text.begins_with(str(app.ui.tournaments.entries().size())), "second source tab keeps current official tournament catalog")
 	await press("OfflineTournaments")
 	check(app.ui.historic_count.text.begins_with("195"), "offline historic collection still reachable")
 	await capture("analysis-historic")

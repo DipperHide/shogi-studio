@@ -44,7 +44,7 @@ func run(instance) -> void:
 	app._start_match("local",1,2,"basic"); app.ui.close(); await play("7g7f")
 	live = app.game; saved_live = live.to_data().duplicate(true); practice = app.ui.practice
 	app.ui.show_historic_games(); archive = app.ui.tournament_view
-	check(app.ui.historic_recent and archive.rows.size() == 26, "recent official catalog opens from drawer entry")
+	check(app.ui.historic_recent and not archive.rows.is_empty() and archive.rows.size() == app.ui.tournaments.entries().size(), "recent official catalog opens from drawer entry")
 	check(app.ui.page_name == "tournament-archive" and app.ui.page.find_child("HistoricSearch",true,false) == null, "archive uses separate filter instead of inline form")
 	await press("OfflineTournaments")
 	check(archive.rows.size() == 195, "all offline games remain available")
