@@ -101,6 +101,35 @@ var network_store = NetworkStore.new()
 var network_save_path: String = "user://network-game.json"
 var first_board_frame_ms: int = -1
 var engine_start_ms: int = -1
+var chu_screen
+var chu_previous: Dictionary = {}
+
+func open_chu(saved = null) -> void:
+	if session != null: ui.show_message("请先退出本将棋联机对局。"); return
+	if chu_screen != null: return
+	_save(); _cancel_pointer(); _cancel_motion(); _pause_search()
+	chu_previous = {"coach":coach.enabled,"live":live.enabled}
+	live.enabled=false; live.invalidate(); coach.enabled=false; coach.generation+=1; coach.queued.clear(); coach.job.clear(); coach.warning.clear()
+	if is_instance_valid(coach.engine): coach.engine.shutdown(); coach.engine.queue_free(); coach.engine=null
+	ui.report.cancel()
+	if usi!=null: usi.shutdown()
+	if thread!=null and thread.is_started(): thread.wait_to_finish(); thread=null
+	ui.close(); ui.visible=false; ui.process_mode=Node.PROCESS_MODE_DISABLED
+	board_view.hide()
+	if is_instance_valid(wood_view): wood_view.hide()
+	set_process(false); set_process_input(false)
+	chu_screen=preload("res://scripts/chu_screen.gd").new(); chu_screen.app=self
+	if saved!=null: chu_screen.game=saved; chu_screen.imported=true; chu_screen.replay=saved.moves.size()
+	add_child(chu_screen)
+	if saved!=null: chu_screen.close_modal(); chu_screen._refresh(true)
+
+func close_chu() -> void:
+	if chu_screen==null: return
+	chu_screen._save(); chu_screen._stop_session(); remove_child(chu_screen); chu_screen.queue_free(); chu_screen=null
+	ui.visible=true; ui.process_mode=Node.PROCESS_MODE_INHERIT; board_view.show()
+	live.enabled=chu_previous.get("live",not testing); coach.enabled=chu_previous.get("coach",not testing)
+	set_process(true); set_process_input(true); set_appearance(preferences.appearance); _refresh(); ui.show_home()
+	if not testing: _deferred_engine.call_deferred()
 
 func _ready() -> void:
 	# Android Back belongs to our page stack; SceneTree otherwise exits after notification.
@@ -111,13 +140,16 @@ func _ready() -> void:
 	if OS.get_name() == "Android" and OS.has_feature("debug") and FileAccess.file_exists("user://package-probe.request"):
 		DirAccess.remove_absolute("user://package-probe.request")
 		args.append("--package-probe")
+	if OS.get_name()=="Android" and OS.has_feature("debug") and FileAccess.file_exists("user://chu-probe.request"):
+		DirAccess.remove_absolute("user://chu-probe.request"); args.append("--chu-probe")
+	if OS.get_name()=="Android" and OS.has_feature("debug") and FileAccess.file_exists("user://chu-peer.request"): args.append("--chu-peer")
 	# Legacy art fixtures remain available only to development tests.
 	if Array(args).any(func(arg): return arg in ["--ui-test", "--art-review", "--smoke-test"]):
 		set_process(false)
 		set_process_input(false)
 		get_tree().change_scene_to_file.call_deferred("res://main.tscn")
 		return
-	testing = Array(args).any(func(arg): return arg in ["--minimal-test", "--complete-test", "--network-ui-test", "--package-probe", "--unified-test", "--unified-peer"])
+	testing = Array(args).any(func(arg): return arg in ["--minimal-test", "--complete-test", "--network-ui-test", "--package-probe", "--unified-test", "--unified-peer", "--chu-probe", "--chu-peer"])
 	if testing:
 		preferences.language = "zh"
 		auto_play = false
@@ -164,7 +196,11 @@ func _ready() -> void:
 	resized.connect(func(): _cancel_pointer(); _layout())
 	set_appearance(preferences.appearance)
 	_refresh()
-	if "--package-probe" in args:
+	if "--chu-peer" in args:
+		test_runner=load("res://scripts/chu_device_peer.gd").new(); test_runner.run.call_deferred(self)
+	elif "--chu-probe" in args:
+		test_runner=load("res://scripts/chu_probe.gd").new(); test_runner.run.call_deferred(self)
+	elif "--package-probe" in args:
 		test_runner = load("res://scripts/shogi_package_probe.gd").new()
 		test_runner.run.call_deferred(self)
 	elif "--unified-test" in args or "--unified-peer" in args:
@@ -581,6 +617,7 @@ func _process(_delta: float) -> void:
 				_commit(legal[0])
 
 func _notification(what: int) -> void:
+	if chu_screen != null: return
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_APPLICATION_PAUSED:
 		active = false
 		pointer_id = -2
@@ -627,6 +664,7 @@ func _study_active() -> bool:
 	return ui != null and ui.has_method("study_active") and ui.study_active()
 
 func _load_engine() -> void:
+	if chu_screen != null: return
 	if live != null: live.cache.clear()
 	if engine_start_ms < 0: engine_start_ms = Time.get_ticks_msec()
 	_pause_search()
@@ -783,6 +821,7 @@ func _load_archive(path: String) -> bool:
 	if session != null: return false
 	var saved = records.read(path)
 	if saved == null: notice = records.error; return false
+	if preload("res://scripts/shogi_variant.gd").is_chu(saved): open_chu(saved); return true
 	if ui != null and ui.has_method("finish_study") and not ui.finish_study(false, func(): _load_archive(path)): return false
 	_pause_search()
 	review_game = saved
@@ -960,7 +999,7 @@ func set_preference(key: String, value: Variant) -> void:
 	preferences.set(key, value)
 	if key == "color_mode" and Engine.has_singleton("ShogiPlatform"):
 		var platform = Engine.get_singleton("ShogiPlatform")
-		if platform.has_method("setColorMode"): platform.setColorMode(value)
+		if preload("res://scripts/shogi_platform_api.gd").supports(platform, "setColorMode"): platform.setColorMode(value)
 	if not testing: preferences_failed = preferences.save_to() != OK
 	if preferences_failed:
 		notice = "保存设置失败，请重试"
@@ -1117,4 +1156,4 @@ func _ai_delay_done() -> bool:
 func _deferred_engine() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
-	if session == null: _load_engine()
+	if session == null and chu_screen == null: _load_engine()

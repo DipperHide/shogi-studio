@@ -14,6 +14,11 @@ func run(owner_node) -> void:
 	course_probe_path = "user://package-probe-tutorial-" + str(Time.get_ticks_usec()) + ".json"
 	app.ui.tutorial.progress_path = course_probe_path
 	report = {"platform": OS.get_name(), "failures": [], "checks": 0, "bluetooth_pair_tested": false}
+	if OS.get_name() == "Android" and OS.has_feature("debug") and FileAccess.file_exists("user://native-picker.request"):
+		DirAccess.remove_absolute("user://native-picker.request")
+		await probe_native_picker()
+		finish()
+		return
 	report.viewport = {"logical_size": [app.size.x, app.size.y], "window_size": [app.get_window().size.x, app.get_window().size.y], "density_dpi": DisplayServer.screen_get_dpi()}
 	if OS.get_name() == "Windows": report.executable_sha256 = FileAccess.get_sha256(OS.get_executable_path())
 	app.get_tree().create_timer(40).timeout.connect(func(): verify(false, "package probe timeout"); finish())
@@ -83,7 +88,8 @@ func run(owner_node) -> void:
 		verify(Engine.has_singleton("ShogiPlatform"), "Android platform plugin registered")
 		if Engine.has_singleton("ShogiPlatform"):
 			var platform = Engine.get_singleton("ShogiPlatform")
-			verify(platform.has_method("pickAnalysisRecord") and platform.has_signal("analysis_record_imported"), "Android analysis picker bridge registered")
+			report.analysis_bridge = {"method": preload("res://scripts/shogi_platform_api.gd").supports(platform, "pickAnalysisRecord"), "signal": platform.has_signal("analysis_record_imported")}
+			verify(preload("res://scripts/shogi_platform_api.gd").supports(platform, "pickAnalysisRecord") and platform.has_signal("analysis_record_imported"), "Android analysis picker bridge registered")
 			report.native_engine_path = platform.enginePath()
 			report.native_engine_visible_to_file_access = FileAccess.file_exists(report.native_engine_path)
 			report.bluetooth_adapter = platform.bluetoothSupported()
@@ -227,7 +233,7 @@ func probe_tournament_archive(historic) -> void:
 	var previous_ply: int = app.replay_index
 	app.ui.show_historic_games()
 	var archive = app.ui.tournament_view
-	verify(app.ui.page_name == "tournament-archive" and archive.rows.size() == 26, "packaged tournament archive opens complete recent catalog")
+	verify(app.ui.page_name == "tournament-archive" and not archive.rows.is_empty() and archive.rows.size() == app.ui.tournaments.entries().size(), "packaged tournament archive opens complete recent catalog")
 	archive.switch_source(false)
 	verify(archive.rows.size() == 195, "packaged archive exposes all offline games")
 	await RenderingServer.frame_post_draw
@@ -252,6 +258,23 @@ func probe_tournament_archive(historic) -> void:
 	verify(await observe_motion("tournament-replay"), "packaged tournament replay displays real movement")
 	verify(app.ui.continue_button.visible, "packaged tournament can continue from selected move")
 	app.ui.close(); app.review_game = previous; app.replay_index = previous_ply; app._refresh()
+
+func probe_native_picker() -> void:
+	app.ui.show_import_analysis(0)
+	var importer = app.ui.analysis_import
+	importer.set_source("position startpos moves 7g7f")
+	for method in ["pickAnalysisRecord", "pickRecord", "exportText", "exportRecord", "isDarkMode", "setColorMode"]:
+		verify(preload("res://scripts/shogi_platform_api.gd").supports(app.ui.platform, method), "native API available: " + method)
+	for attempt in range(2):
+		importer.choose_file()
+		verify(not is_instance_valid(app.ui.file_dialog), "Android uses native picker")
+		var ready = FileAccess.open("user://native-picker-ready.json", FileAccess.WRITE)
+		ready.store_string(JSON.stringify({"attempt": attempt + 1})); ready.close()
+		var deadline = Time.get_ticks_msec() + 45000
+		while importer.picker_ticket != 0 and Time.get_ticks_msec() < deadline: await app.get_tree().process_frame
+		verify(importer.picker_ticket == 0 and not importer.file_button.disabled, "native cancellation allows another request")
+		verify(importer.draft.source == "position startpos moves 7g7f", "native cancellation preserves draft")
+		if importer.picker_ticket != 0: break
 
 func probe_analysis_import(exchange) -> void:
 	var original = app.game

@@ -30,6 +30,7 @@ func run(instance) -> void:
 		check(app.RecordChanges.game_signature(app.game) == signature, "rewinding is read-only " + style)
 		await press("Forward"); await press("Forward")
 		check(await until(func(): return app.motion_progress == 1), "forward animation settles " + style)
+		if not app._can_play(): print("NAVIGATION_STATE ",JSON.stringify({"style":style,"active":app.active,"replay":app.replay_index,"motion":app.motion_progress,"page":app.ui.page_name,"review":app.review_game!=null,"result":app.game.result,"engine_match":app.game.engine_match,"mode":app.game.mode}))
 		check(app.replay_index == -1 and app.game == original and app._can_play(), "latest position immediately resumes live match " + style)
 		check(not app.ui.continue_button.visible and not app.ui.toolbar.get_child(6).disabled, "latest position needs no continuation and allows undo " + style)
 		var move = app.Codec.parse_move("7f7e", app.game.position)

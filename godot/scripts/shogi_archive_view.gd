@@ -131,7 +131,7 @@ func build_row(entry: Dictionary) -> void:
 		if str(item.name).begins_with("ArchiveFavorite"): item.add_theme_color_override("icon_normal_color",Color("ff6c86") if entry.favorite else Color("bcb3a7"))
 	var body=VBoxContainer.new(); body.size_flags_horizontal=Control.SIZE_EXPAND_FILL; body.mouse_filter=Control.MOUSE_FILTER_IGNORE; body.add_theme_constant_override("separation",3); line.add_child(body)
 	var title=text(ui.record_display_title(entry.names),16); title.add_theme_font_override("font",ui.Design.heading_font(ui.app.text_font)); body.add_child(title)
-	body.add_child(text(entry.date.left(10)+( " | "+entry.event if not entry.event.is_empty() else "")+" · %d 手"%entry.plies,12))
+	body.add_child(text(entry.get("variant_label","本将棋")+" · "+entry.date.left(10)+( " | "+entry.event if not entry.event.is_empty() else "")+" · %d 手"%entry.plies,12))
 	var metadata_row=HBoxContainer.new(); metadata_row.mouse_filter=Control.MOUSE_FILTER_IGNORE; body.add_child(metadata_row)
 	var info=action("更多信息",func(): expanded[entry.path]=true; refresh(),"ArchiveInfo_"+id,"ic_info",28); info.size_flags_horizontal=Control.SIZE_SHRINK_END; info.visible=not expanded.has(entry.path); metadata_row.add_child(info)
 	var tags=text(" · ".join(entry.tags) if not entry.tags.is_empty() else "无标签",12); tags.size_flags_horizontal=Control.SIZE_EXPAND_FILL; metadata_row.add_child(tags)
@@ -223,6 +223,7 @@ func detail_page(title: String, name: String) -> VBoxContainer:
 	return content
 
 func show_preview(entry: Dictionary, game) -> void:
+	if preload("res://scripts/shogi_variant.gd").is_chu(game): ui.app.open_chu(game); return
 	var content=detail_page("棋谱预览","archive-preview"); preview_entry=entry
 	preview=preload("res://scripts/shogi_opening_preview.gd").new(); content.add_child(preview)
 	preview.build(self,{"record":true,"name":entry.names,"description":entry.date+" · "+entry.event,"summary":"%d 手 · "%game.moves.size()+ui.app.i18n.result(game)},game)

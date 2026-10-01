@@ -2,23 +2,25 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
 
-0.35.0 refreshes the flat board, pieces, and light/dark colors. Returning to the latest move automatically resumes play and undo; undo also works while viewing your match history. See [validation](docs/TESTING-0.35.0.md).
+**0.37.0 adds Chu Shogi**: a 12×12 2D board, local two-player games, position editing, save/replay, direct IP and Android Bluetooth. Multi-leg lion moves, pinch zoom and panning are supported. Chu Shogi runs without an engine. See the [Chu Shogi guide](docs/CHU-SHOGI.md) and [validation record](docs/TESTING-0.37.0.md).
 
-A free shogi app for Android and Windows, built with Godot 4.7.2 and a local YaneuraOu engine. Current version: **0.35.0**. **All existing features are free: no membership, purchase screen or paid unlock.**
+This release also includes the 0.36 mobile analysis improvements, scrollable history, captured-piece fixes, automatic analysis, mistake retry and four beginner computer levels. Analysis shows the player’s candidate lines and cannot replace the weak opponent’s move selection. **Physical Bluetooth testing with two phones has not been completed.**
+
+A free shogi app for Android and Windows, built with Godot 4.7.2 and a local YaneuraOu engine. Current version: **0.37.0**. **All existing features are free: no membership, purchase screen or paid unlock.**
 
 ![Wooden board](docs/images/board-0.20.png)
 
 ## Install
 
-Source and packages are public: [0.35.0 Release](https://github.com/DipperHide/shogi-studio/releases/tag/v0.35.0). Daily tournament updates are enabled, and the first cloud refresh completed successfully.
+Source and packages are public: [0.37.0 Release](https://github.com/DipperHide/shogi-studio/releases/tag/v0.37.0). Daily tournament updates are enabled, and the first cloud refresh completed successfully.
 
-Download `Shogi-0.35.0-android-arm64.apk` from [Releases](https://github.com/DipperHide/shogi-studio/releases) for ARM64 Android devices. On Windows, extract `Shogi-0.35.0-windows-x64.zip`, run `Shogi.exe` and keep the `engines` folder beside it.
+Download `Shogi-0.37.0-android-arm64.apk` from [Releases](https://github.com/DipperHide/shogi-studio/releases) for ARM64 Android devices. On Windows, extract `Shogi-0.37.0-windows-x64.zip`, run `Shogi.exe` and keep the `engines` folder beside it.
 
-Android package: `org.shogistudio.artpreview`, versionCode 53. This build uses the release template with the previous development signing key for upgrade compatibility. Private keys are excluded. Back up your games before installing a build with a different signer.
+Android package: `org.shogistudio.artpreview`, versionCode 58. This build uses the release template with the previous development signing key for upgrade compatibility. Private keys are excluded. Back up your games before installing a build with a different signer.
 
 ## Features
 
-- Six computer levels, local two-player games, engine matches, direct IP play and Android Bluetooth; legal moves, promotion and captured-piece drops.
+- Ten computer levels (four beginner levels plus the original six), local two-player games, engine matches, direct IP play and Android Bluetooth; legal moves, promotion and captured-piece drops.
 - 2D/3D boards, light/dark themes, custom colors, flipping, dragging, coordinates and proportional captured pieces. Version 0.20 makes the wooden board wider and brighter.
 - Main-toolbar undo, animated replay, analysis snapshots, candidate previews and continuation from a selected position.
 - Local analysis with 1–5 candidate lines, quick/deep reports, suggested continuations, bad-move alerts, estimated winning chances, mistake practice and phase statistics.
@@ -45,7 +47,7 @@ Advanced screens and lessons are mainly in Chinese. Basic navigation supports Ch
 
 ## Updating Japanese tournament records
 
-Recent events currently contain **26 games**, through the **140-move Ōi game played September 8–9, 2026**. The separate offline archive includes **195 complete games / 23,115 moves**.
+Recent events currently contain **27 games**, through the **115-move Ōza game played September 15, 2026**. The separate offline archive includes **195 complete games / 23,115 moves**.
 
 The [scheduled workflow](.github/workflows/update-tournaments.yml) checks official pages daily around 21:23 UTC. The app checks its HTTPS catalog once per day when recent events are opened, with a manual refresh button. New entries do not require another APK. GitHub schedules can be delayed and must remain enabled on the default branch.
 
@@ -61,7 +63,7 @@ Use Windows, Python 3.11+, Godot **4.7.2** with matching export templates, JDK 1
 python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -r requirements-dev.txt
 ./scripts/build_android.ps1
-./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.35.0
+./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.37.0
 ./scripts/test_chessis20.ps1
 ./scripts/test_chessis20.ps1 -CoreOnly -Network
 ./scripts/test_chessis23.ps1

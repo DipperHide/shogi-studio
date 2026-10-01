@@ -13,7 +13,7 @@ func read(path: String):
 		return null
 	var parser = JSON.new()
 	var data = parser.data if parser.parse(f.get_as_text()) == OK else null
-	var game = Game.from_data(data.get("game", data) if data is Dictionary else data)
+	var game = preload("res://scripts/shogi_variant.gd").from_data(data.get("game", data) if data is Dictionary else data)
 	if game == null: error = "这份棋谱无法读取。"
 	return game
 

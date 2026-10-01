@@ -175,7 +175,7 @@ func choose_file(save_in_archive: bool = false) -> void:
 	ticket += 1; picker_ticket = ticket
 	var request = picker_ticket
 	refresh_input()
-	if ui.platform != null and ui.platform.has_method("pickAnalysisRecord"):
+	if ui.platform != null and preload("res://scripts/shogi_platform_api.gd").supports(ui.platform, "pickAnalysisRecord"):
 		ui.platform.pickAnalysisRecord(request)
 		return
 	ui._open_file(false, func(path): read_file(request, path))
@@ -259,6 +259,9 @@ func save_import(game, title: String) -> void:
 	open_game(game, path)
 
 func open_game(game, path: String = "") -> bool:
+	if preload("res://scripts/shogi_variant.gd").is_chu(game):
+		if ui.app.session!=null: return false
+		ui.app.open_chu(game); return true
 	if ui.app.session != null: draft.error = "请先退出联机对局，再载入其他棋谱。"; refresh_input(); return false
 	if not ui.finish_study(true, func(): open_game(game, path)): return false
 	ui.app._pause_search(); ui.report.cancel()

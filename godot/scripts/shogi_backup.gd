@@ -1,6 +1,7 @@
 extends RefCounted
 const PREF_KEYS = ["confirm_move", "sound", "volume", "hints", "last_move", "coordinates", "auto_flip", "appearance", "color_mode", "language", "piece_font", "move_pace", "studio", "report"]
 var error: String = ""
+var chu_path = "user://chu-active-game.json"
 
 func collect(app, tutorial) -> Dictionary:
 	var records: Array = []
@@ -10,18 +11,20 @@ func collect(app, tutorial) -> Dictionary:
 	tutorial._ensure_loaded()
 	var prefs = {}
 	for key in PREF_KEYS: prefs[key] = app.preferences.get(key)
-	return {"shogi_backup": 1, "created": Time.get_datetime_string_from_system(), "active": app.game.to_data(), "records": records, "preferences": prefs, "tutorial": tutorial.progress.data}.duplicate(true)
+	var chu = preload("res://scripts/chu_game.gd").load_from(chu_path)
+	return {"shogi_backup": 2, "created": Time.get_datetime_string_from_system(), "active": app.game.to_data(), "chu_active": chu.to_data() if chu != null else null, "records": records, "preferences": prefs, "tutorial": tutorial.progress.data}.duplicate(true)
 
 func restore(app, tutorial, data: Variant, restore_preferences: bool, restore_learning: bool) -> int:
 	error = ""
-	if not data is Dictionary or data.get("shogi_backup") != 1 or not data.get("records") is Array or data.records.size() > 3000:
+	if not data is Dictionary or not preload("res://scripts/chu_rules.gd").integer(data.get("shogi_backup")) or int(data.shogi_backup) not in [1,2] or not data.get("records") is Array or data.records.size() > 3000:
 		error = "备份格式无效。"; return -1
 	var entries: Array = data.records.duplicate()
 	if data.has("active"): entries.append({"title": "恢复的当前对局", "game": data.active})
+	if data.get("shogi_backup") == 2 and data.get("chu_active") != null: entries.append({"title":"恢复的中将棋当前对局","game":data.chu_active})
 	var validated: Array = []
 	for entry in entries:
 		if not entry is Dictionary: error = "备份内容无效。"; return -1
-		var saved = app.Game.from_data(entry.get("game"))
+		var saved = preload("res://scripts/shogi_variant.gd").from_data(entry.get("game"))
 		if saved == null: error = "备份包含损坏棋谱，未开始恢复。"; return -1
 		var meta = app.records.Archive.metadata(entry.get("archive",{}),int(Time.get_unix_time_from_system()))
 		if meta.is_empty(): error = "备份包含无效收藏或标签，未开始恢复。"; return -1

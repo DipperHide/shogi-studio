@@ -181,6 +181,8 @@ func undo() -> void:
 
 func to_data() -> Dictionary:
 	var data = {"version": 1, "mode": mode, "moves": moves, "resigned": resigned, "resigned_side": resigned_side, "agreed_draw": agreed_draw, "declared_side": declared_side, "clock": clock.to_data(), "human_side":human_side,"difficulty":difficulty,"engine_level":engine_level,"engine_provider":engine_provider, "initial_sfen": initial_sfen, "metadata": metadata, "comments": comments, "annotations": annotations, "engine_match": engine_match}
+	data["variant"] = "standard"
+	data["rules_id"] = "standard-shogi-1"
 	if variation_tree != null:
 		variation_tree.main_notes(comments, annotations)
 		data["variations"] = variation_tree.to_data()
@@ -204,6 +206,7 @@ func declare_win(side: int) -> bool:
 static func from_data(data: Variant) -> ShogiGame:
 	if not data is Dictionary or data.get("version") != 1 or data.get("mode") not in ["ai", "local"]:
 		return null
+	if data.get("variant","standard") != "standard" or data.get("rules_id","standard-shogi-1") != "standard-shogi-1": return null
 	if not data.get("moves") is Array or data.moves.size() > 2000 or not data.get("resigned", false) is bool or not data.get("agreed_draw", false) is bool:
 		return null
 	var game = ShogiGame.new()

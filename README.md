@@ -2,25 +2,25 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
 
-当前工作区为 **0.36.1-test 本地测试版**：在可展开分析区、完整棋路、持驹修复、自动分析、坏棋重试及四档新手电脑基础上，隔离分析与电脑选棋，并在人机对弈、复盘及试下中只显示玩家一方的候选线路。公开发行版仍为 0.35.0；基础测试见 [0.36 测试记录](docs/TESTING-0.36.0.md)，本次验证见 [0.36.1 测试记录](docs/TESTING-0.36.1.md)。
+**0.37.0 加入中将棋**：12×12 二维棋盘、同机双人、摆局、保存回放、IP 直连和安卓蓝牙。支持狮子等棋子的完整多段操作、双指缩放和平移；中将棋不运行引擎。详见 [中将棋说明](docs/CHU-SHOGI.md) 与 [验证记录](docs/TESTING-0.37.0.md)。
 
-0.35.0 更新二维棋盘、棋子和明暗配色。回放前进到最新局面自动恢复下棋与悔棋，回看中也可正常悔棋。见 [验证记录](docs/TESTING-0.35.0.md)。
+同时正式收录 0.36 系列的可展开分析区、滚动棋路、持驹修复、自动分析、坏棋重试与四档弱电脑。分析仅显示玩家一方的候选线路，开启分析不会改变弱电脑选棋。**尚未完成双手机蓝牙实测**。
 
-面向 Android 和 Windows 的免费将棋对弈、复盘与学习应用，使用 Godot 4.7.2 和 YaneuraOu 本地引擎。当前版本 **0.35.0**，**所有功能免费开放，没有会员、购买入口或付费解锁**。
+面向 Android 和 Windows 的免费将棋对弈、复盘与学习应用，使用 Godot 4.7.2 和 YaneuraOu 本地引擎。当前版本 **0.37.0**，**所有功能免费开放，没有会员、购买入口或付费解锁**。
 
 ![木制棋盘](docs/images/board-0.20.png)
 
 ## 安装
 
-源码和安装包已公开：[0.35.0 Release](https://github.com/DipperHide/shogi-studio/releases/tag/v0.35.0)。每日棋谱更新已启用，并已完成首次云端更新。
+源码和安装包已公开：[0.37.0 Release](https://github.com/DipperHide/shogi-studio/releases/tag/v0.37.0)。每日棋谱更新已启用，并已完成首次云端更新。
 
-从 [Releases](https://github.com/DipperHide/shogi-studio/releases) 下载 `Shogi-0.35.0-android-arm64.apk`，适用于 ARM64 Android 设备。Windows 下载 `Shogi-0.35.0-windows-x64.zip`，解压后运行 `Shogi.exe`，保留同目录的 `engines` 文件夹。
+从 [Releases](https://github.com/DipperHide/shogi-studio/releases) 下载 `Shogi-0.37.0-android-arm64.apk`，适用于 ARM64 Android 设备。Windows 下载 `Shogi-0.37.0-windows-x64.zip`，解压后运行 `Shogi.exe`，保留同目录的 `engines` 文件夹。
 
-Android 包名 `org.shogistudio.artpreview`，versionCode 53。使用 release 导出模板，沿用前版开发签名以便覆盖升级；私钥不在仓库中。安装不同签名的构建前请导出备份。
+Android 包名 `org.shogistudio.artpreview`，versionCode 58。使用 release 导出模板，沿用前版开发签名以便覆盖升级；私钥不在仓库中。安装不同签名的构建前请导出备份。
 
 ## 功能
 
-- 六档电脑、同机双人、电脑互战、IP 直连和 Android 蓝牙；升变、持驹打入和将棋禁手校验。
+- 十档电脑（四档新手与原六档）、同机双人、电脑互战、IP 直连和 Android 蓝牙；升变、持驹打入和将棋禁手校验。
 - 二维／三维棋盘、明暗主题、自定义颜色、翻转、拖动、坐标、固定比例持驹。0.20 加宽并调亮木制棋盘。
 - 主界面悔棋、带移动动画的逐手／自动回放、分析快照、候选线路预览，从任意选定局面继续下。
 - 本地引擎、1–5 条候选线路、快速／深度整局报告、好棋线路、坏棋提醒、局面胜率估计、失误练习和阶段统计。
@@ -47,7 +47,7 @@ Android 包名 `org.shogistudio.artpreview`，versionCode 53。使用 release �
 
 ## 持续更新日本赛事
 
-“分析棋谱 → 历史大赛”提供“近期赛事”和“离线历史”。近期目录收录 **26 局**，目前最新为 **2026 年 9 月 8–9 日王位战第六局，140 手**；离线历史库另有 **195 局、23,115 手**。
+“分析棋谱 → 历史大赛”提供“近期赛事”和“离线历史”。近期目录收录 **27 局**，目前最新为 **2026 年 9 月 15 日王座战第二局，115 手**；离线历史库另有 **195 局、23,115 手**。
 
 [更新工作流](.github/workflows/update-tournaments.yml) 每天约北京时间 05:23 检查官方站点。应用进入近期赛事时每天检查一次 HTTPS 目录，也可手动刷新，无需为新比赛重新安装 APK。GitHub 调度可能延迟，工作流须在默认分支启用。
 
@@ -63,7 +63,7 @@ Android 包名 `org.shogistudio.artpreview`，versionCode 53。使用 release �
 python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -r requirements-dev.txt
 ./scripts/build_android.ps1
-./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.35.0
+./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.37.0
 ```
 
 用 Godot 打开 `godot/project.godot` 可开发桌面版。运行素材、引擎和 NNUE 已包含；构建脚本会从同梱源码包恢复引擎源码目录。release APK 需在本机设置 `GODOT_ANDROID_KEYSTORE_RELEASE_PATH`、`GODOT_ANDROID_KEYSTORE_RELEASE_USER`、`GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD` 后运行 `./scripts/build_android.ps1 -Release`。不要提交 keystore 或密码。
@@ -81,7 +81,7 @@ python -m venv .venv
 ./scripts/test_chessis32.ps1
 ./scripts/test_chessis33.ps1
 ./scripts/test_chessis34.ps1 -Probes board-hud,chessis34
-./scripts/test_package.ps1 -ReportDirectory review/app/chessis34/package -Executable builds/windows-0.35.0/Shogi.exe
+./scripts/test_package.ps1 -ReportDirectory review/app/chessis34/package -Executable builds/windows-0.37.0/Shogi.exe
 ```
 
 [CI](.github/workflows/ci.yml) 在 push／PR 时运行核心测试。本地另测四种尺寸、两个方向、明暗模式、持驹、吃子／升变／打入动画和实际引擎。结果见 [0.23 分类统计验证](docs/TESTING-0.23.md) 和 [0.20 棋盘／赛事验证](docs/TESTING-0.20.md)。测试降低已覆盖场景的回归风险，不能保证绝对没有 bug；已连接 Android 14 手机并验证启动、目录与二维／3D 回放；数据见 [实机记录](docs/ANDROID-DEVICE-BASELINE.md)。蓝牙双机仍未验收。

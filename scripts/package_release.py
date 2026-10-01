@@ -29,6 +29,10 @@ Run Shogi.exe. Keep the engines folder beside it.
 
 菜单 > 设置：切换极简／木制、明暗、中／日／英文与落子节奏。
 Menu > Settings: appearance, color mode, language and move pace.
+菜单 > 开始对弈 > 中将棋：12×12 双人、摆局、回放及联机，不使用引擎。
+Menu > Play > Chu Shogi: 12x12 two-player games, setup, replay and networking, without an engine.
+中将棋蓝牙尚未完成双手机实测。
+Chu Shogi Bluetooth has not been physically tested with two phones.
 点击或拖动棋子；方向键与回车也可行棋。Esc 打开菜单。
 Click or drag a piece; arrow keys and Enter also work. Esc opens the menu.
 

@@ -933,7 +933,7 @@ func show_record_details(path: String) -> void:
 	column.add_child(label(str(game.moves.size()) + "  ·  " + app.i18n.result(game)))
 	column.add_child(button(app.t("查看"), func():
 		if app._load_archive(path):
-			if not app._study_active(): show_history(app.review_game.moves.size())
+			if app.chu_screen == null and not app._study_active(): show_history(app.review_game.moves.size())
 		else: show_message(app.t("联机中只能查看当前棋谱，退出联机后可继续其他棋局。") if app.session != null else app.records.error)
 	))
 	column.add_child(button(app.t("重命名"), func():
@@ -966,7 +966,7 @@ func show_continue_record() -> void:
 	column.add_child(button(app.t("取消"), func(): show_history(app.replay_index)))
 
 func import_record() -> void:
-	if platform != null and platform.has_method("pickRecord"):
+	if platform != null and preload("res://scripts/shogi_platform_api.gd").supports(platform, "pickRecord"):
 		platform.pickRecord()
 		return
 	_open_file(false, func(path):
@@ -980,7 +980,7 @@ func import_record() -> void:
 func export_record(path: String) -> void:
 	var game = app.records.read(path)
 	if game == null: show_message(app.records.error); return
-	if platform != null and platform.has_method("exportRecord"):
+	if platform != null and preload("res://scripts/shogi_platform_api.gd").supports(platform, "exportRecord"):
 		platform.exportRecord(JSON.stringify(game.to_data(), "\t"))
 		return
 	_open_file(true, func(destination):
@@ -1012,10 +1012,11 @@ func show_paste() -> void:
 	column.add_child(button(app.t("导入"), func(): _import_text(input.text)))
 
 func _import_text(text: String) -> void:
+	if app.chu_screen!=null: app.chu_screen.import_text(text); return
 	if text.length() > 2097152: show_message(app.t("这份棋谱无法读取。")); return
 	var parser = JSON.new()
 	var data = parser.data if parser.parse(text) == OK else null
-	var game = app.Game.from_data(data.get("game", data) if data is Dictionary else data)
+	var game = preload("res://scripts/shogi_variant.gd").from_data(data.get("game", data) if data is Dictionary else data)
 	if game == null: show_message(app.t("这份棋谱无法读取。")); return
 	var saved = app.records.archive(game)
 	if saved.is_empty(): show_message(app.records.error)

@@ -2,23 +2,25 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
 
-0.35.0 では平面盤・駒・明暗配色を刷新しました。最新の手に戻ると自動的に対局を再開でき、履歴を見ている間も待ったが使えます。[検証記録](docs/TESTING-0.35.0.md)。
+**0.37.0 で中将棋を追加**：12×12 の二次元盤、同じ端末での二人対局、局面編集、保存・再生、IP 直接接続、Android Bluetooth に対応します。獅子などの複数段移動、ピンチ拡大、パン操作が使えます。中将棋ではエンジンを起動しません。[中将棋の説明](docs/CHU-SHOGI.md)と[検証記録](docs/TESTING-0.37.0.md)を参照してください。
 
-Android・Windows 向けの無料将棋アプリです。Godot 4.7.2 と、やねうら王のローカル解析エンジンを使用します。現在のバージョンは **0.35.0**。**既存の機能はすべて無料で、会員制度・購入画面・有料解除はありません。**
+0.36 系の可変サイズ解析欄、スクロールできる棋譜、持駒の修正、自動解析、悪手のやり直し、初心者向けの弱いコンピューター4段階も収録します。解析はプレイヤー側の候補手順を表示し、弱い相手の指し手選択には影響しません。**スマートフォン2台での Bluetooth 実機試験は未実施です。**
+
+Android・Windows 向けの無料将棋アプリです。Godot 4.7.2 と、やねうら王のローカル解析エンジンを使用します。現在のバージョンは **0.37.0**。**既存の機能はすべて無料で、会員制度・購入画面・有料解除はありません。**
 
 ![木製の将棋盤](docs/images/board-0.20.png)
 
 ## インストール
 
-ソースと配布ファイルを公開しました：[0.35.0 Release](https://github.com/DipperHide/shogi-studio/releases/tag/v0.35.0)。棋譜一覧の毎日更新が有効になり、クラウドでの初回更新も成功しました。
+ソースと配布ファイルを公開しました：[0.37.0 Release](https://github.com/DipperHide/shogi-studio/releases/tag/v0.37.0)。棋譜一覧の毎日更新が有効になり、クラウドでの初回更新も成功しました。
 
-[Releases](https://github.com/DipperHide/shogi-studio/releases) から `Shogi-0.35.0-android-arm64.apk` をダウンロードしてください。ARM64 対応 Android 端末向けの完全な APK です。Windows は `Shogi-0.35.0-windows-x64.zip` を展開し、`Shogi.exe` を実行します。`engines` フォルダーは同じ場所に置いてください。
+[Releases](https://github.com/DipperHide/shogi-studio/releases) から `Shogi-0.37.0-android-arm64.apk` をダウンロードしてください。ARM64 対応 Android 端末向けの完全な APK です。Windows は `Shogi-0.37.0-windows-x64.zip` を展開し、`Shogi.exe` を実行します。`engines` フォルダーは同じ場所に置いてください。
 
-Android のパッケージ名は `org.shogistudio.artpreview`、versionCode は 52 です。release テンプレートで書き出し、上書き更新のため従来の開発用署名を継続しています。秘密鍵は含めません。異なる署名のビルドを入れる前に棋譜をバックアップしてください。
+Android のパッケージ名は `org.shogistudio.artpreview`、versionCode は 58 です。release テンプレートで書き出し、上書き更新のため従来の開発用署名を継続しています。秘密鍵は含めません。異なる署名のビルドを入れる前に棋譜をバックアップしてください。
 
 ## 主な機能
 
-- 6 段階のコンピューター、同じ端末での二人対局、エンジン同士の対局、IP 直接接続、Android Bluetooth。合法手・成り・持駒の打ち込み・禁手を確認します。
+- 10 段階のコンピューター（初心者向け4段階と従来の6段階）、同じ端末での二人対局、エンジン同士の対局、IP 直接接続、Android Bluetooth。合法手・成り・持駒の打ち込み・禁手を確認します。
 - 2D／3D 盤、明暗テーマ、配色、反転、ドラッグ、座標表示、縦横比を保つ持駒。0.20 では木製盤を明るく、幅広くしました。
 - メイン画面の待った、アニメーション付き棋譜再生、解析結果、候補手順の再生、選択局面からの対局再開。
 - 1～5 本の候補手順、簡易／詳細解析、推奨手順、悪手通知、推定勝率、失敗手の練習、局面段階別統計。
@@ -45,7 +47,7 @@ Android のパッケージ名は `org.shogistudio.artpreview`、versionCode は 
 
 ## 日本の大会棋譜の更新
 
-最近の一覧には **26 局**を収録し、現在の最新は **2026 年 9 月 8～9 日の王位戦第 6 局、140 手**です。別途、過去の完全棋譜 **195 局・23,115 手**をオフラインで利用できます。
+最近の一覧には **27 局**を収録し、現在の最新は **2026 年 9 月 15 日の王座戦第 2 局、115 手**です。別途、過去の完全棋譜 **195 局・23,115 手**をオフラインで利用できます。
 
 [定期更新ワークフロー](.github/workflows/update-tournaments.yml) が毎日日本時間 06:23 頃に公式中継ページを確認します。アプリは最近の大会一覧を開くと 1 日に 1 回 HTTPS 経由で確認し、「刷新」で手動更新もできます。新しい対局ごとの APK 再インストールは不要です。GitHub の実行には遅延があり、デフォルトブランチでワークフローを有効にしておく必要があります。
 
@@ -61,7 +63,7 @@ Windows、Python 3.11 以降、Godot **4.7.2** と対応テンプレート、JDK
 python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -r requirements-dev.txt
 ./scripts/build_android.ps1
-./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.35.0
+./scripts/build_windows.ps1 -OutputDirectory builds/windows-0.37.0
 ./scripts/test_chessis20.ps1
 ./scripts/test_chessis20.ps1 -CoreOnly -Network
 ./scripts/test_chessis23.ps1

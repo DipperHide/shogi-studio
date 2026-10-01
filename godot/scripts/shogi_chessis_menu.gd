@@ -891,6 +891,7 @@ func back() -> void:
 
 func show_play() -> void:
 	var column = _page("开始对弈", "play")
+	column.add_child(action_row("中将棋", "12×12 · 同机双人、IP 与安卓蓝牙", "play", func(): app.open_chu(), true))
 	for entry in [["与电脑对弈", "选择难度与先后手", show_bots], ["同机双人", "与朋友共用棋盘", func(): show_setup(1)], ["电脑对电脑", "观看引擎双方对弈", func(): show_setup(2)], ["网络对战", "IP 直连对局", show_network], ["蓝牙对战", "连接附近的 Android 设备", show_bluetooth]]:
 		column.add_child(action_row(entry[0], entry[1], "play", entry[2], true))
 
@@ -1013,6 +1014,7 @@ func show_paste() -> void:
 	column.add_child(button("导入", func(): _import_text(input.text)))
 
 func _import_text(value: String) -> void:
+	if app.chu_screen != null: app.chu_screen.import_text(value); return
 	if reading_backup:
 		reading_backup = false
 		show_restore(value)
@@ -1025,7 +1027,7 @@ func _import_text(value: String) -> void:
 	else: show_record_details(saved)
 
 func import_record() -> void:
-	if platform != null and platform.has_method("pickRecord"): platform.pickRecord(); return
+	if platform != null and preload("res://scripts/shogi_platform_api.gd").supports(platform, "pickRecord"): platform.pickRecord(); return
 	_open_file(false, func(path):
 		var file = FileAccess.open(path, FileAccess.READ)
 		if file == null or file.get_length() > 2097152: show_message("棋谱无法读取。"); return
@@ -1052,7 +1054,7 @@ func show_export() -> void:
 	column.add_child(button("保存文件", func(): save_text(text.text, "shogi." + selector.get_item_text(selector.selected).to_lower())))
 
 func save_text(value: String, filename: String) -> void:
-	if platform != null and platform.has_method("exportText"): platform.exportText(value, filename); return
+	if platform != null and preload("res://scripts/shogi_platform_api.gd").supports(platform, "exportText"): platform.exportText(value, filename); return
 	_open_file(true, func(path):
 		var file = FileAccess.open(path, FileAccess.WRITE)
 		if file == null: show_message("保存失败"); return
@@ -1992,7 +1994,7 @@ func show_backup() -> void:
 		save_text(JSON.stringify(service.collect(app, tutorial), "  "), "shogi-backup.json")
 	))
 	column.add_child(button("打开备份文件", func():
-		if platform != null and platform.has_method("pickRecord"):
+		if platform != null and preload("res://scripts/shogi_platform_api.gd").supports(platform, "pickRecord"):
 			reading_backup = true
 			platform.pickRecord()
 			return

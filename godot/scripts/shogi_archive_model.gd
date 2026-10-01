@@ -21,14 +21,16 @@ static func describe(path: String, data: Variant, modified: int, digest: String)
 	var archive = metadata(document.get("archive",{}),modified)
 	if archive.is_empty(): archive = metadata({},modified)
 	var title = str(document.get("title",path.get_file().trim_suffix(".json"))).left(100)
+	var variant = str(game.get("variant","standard"))
+	var variant_label = "中将棋" if variant == "chu" else "本将棋" if variant == "standard" else "未知棋种"
 	var first = str(tags.get("先手","")).strip_edges(); var second = str(tags.get("后手",tags.get("後手",""))).strip_edges()
 	var names = title if first.is_empty() and second.is_empty() else (first if not first.is_empty() else "先手") + " vs " + (second if not second.is_empty() else "后手")
 	var event = str(tags.get("棋战",tags.get("棋戦","")))
 	var date = str(tags.get("开始日時",tags.get("開始日時",tags.get("日期",""))))
 	if date.is_empty(): date = Time.get_datetime_string_from_unix_time(archive.created).left(10)
 	var count = game.get("moves",[]).size() if game.get("moves",[]) is Array else 0
-	var searchable = Historic.normalized(" ".join([title,names,event,date,str(tags)," ".join(archive.tags)]))
-	return {"path":path,"title":title,"names":names,"event":event,"date":date,"plies":count,"metadata":tags.duplicate(true),
+	var searchable = Historic.normalized(" ".join([title,names,event,date,str(tags),variant_label," ".join(archive.tags)]))
+	return {"path":path,"title":title,"names":names,"event":event,"date":date,"plies":count,"metadata":tags.duplicate(true),"variant":variant,"variant_label":variant_label,
 		"archive":archive,"modified":modified,"created":archive.created,"favorite":archive.favorite,"tags":archive.tags,
 		"search":searchable,"sha256":digest,"readable":game.get("version")==1 and game.get("moves") is Array}
 

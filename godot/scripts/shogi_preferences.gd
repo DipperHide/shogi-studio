@@ -37,7 +37,7 @@ func is_dark() -> bool:
 		return color_mode == "dark"
 	if OS.get_name() == "Android" and Engine.has_singleton("ShogiPlatform"):
 		var platform = Engine.get_singleton("ShogiPlatform")
-		if platform.has_method("isDarkMode"): return platform.isDarkMode()
+		if preload("res://scripts/shogi_platform_api.gd").supports(platform, "isDarkMode"): return platform.isDarkMode()
 	return DisplayServer.is_dark_mode() if DisplayServer.is_dark_mode_supported() else true
 
 func load_from(path: String = PATH) -> void:

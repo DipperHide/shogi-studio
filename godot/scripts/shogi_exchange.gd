@@ -11,7 +11,7 @@ func parse(source: String):
 	var text = source.strip_edges().trim_prefix("\ufeff")
 	if text.begins_with("{"):
 		var data = JSON.parse_string(text)
-		var game = Game.from_data(data.get("game", data) if data is Dictionary else data)
+		var game = preload("res://scripts/shogi_variant.gd").from_data(data.get("game", data) if data is Dictionary else data)
 		return game if game != null else fail("JSON 棋谱损坏或包含非法着手。")
 	if text.begins_with("position ") or text.begins_with("startpos") or text.begins_with("sfen "):
 		return parse_usi(text.trim_prefix("position "))
@@ -158,6 +158,7 @@ func parse_kif(text: String):
 
 static func export_game(game, format: String) -> String:
 	if format == "JSON": return JSON.stringify(game.to_data(), "  ")
+	if preload("res://scripts/shogi_variant.gd").is_chu(game): return ""
 	if format == "USI": return Codec.history_command(game.moves, game.initial_command())
 	if format == "SFEN": return Codec.sfen(game.position, game.moves.size() + 1)
 	var lines: Array[String] = []
