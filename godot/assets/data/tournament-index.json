@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_utc": "2026-10-02T00:52:39.302970+00:00",
+  "updated_utc": "2026-10-03T00:32:50.482085+00:00",
   "sources": [
     {
       "url": "http://live.shogi.or.jp/oui/",
@@ -8,7 +8,7 @@
     },
     {
       "url": "http://live.shogi.or.jp/ouza/",
-      "pages": 3
+      "pages": 4
     },
     {
       "url": "http://live.shogi.or.jp/kiou/",
@@ -28,6 +28,26 @@
     }
   ],
   "games": [
+    {
+      "tags": {
+        "開始日時": "2026/10/02 09:00",
+        "終了日時": "2026/10/02 18:02",
+        "棋戦": "第74期王座戦五番勝負第３局",
+        "戦型": "相掛かり",
+        "持ち時間": "5時間",
+        "場所": "北海道虻田郡「ニセコ温泉郷　いこいの湯宿　いろは」",
+        "手合割": "平手",
+        "先手": "広瀬章人九段",
+        "後手": "伊藤匠王座"
+      },
+      "plies": 100,
+      "terminal": "101 投了",
+      "moves_sha256": "bbb97bedc0a3148f6162563bdf5d2948afe8c9e590946a7b596a41b64346111a",
+      "id": "ouza202610020101",
+      "source": "http://live.shogi.or.jp/ouza/kifu/74/ouza202610020101.html",
+      "kif_source": "http://live.shogi.or.jp/ouza/kifu/74/ouza202610020101.kif",
+      "sha256": "7dd6ba8e9cfe1a8e4caf2cdb31ba297108e67187714ace88318aefcb0efc86ac"
+    },
     {
       "tags": {
         "開始日時": "2026/09/15 09:00",
