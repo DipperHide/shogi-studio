@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_utc": "2026-10-04T23:59:33.829524+00:00",
+  "updated_utc": "2026-10-06T01:46:58.851600+00:00",
   "sources": [
     {
       "url": "http://live.shogi.or.jp/oui/",
@@ -46,7 +46,7 @@
       "id": "ouza202610020101",
       "source": "http://live.shogi.or.jp/ouza/kifu/74/ouza202610020101.html",
       "kif_source": "http://live.shogi.or.jp/ouza/kifu/74/ouza202610020101.kif",
-      "sha256": "7dd6ba8e9cfe1a8e4caf2cdb31ba297108e67187714ace88318aefcb0efc86ac"
+      "sha256": "ee2b58442af64fee7f0bcb322c5d8c6edf0ecc64eecea5eccf24799b9d3d4d94"
     },
     {
       "tags": {
