@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_utc": "2026-10-14T00:21:35.799428+00:00",
+  "updated_utc": "2026-10-14T23:58:24.643460+00:00",
   "sources": [
     {
       "url": "http://live.shogi.or.jp/oui/",
@@ -8,7 +8,7 @@
     },
     {
       "url": "http://live.shogi.or.jp/ouza/",
-      "pages": 4
+      "pages": 5
     },
     {
       "url": "http://live.shogi.or.jp/kiou/",
@@ -28,6 +28,26 @@
     }
   ],
   "games": [
+    {
+      "tags": {
+        "開始日時": "2026/10/14 09:00",
+        "終了日時": "2026/10/14 19:49",
+        "棋戦": "第74期王座戦五番勝負第４局",
+        "戦型": "相掛かり",
+        "持ち時間": "5時間",
+        "場所": "兵庫県神戸市「ホテルオークラ神戸」",
+        "手合割": "平手",
+        "先手": "伊藤匠王座",
+        "後手": "広瀬章人九段"
+      },
+      "plies": 94,
+      "terminal": "95 投了",
+      "moves_sha256": "194544571c626e1c34d4a261a7a9a95c09f88fafe8d4065c92c775b67fe12208",
+      "id": "ouza202610140101",
+      "source": "http://live.shogi.or.jp/ouza/kifu/74/ouza202610140101.html",
+      "kif_source": "http://live.shogi.or.jp/ouza/kifu/74/ouza202610140101.kif",
+      "sha256": "a81b576d64313813869c2c1a4837d1d048b5a7c55bd066cb8f0bb21fc38ba254"
+    },
     {
       "tags": {
         "開始日時": "2026/10/02 09:00",
