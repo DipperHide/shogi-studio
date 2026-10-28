@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_utc": "2026-10-27T00:33:23.904422+00:00",
+  "updated_utc": "2026-10-28T00:33:29.018951+00:00",
   "sources": [
     {
       "url": "http://live.shogi.or.jp/oui/",
@@ -28,6 +28,26 @@
     }
   ],
   "games": [
+    {
+      "tags": {
+        "開始日時": "2026/10/27 09:00",
+        "終了日時": "2026/10/27 20:46",
+        "棋戦": "第74期王座戦五番勝負第５局",
+        "戦型": "相掛かり",
+        "持ち時間": "5時間",
+        "場所": "山梨県甲府市「常磐ホテル」",
+        "手合割": "平手",
+        "先手": "広瀬章人九段",
+        "後手": "伊藤匠王座"
+      },
+      "plies": 121,
+      "terminal": "122 投了",
+      "moves_sha256": "4222417e5318ccc6afbcfa89253973b7c62c8f9a07c255bc32fbcee913f07c31",
+      "id": "ouza202610270101",
+      "source": "http://live.shogi.or.jp/ouza/kifu/74/ouza202610270101.html",
+      "kif_source": "http://live.shogi.or.jp/ouza/kifu/74/ouza202610270101.kif",
+      "sha256": "0b98c875a30bd61e2d60857d8ba7e69b5f12fcdf6db9d4e3e2af07361d714fdb"
+    },
     {
       "tags": {
         "開始日時": "2026/10/14 09:00",
